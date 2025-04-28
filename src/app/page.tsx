@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
@@ -128,7 +127,7 @@ export default function Home() {
                 <span className="text-2xl font-bold">3</span>
               </div>
               <h3 className="font-bold text-xl mb-2">100% Satisfaction</h3>
-              <p className="text-gray-600 dark:text-gray-300">If your cat isn't satisfied, we offer a full money-back guarantee.</p>
+              <p className="text-gray-600 dark:text-gray-300">If your cat isn&apos;t satisfied, we offer a full money-back guarantee.</p>
             </div>
           </div>
         </div>
