@@ -71,14 +71,28 @@ export default function Home() {
       <ComingSoonPage isOpen={comingSoonPageOpen} onClose={() => setComingSoonPageOpen(false)} />
     
       {!showMainContent ? (
-        // Minimalist landing page like ammocat3000.com
+        // Minimalist landing page like ammocat3000.com with video
         <div className="flex flex-col min-h-screen bg-white text-black px-4 py-8 md:px-8 md:py-12">
-          <main className="flex-grow flex flex-col items-start justify-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-16 ml-2">
+          <main className="flex-grow flex flex-col items-start justify-center max-w-4xl mx-auto w-full">
+            <h1 className="text-4xl md:text-5xl font-bold mb-12 ml-2">
               # ammo cat
             </h1>
             
-            <div className="text-xl leading-relaxed mb-16 space-y-8 ml-2">
+            {/* Video section */}
+            <div className="w-full mb-12 flex justify-center">
+              <div className="relative w-full max-w-2xl">
+                <video 
+                  autoPlay 
+                  playsInline
+                  muted
+                  loop
+                  className="w-full h-auto object-contain"
+                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO.mp4"
+                />
+              </div>
+            </div>
+            
+            <div className="text-xl leading-relaxed mb-12 space-y-8 ml-2">
               <p>
                 Ammo Cat is enjoying life in his castle<br />
                 when zombie neighbors start launching<br />
