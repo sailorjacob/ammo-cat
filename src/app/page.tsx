@@ -68,7 +68,7 @@ export default function Home() {
             playsInline
             muted
             loop
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
             src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO.mp4"
           />
           <div className="absolute bottom-10 left-0 right-0 text-center text-black bg-white/50 py-2">
