@@ -38,7 +38,8 @@ export default function GamePage() {
       height: number, 
       speed: number, 
       lastFireTime: number, 
-      fireRate: number
+      fireRate: number,
+      useAltImage: boolean
     }>,
     enemyFireballs: [] as Array<{x: number, y: number, angle: number, speed: number}>,
     zombiesKilled: 0,
@@ -75,6 +76,9 @@ export default function GamePage() {
     
     const zombieImage = new (window.Image as any)() as HTMLImageElement;
     zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
+    
+    const zombieImage2 = new (window.Image as any)() as HTMLImageElement;
+    zombieImage2.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombie2128x128.png";
     
     // Game constants
     const GAME_WIDTH = 800;
@@ -118,7 +122,8 @@ export default function GamePage() {
           height: ZOMBIE_SIZE,
           speed: ZOMBIE_SPEED * (0.8 + Math.random() * 0.4),
           lastFireTime: Date.now(),
-          fireRate: 2000 + Math.random() * 3000
+          fireRate: 2000 + Math.random() * 3000,
+          useAltImage: Math.random() < 0.25 // 25% chance of using alt image
         });
       }
       
@@ -468,7 +473,15 @@ export default function GamePage() {
           const safeAngle = angle || 0;
           ctx.translate(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2);
           ctx.rotate(safeAngle);
-          ctx.drawImage(zombieImage, -zombie.width / 2, -zombie.height / 2, zombie.width, zombie.height);
+          // Choose which zombie image to use based on the useAltImage flag
+          const imageToUse = zombie.useAltImage ? zombieImage2 : zombieImage;
+          
+          // If using alt image, apply additional rotation correction to fix upside-down issue
+          if (zombie.useAltImage) {
+            ctx.rotate(Math.PI); // Rotate 180 degrees to fix orientation
+          }
+          
+          ctx.drawImage(imageToUse, -zombie.width / 2, -zombie.height / 2, zombie.width, zombie.height);
         } catch (e) {
           // Fallback if image fails
           ctx.fillStyle = '#00FF00';
