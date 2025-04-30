@@ -39,6 +39,7 @@ interface GameState {
   zombiesKilled: number;
   currentWaveSize: number;
   nextZombieId: number;
+  debug: boolean;
 }
 
 export const useGameState = () => {
@@ -59,7 +60,8 @@ export const useGameState = () => {
     enemyFireballs: [],
     zombiesKilled: 0,
     currentWaveSize: 1,
-    nextZombieId: 1
+    nextZombieId: 1,
+    debug: true  // Enable debug logging
   });
   
   // Initialize player position
@@ -67,20 +69,27 @@ export const useGameState = () => {
     const PLAYER_SIZE = 64;
     const PLAYER_SPEED = 5;
     
-    if (!playerRef.current) {
-      playerRef.current = {
-        x: width / 4 - PLAYER_SIZE / 2,
-        y: height / 2 - PLAYER_SIZE / 2,
-        width: PLAYER_SIZE,
-        height: PLAYER_SIZE,
-        speed: PLAYER_SPEED,
-        fireballs: [],
-        isMovingUp: false,
-        isMovingDown: false,
-        isMovingLeft: false,
-        isMovingRight: false,
-        isShooting: false
-      };
+    if (gameStateRef.current.debug) {
+      console.log("Initializing player with dimensions:", width, height);
+    }
+    
+    // Always create a fresh player on initialization
+    playerRef.current = {
+      x: width / 4 - PLAYER_SIZE / 2,
+      y: height / 2 - PLAYER_SIZE / 2,
+      width: PLAYER_SIZE,
+      height: PLAYER_SIZE,
+      speed: PLAYER_SPEED,
+      fireballs: [],
+      isMovingUp: false,
+      isMovingDown: false,
+      isMovingLeft: false,
+      isMovingRight: false,
+      isShooting: false
+    };
+    
+    if (gameStateRef.current.debug) {
+      console.log("Player initialized:", playerRef.current);
     }
     
     return playerRef.current;
@@ -88,7 +97,10 @@ export const useGameState = () => {
   
   // Spawn zombies
   const spawnZombies = (count: number, gameWidth: number, gameHeight: number, zombieSize: number, zombieSpeed: number) => {
-    console.log(`Spawning ${count} zombies`);
+    if (gameStateRef.current.debug) {
+      console.log(`Spawning ${count} zombies`);
+    }
+    
     const newZombies: Zombie[] = [];
     
     for (let i = 0; i < count; i++) {
@@ -107,7 +119,10 @@ export const useGameState = () => {
     
     // Add new zombies to the array
     gameStateRef.current.zombies.push(...newZombies);
-    console.log(`Total zombies now: ${gameStateRef.current.zombies.length}`);
+    
+    if (gameStateRef.current.debug) {
+      console.log(`Total zombies now: ${gameStateRef.current.zombies.length}`);
+    }
     
     return gameStateRef.current.zombies;
   };
@@ -138,6 +153,10 @@ export const useGameState = () => {
   
   // Start or restart game
   const resetGame = () => {
+    if (gameStateRef.current.debug) {
+      console.log("Resetting game state");
+    }
+    
     setScore(0);
     setLives(4);
     setGameStartTime(Date.now());
@@ -148,7 +167,12 @@ export const useGameState = () => {
     gameStateRef.current.zombiesKilled = 0;
     gameStateRef.current.currentWaveSize = 1;
     
+    // Set game state to playing
     setGameState('playing');
+    
+    if (gameStateRef.current.debug) {
+      console.log("Game state reset, now playing");
+    }
   };
   
   return {
