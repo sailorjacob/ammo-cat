@@ -72,7 +72,7 @@ export default function GamePage() {
     
     // Load images
     const playerImage = new (window.Image as any)() as HTMLImageElement;
-    playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
+    playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png";
     
     const zombieImage = new (window.Image as any)() as HTMLImageElement;
     zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
@@ -697,7 +697,7 @@ export default function GamePage() {
           {Array.from({ length: lives }).map((_, index) => (
             <div key={index} className="inline-block" style={{ width: '32px', height: '32px', marginRight: '8px', display: 'inline-block' }}>
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png"
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
                 alt="Life"
                 width={32}
                 height={32}
