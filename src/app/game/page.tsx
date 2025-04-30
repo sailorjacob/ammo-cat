@@ -90,6 +90,12 @@ export default function GamePage() {
     const BOUNDARY_TOP = 0;
     const BOUNDARY_BOTTOM = GAME_HEIGHT;
     
+    // Touch state for mobile controls
+    let isDragging = false;
+    let lastTapTime = 0;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+    
     // Access player and zombies
     const player = playerRef.current;
     const { zombies, enemyFireballs } = gameStateRef.current;
@@ -212,6 +218,85 @@ export default function GamePage() {
     const handleMouseUp = () => {
       if (gameState !== 'playing') return;
       player.isShooting = false;
+    };
+    
+    // Touch handlers for mobile controls
+    const handleTouchStart = (e: TouchEvent) => {
+      if (gameState !== 'playing' || !e.touches[0]) return;
+      
+      // Get the touch position relative to the canvas
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
+      
+      // Check if the touch is on the player (or close to it)
+      const isOnPlayer = Math.abs(touchX - (player.x + player.width/2)) < player.width &&
+                         Math.abs(touchY - (player.y + player.height/2)) < player.height;
+      
+      if (isOnPlayer) {
+        // Start dragging
+        isDragging = true;
+        lastTouchX = touchX;
+        lastTouchY = touchY;
+      } else {
+        // Check for double tap to shoot
+        const now = Date.now();
+        if (now - lastTapTime < 300) {
+          // Double tap detected, shoot
+          player.fireballs.push({
+            x: player.x + player.width,
+            y: player.y + player.height / 2,
+            curve: (Math.random() - 0.5) * 2,
+            speed: FIREBALL_SPEED
+          });
+        } else {
+          // Single tap - also shoot for better responsiveness
+          player.fireballs.push({
+            x: player.x + player.width,
+            y: player.y + player.height / 2,
+            curve: (Math.random() - 0.5) * 2,
+            speed: FIREBALL_SPEED
+          });
+        }
+        lastTapTime = now;
+      }
+      
+      // Prevent default to avoid scrolling the page
+      e.preventDefault();
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (gameState !== 'playing' || !isDragging || !e.touches[0]) return;
+      
+      // Get the touch position relative to the canvas
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
+      
+      // Calculate the delta movement
+      const deltaX = touchX - lastTouchX;
+      const deltaY = touchY - lastTouchY;
+      
+      // Update player position
+      player.x = Math.max(BOUNDARY_LEFT, Math.min(BOUNDARY_RIGHT - player.width, player.x + deltaX));
+      player.y = Math.max(BOUNDARY_TOP, Math.min(BOUNDARY_BOTTOM - player.height, player.y + deltaY));
+      
+      // Update last touch position
+      lastTouchX = touchX;
+      lastTouchY = touchY;
+      
+      // Prevent default to avoid scrolling the page
+      e.preventDefault();
+    };
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (gameState !== 'playing') return;
+      isDragging = false;
+      
+      // Prevent default
+      e.preventDefault();
     };
     
     // Update player position
@@ -459,6 +544,9 @@ export default function GamePage() {
     window.addEventListener('keyup', handleKeyUp);
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('touchstart', handleTouchStart as EventListener);
+    canvas.addEventListener('touchmove', handleTouchMove as EventListener);
+    canvas.addEventListener('touchend', handleTouchEnd as EventListener);
     
     // Start game loop when image is loaded or after a timeout
     playerImage.onload = () => {
@@ -481,6 +569,9 @@ export default function GamePage() {
       window.removeEventListener('keyup', handleKeyUp);
       canvas.removeEventListener('mousedown', handleMouseDown);
       canvas.removeEventListener('mouseup', handleMouseUp);
+      canvas.removeEventListener('touchstart', handleTouchStart as EventListener);
+      canvas.removeEventListener('touchmove', handleTouchMove as EventListener);
+      canvas.removeEventListener('touchend', handleTouchEnd as EventListener);
     };
   }, [gameState, score]);
   
@@ -497,7 +588,15 @@ export default function GamePage() {
       playerRef.current.isMovingLeft = false;
       playerRef.current.isMovingRight = false;
       playerRef.current.isShooting = false;
+      
+      // Reset player position
+      playerRef.current.x = 200;
+      playerRef.current.y = 250;
     }
+    
+    // Clear zombies and enemy fireballs when countdown starts
+    gameStateRef.current.zombies = [];
+    gameStateRef.current.enemyFireballs = [];
     
     const countdownInterval = setInterval(() => {
       setCountdown(prev => {
@@ -583,15 +682,16 @@ export default function GamePage() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="mb-4 flex items-center justify-between w-full max-w-[800px]">
-        <div className="flex flex-row">
+        <div className="flex flex-row items-center">
           {Array.from({ length: lives }).map((_, index) => (
-            <div key={index} className="w-8 h-8 relative mr-2 inline-block">
+            <div key={index} className="w-8 h-8 relative inline-block mr-2">
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png"
                 alt="Life"
                 width={32}
                 height={32}
                 unoptimized={true}
+                className="inline-block"
               />
             </div>
           ))}
@@ -619,7 +719,7 @@ export default function GamePage() {
               Use WASD or arrow keys to move. Spacebar to shoot.
               <br /><br />
               <span className="block font-bold mb-2">Mobile Controls:</span>
-              Click to shoot. Move with keyboard.
+              Drag the cat to move. Tap anywhere else to shoot.
               <br /><br />
               Survive as long as possible and defeat the zombie cats!
             </p>
