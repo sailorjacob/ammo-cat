@@ -680,16 +680,16 @@ export default function GamePage() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="mb-4 flex items-center justify-between w-full max-w-[800px]">
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center" style={{ display: 'flex', flexDirection: 'row' }}>
           {Array.from({ length: lives }).map((_, index) => (
-            <div key={index} className="w-8 h-8 relative inline-block mr-2">
+            <div key={index} className="inline-block" style={{ width: '32px', height: '32px', marginRight: '8px', display: 'inline-block' }}>
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png"
                 alt="Life"
                 width={32}
                 height={32}
                 unoptimized={true}
-                className="inline-block"
+                style={{ display: 'inline-block' }}
               />
             </div>
           ))}
