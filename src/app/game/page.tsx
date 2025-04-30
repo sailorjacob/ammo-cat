@@ -166,6 +166,7 @@ export default function GamePage() {
         }
 
         // Check for collision with zombies
+        let hitZombie = false;
         for (let j = zombies.length - 1; j >= 0; j--) {
           const zombie = zombies[j];
           if (
@@ -178,6 +179,7 @@ export default function GamePage() {
             player.fireballs.splice(i, 1);
             zombies.splice(j, 1);
             zombiesKilled++;
+            hitZombie = true;
             
             // Update score and multiplier
             const now = Date.now();
@@ -194,11 +196,16 @@ export default function GamePage() {
             
             // If all zombies are killed, spawn more
             if (zombies.length === 0) {
+              console.log(`Wave cleared! Doubling zombies from ${currentWaveSize} to ${currentWaveSize * 2}`);
               currentWaveSize *= 2;
               spawnZombies(currentWaveSize);
             }
             break;
           }
+        }
+        
+        if (hitZombie) {
+          continue; // Skip to next fireball since this one has been removed
         }
       }
 
@@ -209,6 +216,32 @@ export default function GamePage() {
                                 player.x + player.width / 2 - (zombie.x + zombie.width / 2));
         zombie.x += Math.cos(angle) * zombie.speed;
         zombie.y += Math.sin(angle) * zombie.speed;
+
+        // Check for direct collision with player
+        if (
+          player.x < zombie.x + zombie.width &&
+          player.x + player.width > zombie.x &&
+          player.y < zombie.y + zombie.height &&
+          player.y + player.height > zombie.y
+        ) {
+          // Player collided with zombie
+          setLives(prevLives => {
+            const newLives = prevLives - 1;
+            if (newLives <= 0) {
+              setFinalScore(score);
+              setGameState('gameover');
+            } else {
+              setGameState('countdown');
+              setCountdown(3);
+            }
+            return newLives;
+          });
+          // Remove the zombie that collided
+          zombies.splice(zombies.indexOf(zombie), 1);
+          
+          // Don't immediately move the player back to start - this will happen after countdown
+          return;
+        }
 
         // Rotate and draw zombie
         ctx.save();
@@ -369,29 +402,31 @@ export default function GamePage() {
       }
     };
 
-    // Handle touch input
+    // Handle touch input - improved for mobile
     const handleTouchStart = (e: TouchEvent) => {
       if (gameState !== 'playing') return;
       
       const touch = e.touches[0];
       const rect = canvas.getBoundingClientRect();
-      const x = touch.clientX - rect.left;
-      const y = touch.clientY - rect.top;
+      const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
       
-      // Determine if user is trying to move or shoot
-      if (x < GAME_WIDTH / 2) {
-        // Movement
-        const isTop = y < GAME_HEIGHT / 2;
-        const isLeft = x < GAME_WIDTH / 4;
-        
-        if (isTop) player.isMovingUp = true;
-        else player.isMovingDown = true;
-        
-        if (isLeft) player.isMovingLeft = true;
-        else player.isMovingRight = true;
+      // Check if the player was touched (to start drag)
+      const touchedPlayer = 
+        touchX >= player.x && 
+        touchX <= player.x + player.width && 
+        touchY >= player.y && 
+        touchY <= player.y + player.height;
+      
+      if (touchedPlayer) {
+        // Starting a drag operation
+        canvas.setAttribute('data-dragging', 'true');
+        canvas.setAttribute('data-drag-start-x', touchX.toString());
+        canvas.setAttribute('data-drag-start-y', touchY.toString());
+        canvas.setAttribute('data-player-start-x', player.x.toString());
+        canvas.setAttribute('data-player-start-y', player.y.toString());
       } else {
-        // Shooting
-        player.isShooting = true;
+        // If not dragging, any touch is a shot
         player.fireballs.push({
           x: player.x + player.width,
           y: player.y + player.height / 2,
@@ -400,13 +435,36 @@ export default function GamePage() {
       }
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (gameState !== 'playing') return;
+      
+      // Only process if we're dragging the player
+      if (canvas.getAttribute('data-dragging') === 'true') {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const touchX = touch.clientX - rect.left;
+        const touchY = touch.clientY - rect.top;
+        
+        // Get the starting position
+        const dragStartX = parseFloat(canvas.getAttribute('data-drag-start-x') || '0');
+        const dragStartY = parseFloat(canvas.getAttribute('data-drag-start-y') || '0');
+        const playerStartX = parseFloat(canvas.getAttribute('data-player-start-x') || '0');
+        const playerStartY = parseFloat(canvas.getAttribute('data-player-start-y') || '0');
+        
+        // Calculate the new position based on drag distance
+        const dx = touchX - dragStartX;
+        const dy = touchY - dragStartY;
+        
+        // Update player position with boundary checks
+        player.x = Math.max(BOUNDARY_LEFT, Math.min(BOUNDARY_RIGHT - player.width, playerStartX + dx));
+        player.y = Math.max(BOUNDARY_TOP, Math.min(BOUNDARY_BOTTOM - player.height, playerStartY + dy));
+      }
+    };
+
     const handleTouchEnd = () => {
       if (gameState !== 'playing') return;
-      player.isMovingUp = false;
-      player.isMovingDown = false;
-      player.isMovingLeft = false;
-      player.isMovingRight = false;
-      player.isShooting = false;
+      // Reset dragging state
+      canvas.setAttribute('data-dragging', 'false');
     };
 
     // Handle mouse input for shooting
@@ -449,6 +507,7 @@ export default function GamePage() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
     canvas.addEventListener('touchend', handleTouchEnd);
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mouseup', handleMouseUp);
@@ -475,11 +534,44 @@ export default function GamePage() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
       canvas.removeEventListener('touchend', handleTouchEnd);
       canvas.removeEventListener('mousedown', handleMouseDown);
       canvas.removeEventListener('mouseup', handleMouseUp);
     };
   }, [gameState, assetsLoaded, score]);
+
+  // When the game restarts or starts from countdown, reset player position properly
+  useEffect(() => {
+    if (gameState === 'playing') {
+      // This will ensure the player starts at the right place after countdown
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      
+      const GAME_WIDTH = 800;
+      const GAME_HEIGHT = 600;
+      const PLAYER_SIZE = 64;
+      
+      // Force redraw of player in correct position on first frame
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const playerImage = new window.Image() as HTMLImageElement;
+        playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
+        playerImage.crossOrigin = "anonymous";
+        
+        const x = GAME_WIDTH / 4 - PLAYER_SIZE / 2;
+        const y = GAME_HEIGHT / 2 - PLAYER_SIZE / 2;
+        
+        try {
+          ctx.drawImage(playerImage, x, y, PLAYER_SIZE, PLAYER_SIZE);
+        } catch (e) {
+          // Fallback
+          ctx.fillStyle = '#FF0000';
+          ctx.fillRect(x, y, PLAYER_SIZE, PLAYER_SIZE);
+        }
+      }
+    }
+  }, [gameState]);
 
   const startGame = () => {
     setScore(0);
@@ -509,6 +601,23 @@ export default function GamePage() {
     link.click();
   };
 
+  // Add this to prevent default touch events that might interfere with the game
+  useEffect(() => {
+    const preventDefaultTouchAction = (e: TouchEvent) => {
+      if (e.target === canvasRef.current) {
+        e.preventDefault();
+      }
+    };
+    
+    document.addEventListener('touchstart', preventDefaultTouchAction, { passive: false });
+    document.addEventListener('touchmove', preventDefaultTouchAction, { passive: false });
+    
+    return () => {
+      document.removeEventListener('touchstart', preventDefaultTouchAction);
+      document.removeEventListener('touchmove', preventDefaultTouchAction);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="mb-4 flex items-center justify-between w-full max-w-[800px]">
@@ -533,15 +642,25 @@ export default function GamePage() {
           ref={canvasRef}
           width={800}
           height={600}
-          className="border border-gray-300 bg-white"
+          className="border border-gray-300 bg-white touch-none select-none"
+          style={{ touchAction: 'none' }}
+          data-dragging="false"
+          data-drag-start-x="0"
+          data-drag-start-y="0"
+          data-player-start-x="0"
+          data-player-start-y="0"
         />
         
         {gameState === 'ready' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white">
             <h1 className="text-4xl mb-6">AMMO CAT</h1>
             <p className="mb-8 text-center max-w-md">
+              <span className="block mb-3 font-bold">Desktop Controls:</span>
               Use WASD or arrow keys to move. Click or spacebar to shoot.
-              <br />
+              <br /><br />
+              <span className="block mb-3 font-bold">Mobile Controls:</span>
+              Drag the cat to move. Tap anywhere to shoot.
+              <br /><br />
               Survive as long as possible and defeat the zombie cats!
             </p>
             <button
