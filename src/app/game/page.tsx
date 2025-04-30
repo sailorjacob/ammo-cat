@@ -30,16 +30,25 @@ export default function GamePage() {
   // Game assets preloading
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   
+  // Debug logging for game state
+  useEffect(() => {
+    console.log("Game state changed:", gameState);
+    console.log("Player ref:", playerRef.current);
+  }, [gameState, playerRef.current]);
+  
   // Initialize player position
   useEffect(() => {
     const GAME_WIDTH = 800;
     const GAME_HEIGHT = 600;
     
+    console.log("Initializing player");
     initializePlayer(GAME_WIDTH, GAME_HEIGHT);
   }, [initializePlayer]);
   
   useEffect(() => {
     // Preload images
+    console.log("Preloading images...");
+    
     const playerImg = new window.Image() as HTMLImageElement;
     playerImg.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
     playerImg.crossOrigin = "anonymous";
@@ -48,15 +57,25 @@ export default function GamePage() {
     zombieImg.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
     zombieImg.crossOrigin = "anonymous";
     
+    // Log when images are loaded
+    playerImg.onload = () => console.log("Player image loaded");
+    zombieImg.onload = () => console.log("Zombie image loaded");
+    
     Promise.all([
-      new Promise<void>(resolve => { playerImg.onload = () => resolve(); }),
-      new Promise<void>(resolve => { zombieImg.onload = () => resolve(); })
+      new Promise<void>(resolve => { playerImg.onload = () => { console.log("Player image loaded"); resolve(); }; }),
+      new Promise<void>(resolve => { zombieImg.onload = () => { console.log("Zombie image loaded"); resolve(); }; })
     ]).then(() => {
+      console.log("All images loaded");
+      setAssetsLoaded(true);
+    }).catch(err => {
+      console.error("Error loading images:", err);
+      // Set loaded anyway to allow game to continue
       setAssetsLoaded(true);
     });
     
     // If images take too long, set assetsLoaded anyway after a timeout
     const timeout = setTimeout(() => {
+      console.log("Image load timeout - setting loaded anyway");
       setAssetsLoaded(true);
     }, 3000);
     
@@ -64,13 +83,23 @@ export default function GamePage() {
   }, []);
 
   useEffect(() => {
-    if (!assetsLoaded || gameState === 'ready' || gameState === 'gameover') return;
+    if (!assetsLoaded || gameState === 'ready' || gameState === 'gameover') {
+      console.log("Game not ready yet - assets loaded:", assetsLoaded, "game state:", gameState);
+      return;
+    }
 
+    console.log("Starting game loop - game state:", gameState);
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      console.error("Canvas ref is null");
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      console.error("Could not get canvas context");
+      return;
+    }
 
     // Game constants
     const GAME_WIDTH = 800;
@@ -98,13 +127,23 @@ export default function GamePage() {
 
     // Use the ref for player state
     let player = playerRef.current;
-    if (!player) return;
+    if (!player) {
+      console.error("Player ref is null, initializing player");
+      player = initializePlayer(GAME_WIDTH, GAME_HEIGHT);
+      if (!player) {
+        console.error("Failed to initialize player");
+        return;
+      }
+    }
+
+    console.log("Player position:", player.x, player.y);
 
     // Accessing zombie data from the ref
     const { zombies, enemyFireballs, currentWaveSize } = gameStateRef.current;
     
     // Initial spawn if needed
     if (gameState === 'playing' && zombies.length === 0) {
+      console.log("Spawning initial zombies, wave size:", gameStateRef.current.currentWaveSize);
       spawnZombies(gameStateRef.current.currentWaveSize, GAME_WIDTH, GAME_HEIGHT, ZOMBIE_SIZE, ZOMBIE_SPEED);
     }
     
@@ -226,10 +265,12 @@ export default function GamePage() {
       updatePlayerPosition();
       keepPlayerInBounds();
 
-      // Draw player
+      // Draw player with debug info
       try {
+        console.log("Drawing player at:", player.x, player.y);
         ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
       } catch (e) {
+        console.error("Error drawing player:", e);
         // Fallback if image fails to load
         ctx.fillStyle = '#FF0000';
         ctx.fillRect(player.x, player.y, player.width, player.height);
@@ -385,8 +426,10 @@ export default function GamePage() {
       // Update and draw enemy fireballs
       for (let i = enemyFireballs.length - 1; i >= 0; i--) {
         const fireball = enemyFireballs[i];
-        fireball.x += Math.cos(fireball.angle) * fireball.speed;
-        fireball.y += Math.sin(fireball.angle) * fireball.speed;
+        // Use default angle of 0 if angle is undefined
+        const angle = fireball.angle || 0;
+        fireball.x += Math.cos(angle) * fireball.speed;
+        fireball.y += Math.sin(angle) * fireball.speed;
 
         // Draw enemy fireball
         ctx.fillStyle = '#FF5500';
@@ -630,7 +673,16 @@ export default function GamePage() {
   }, [gameState]);
 
   const startGame = () => {
+    console.log("Starting game...");
+    
+    // Make sure assets are loaded
+    setAssetsLoaded(true);
+    
+    // Reset game state
     resetGame();
+    
+    console.log("Game started, state:", gameState);
+    console.log("Player initialized:", playerRef.current);
   };
 
   const restartGame = () => {
