@@ -55,10 +55,10 @@ export default function GamePage() {
     }
     
     // Load images
-    const playerImage = new Image();
+    const playerImage = new (window.Image as any)() as HTMLImageElement;
     playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
     
-    const zombieImage = new Image();
+    const zombieImage = new (window.Image as any)() as HTMLImageElement;
     zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
     
     // Game constants
