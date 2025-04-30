@@ -230,9 +230,10 @@ export default function GamePage() {
       const touchX = touch.clientX - rect.left;
       const touchY = touch.clientY - rect.top;
       
-      // Check if the touch is on the player (or close to it)
-      const isOnPlayer = Math.abs(touchX - (player.x + player.width/2)) < player.width &&
-                         Math.abs(touchY - (player.y + player.height/2)) < player.height;
+      // Simplified approach: If touch is close to player, start dragging
+      // Make the touch target area larger for easier dragging
+      const isOnPlayer = Math.abs(touchX - (player.x + player.width/2)) < player.width*1.5 &&
+                         Math.abs(touchY - (player.y + player.height/2)) < player.height*1.5;
       
       if (isOnPlayer) {
         // Start dragging
@@ -240,26 +241,14 @@ export default function GamePage() {
         lastTouchX = touchX;
         lastTouchY = touchY;
       } else {
-        // Check for double tap to shoot
-        const now = Date.now();
-        if (now - lastTapTime < 300) {
-          // Double tap detected, shoot
-          player.fireballs.push({
-            x: player.x + player.width,
-            y: player.y + player.height / 2,
-            curve: (Math.random() - 0.5) * 2,
-            speed: FIREBALL_SPEED
-          });
-        } else {
-          // Single tap - also shoot for better responsiveness
-          player.fireballs.push({
-            x: player.x + player.width,
-            y: player.y + player.height / 2,
-            curve: (Math.random() - 0.5) * 2,
-            speed: FIREBALL_SPEED
-          });
-        }
-        lastTapTime = now;
+        // Shoot when tapping outside player area
+        player.fireballs.push({
+          x: player.x + player.width,
+          y: player.y + player.height / 2,
+          curve: (Math.random() - 0.5) * 2,
+          speed: FIREBALL_SPEED
+        });
+        lastTapTime = Date.now();
       }
       
       // Prevent default to avoid scrolling the page
@@ -267,25 +256,34 @@ export default function GamePage() {
     };
     
     const handleTouchMove = (e: TouchEvent) => {
-      if (gameState !== 'playing' || !isDragging || !e.touches[0]) return;
+      if (gameState !== 'playing' || !e.touches[0]) return;
       
-      // Get the touch position relative to the canvas
+      // If dragging started or we're near the player, enable drag
       const touch = e.touches[0];
       const rect = canvas.getBoundingClientRect();
       const touchX = touch.clientX - rect.left;
       const touchY = touch.clientY - rect.top;
       
-      // Calculate the delta movement
-      const deltaX = touchX - lastTouchX;
-      const deltaY = touchY - lastTouchY;
+      // More lenient check to start dragging during movement
+      if (!isDragging) {
+        const isNearPlayer = Math.abs(touchX - (player.x + player.width/2)) < player.width*2 &&
+                            Math.abs(touchY - (player.y + player.height/2)) < player.height*2;
+        if (isNearPlayer) {
+          isDragging = true;
+          lastTouchX = touchX;
+          lastTouchY = touchY;
+        }
+      }
       
-      // Update player position
-      player.x = Math.max(BOUNDARY_LEFT, Math.min(BOUNDARY_RIGHT - player.width, player.x + deltaX));
-      player.y = Math.max(BOUNDARY_TOP, Math.min(BOUNDARY_BOTTOM - player.height, player.y + deltaY));
-      
-      // Update last touch position
-      lastTouchX = touchX;
-      lastTouchY = touchY;
+      // If we're dragging, move the player
+      if (isDragging) {
+        // Move player directly to touch position rather than using deltas
+        // This feels more natural on mobile
+        player.x = Math.max(BOUNDARY_LEFT, Math.min(BOUNDARY_RIGHT - player.width, 
+                touchX - player.width/2));
+        player.y = Math.max(BOUNDARY_TOP, Math.min(BOUNDARY_BOTTOM - player.height, 
+                touchY - player.height/2));
+      }
       
       // Prevent default to avoid scrolling the page
       e.preventDefault();
