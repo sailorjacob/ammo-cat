@@ -15,6 +15,9 @@ export default function GamePage() {
   // Game assets preloading
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   
+  // Add debugging state to track image loading
+  const [debugInfo, setDebugInfo] = useState<string>('Starting...');
+  
   useEffect(() => {
     // Preload images
     const playerImg = new window.Image() as HTMLImageElement;
@@ -132,20 +135,29 @@ export default function GamePage() {
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
+      // Add debug text
+      ctx.fillStyle = '#000000';
+      ctx.font = '14px Arial';
+      ctx.fillText(`Player: (${Math.floor(player.x)}, ${Math.floor(player.y)})`, 10, 20);
+      ctx.fillText(`Zombies: ${zombies.length}`, 10, 40);
+      ctx.fillText(`Fireballs: ${player.fireballs.length}`, 10, 60);
+      
+      // Draw player - first draw a fallback rectangle
+      ctx.fillStyle = '#FF0000';
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+      
+      // Then try to draw the image
+      try {
+        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+      } catch (e) {
+        console.error('Failed to draw player image:', e);
+      }
+
       // Update player position
       if (player.isMovingUp) player.y = Math.max(BOUNDARY_TOP, player.y - player.speed);
       if (player.isMovingDown) player.y = Math.min(BOUNDARY_BOTTOM - player.height, player.y + player.speed);
       if (player.isMovingLeft) player.x = Math.max(BOUNDARY_LEFT, player.x - player.speed);
       if (player.isMovingRight) player.x = Math.min(BOUNDARY_RIGHT - player.width, player.x + player.speed);
-
-      // Draw player
-      try {
-        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
-      } catch (e) {
-        // Fallback if image fails to load
-        ctx.fillStyle = '#FF0000';
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-      }
 
       // Update and draw player fireballs
       for (let i = player.fireballs.length - 1; i >= 0; i--) {
@@ -573,15 +585,57 @@ export default function GamePage() {
     }
   }, [gameState]);
 
+  // Immediate render on game start
+  useEffect(() => {
+    if (gameState === 'playing') {
+      setDebugInfo('Game started. If characters are not visible, they will appear as colored rectangles.');
+      
+      // Immediately draw the player character with a fallback method
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        setDebugInfo('Error: Canvas not found');
+        return;
+      }
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        setDebugInfo('Error: Canvas context not found');
+        return;
+      }
+      
+      // Clear canvas and draw player
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, 800, 600);
+      
+      // Get initial player position
+      const x = 800 / 4 - 64 / 2;
+      const y = 600 / 2 - 64 / 2;
+      
+      // Always draw fallback rectangle to ensure player is visible
+      ctx.fillStyle = '#FF0000';
+      ctx.fillRect(x, y, 64, 64);
+      
+      // Start game animation immediately
+      setAssetsLoaded(true);
+      
+      // Draw fallback zombie for testing
+      const zombieX = 800 - 128;
+      const zombieY = 600 / 2 - 64 / 2;
+      ctx.fillStyle = '#00FF00';
+      ctx.fillRect(zombieX, zombieY, 64, 64);
+    }
+  }, [gameState]);
+
+  // Modify the startGame function to use alternative approach
   const startGame = () => {
+    setDebugInfo('Starting game...');
     setScore(0);
     setLives(4);
-    setGameState('playing');
-    // Force a re-render to make sure the game loop starts properly
-    setTimeout(() => {
-      const event = new Event('resize');
-      window.dispatchEvent(event);
-    }, 100);
+    
+    // Use requestAnimationFrame to ensure state has updated before continuing
+    requestAnimationFrame(() => {
+      setGameState('playing');
+    });
   };
 
   const restartGame = () => {
@@ -636,6 +690,13 @@ export default function GamePage() {
         </div>
         <div className="text-2xl font-bold">Score: {score}</div>
       </div>
+
+      {/* Debug info - only visible during development */}
+      {process.env.NODE_ENV === 'development' && gameState === 'playing' && (
+        <div className="mb-2 w-full max-w-[800px] p-2 bg-gray-100 text-xs overflow-auto max-h-20">
+          <p>Debug: {debugInfo}</p>
+        </div>
+      )}
 
       <div className="relative">
         <canvas
