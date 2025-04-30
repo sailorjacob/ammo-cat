@@ -19,9 +19,11 @@ export default function GamePage() {
     // Preload images
     const playerImg = new window.Image() as HTMLImageElement;
     playerImg.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
+    playerImg.crossOrigin = "anonymous";
     
     const zombieImg = new window.Image() as HTMLImageElement;
     zombieImg.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
+    zombieImg.crossOrigin = "anonymous";
     
     Promise.all([
       new Promise<void>(resolve => { playerImg.onload = () => resolve(); }),
@@ -29,6 +31,13 @@ export default function GamePage() {
     ]).then(() => {
       setAssetsLoaded(true);
     });
+    
+    // If images take too long, set assetsLoaded anyway after a timeout
+    const timeout = setTimeout(() => {
+      setAssetsLoaded(true);
+    }, 3000);
+    
+    return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
@@ -83,12 +92,15 @@ export default function GamePage() {
     // Load images
     const playerImage = new window.Image() as HTMLImageElement;
     playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
+    playerImage.crossOrigin = "anonymous";
 
     const zombieImage = new window.Image() as HTMLImageElement;
     zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
+    zombieImage.crossOrigin = "anonymous";
 
     // Spawn initial zombies
     const spawnZombies = (count: number) => {
+      console.log(`Spawning ${count} zombies`);
       for (let i = 0; i < count; i++) {
         zombies.push({
           x: GAME_WIDTH - ZOMBIE_SIZE - Math.random() * 100,
@@ -127,7 +139,13 @@ export default function GamePage() {
       if (player.isMovingRight) player.x = Math.min(BOUNDARY_RIGHT - player.width, player.x + player.speed);
 
       // Draw player
-      ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+      try {
+        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+      } catch (e) {
+        // Fallback if image fails to load
+        ctx.fillStyle = '#FF0000';
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+      }
 
       // Update and draw player fireballs
       for (let i = player.fireballs.length - 1; i >= 0; i--) {
@@ -196,7 +214,13 @@ export default function GamePage() {
         ctx.save();
         ctx.translate(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2);
         ctx.rotate(angle);
-        ctx.drawImage(zombieImage, -zombie.width / 2, -zombie.height / 2, zombie.width, zombie.height);
+        try {
+          ctx.drawImage(zombieImage, -zombie.width / 2, -zombie.height / 2, zombie.width, zombie.height);
+        } catch (e) {
+          // Fallback if image fails to load
+          ctx.fillStyle = '#00FF00';
+          ctx.fillRect(-zombie.width / 2, -zombie.height / 2, zombie.width, zombie.height);
+        }
         ctx.restore();
 
         // Zombie shoots fireballs
@@ -389,16 +413,30 @@ export default function GamePage() {
     const handleMouseDown = (e: MouseEvent) => {
       if (gameState !== 'playing') return;
       
+      // Allow shooting from anywhere on screen, not just right half
+      player.isShooting = true;
+      player.fireballs.push({
+        x: player.x + player.width,
+        y: player.y + player.height / 2,
+        curve: (Math.random() - 0.5) * 2 // Random curve for fireballs
+      });
+      
+      // Also handle movement based on mouse position
       const rect = canvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       
-      if (x >= GAME_WIDTH / 2) {
-        player.isShooting = true;
-        player.fireballs.push({
-          x: player.x + player.width,
-          y: player.y + player.height / 2,
-          curve: (Math.random() - 0.5) * 2 // Random curve for fireballs
-        });
+      // Left half of screen controls movement
+      if (x < GAME_WIDTH / 2) {
+        // Movement
+        const isTop = y < GAME_HEIGHT / 2;
+        const isLeft = x < GAME_WIDTH / 4;
+        
+        if (isTop) player.isMovingUp = true;
+        else player.isMovingDown = true;
+        
+        if (isLeft) player.isMovingLeft = true;
+        else player.isMovingRight = true;
       }
     };
 
@@ -447,6 +485,11 @@ export default function GamePage() {
     setScore(0);
     setLives(4);
     setGameState('playing');
+    // Force a re-render to make sure the game loop starts properly
+    setTimeout(() => {
+      const event = new Event('resize');
+      window.dispatchEvent(event);
+    }, 100);
   };
 
   const restartGame = () => {
@@ -469,14 +512,15 @@ export default function GamePage() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="mb-4 flex items-center justify-between w-full max-w-[800px]">
-        <div className="flex">
+        <div className="flex flex-row">
           {Array.from({ length: lives }).map((_, index) => (
-            <div key={index} className="w-8 h-8 relative mr-2">
+            <div key={index} className="w-8 h-8 relative mr-2 inline-block">
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png"
                 alt="Life"
                 width={32}
                 height={32}
+                unoptimized={true}
               />
             </div>
           ))}
