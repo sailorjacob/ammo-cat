@@ -3,17 +3,40 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGameState } from './useGameState';
 
 export default function GamePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [gameState, setGameState] = useState<'ready' | 'playing' | 'countdown' | 'gameover'>('ready');
-  const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(4);
-  const [countdown, setCountdown] = useState(3);
-  const [finalScore, setFinalScore] = useState(0);
+  const {
+    score,
+    setScore,
+    lives,
+    gameState,
+    setGameState,
+    countdown,
+    setCountdown,
+    finalScore,
+    setFinalScore,
+    hitEffect,
+    gameStartTime,
+    playerRef,
+    gameStateRef,
+    initializePlayer,
+    spawnZombies,
+    playerHit,
+    resetGame
+  } = useGameState();
   
   // Game assets preloading
   const [assetsLoaded, setAssetsLoaded] = useState(false);
+  
+  // Initialize player position
+  useEffect(() => {
+    const GAME_WIDTH = 800;
+    const GAME_HEIGHT = 600;
+    
+    initializePlayer(GAME_WIDTH, GAME_HEIGHT);
+  }, [initializePlayer]);
   
   useEffect(() => {
     // Preload images
@@ -64,61 +87,27 @@ export default function GamePage() {
     const BOUNDARY_TOP = 0;
     const BOUNDARY_BOTTOM = GAME_HEIGHT;
 
-    // Game state
-    let player = {
-      x: GAME_WIDTH / 4 - PLAYER_SIZE / 2,
-      y: GAME_HEIGHT / 2 - PLAYER_SIZE / 2,
-      width: PLAYER_SIZE,
-      height: PLAYER_SIZE,
-      speed: PLAYER_SPEED,
-      fireballs: [] as any[],
-      isMovingUp: false,
-      isMovingDown: false,
-      isMovingLeft: false,
-      isMovingRight: false,
-      isShooting: false
-    };
-
-    let zombies: any[] = [];
-    let enemyFireballs: any[] = [];
-    let zombiesKilled = 0;
-    let currentWaveSize = 1;
-    let gameStartTime = Date.now();
-    let lastZombieSpawnTime = 0;
-    let scoreMultiplier = 1;
-    let consecutiveHits = 0;
-    let lastHitTime = 0;
-
-    // Load images
+    // Load game images
     const playerImage = new window.Image() as HTMLImageElement;
     playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
     playerImage.crossOrigin = "anonymous";
-
+    
     const zombieImage = new window.Image() as HTMLImageElement;
     zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
     zombieImage.crossOrigin = "anonymous";
 
-    // Spawn initial zombies
-    const spawnZombies = (count: number) => {
-      console.log(`Spawning ${count} zombies`);
-      for (let i = 0; i < count; i++) {
-        zombies.push({
-          x: GAME_WIDTH - ZOMBIE_SIZE - Math.random() * 100,
-          y: Math.random() * (GAME_HEIGHT - ZOMBIE_SIZE),
-          width: ZOMBIE_SIZE,
-          height: ZOMBIE_SIZE,
-          speed: ZOMBIE_SPEED * (0.8 + Math.random() * 0.4),
-          lastFireTime: Date.now(),
-          fireRate: 2000 + Math.random() * 3000 // Random fire rate between 2-5 seconds
-        });
-      }
-    };
+    // Use the ref for player state
+    let player = playerRef.current;
+    if (!player) return;
 
-    // Initial spawn
+    // Accessing zombie data from the ref
+    const { zombies, enemyFireballs, currentWaveSize } = gameStateRef.current;
+    
+    // Initial spawn if needed
     if (gameState === 'playing' && zombies.length === 0) {
-      spawnZombies(currentWaveSize);
+      spawnZombies(gameStateRef.current.currentWaveSize, GAME_WIDTH, GAME_HEIGHT, ZOMBIE_SIZE, ZOMBIE_SPEED);
     }
-
+    
     // Game loop
     let animationFrameId: number;
     let lastTime = 0;
@@ -174,7 +163,8 @@ export default function GamePage() {
         player.fireballs.push({
           x: player.x + player.width,
           y: player.y + player.height / 2,
-          curve: (Math.random() - 0.5) * 2 // Random curve for fireballs
+          curve: (Math.random() - 0.5) * 2, // Random curve for fireballs
+          speed: 7 // Add the required speed property
         });
       }
       
@@ -217,6 +207,12 @@ export default function GamePage() {
       }
     };
 
+    // Make sure the player stays within boundaries
+    const keepPlayerInBounds = () => {
+      player.x = Math.max(BOUNDARY_LEFT, Math.min(BOUNDARY_RIGHT - player.width, player.x));
+      player.y = Math.max(BOUNDARY_TOP, Math.min(BOUNDARY_BOTTOM - player.height, player.y));
+    };
+
     const gameLoop = (timestamp: number) => {
       // Calculate delta time
       const deltaTime = timestamp - lastTime;
@@ -228,6 +224,7 @@ export default function GamePage() {
 
       // Update player position - use the new function
       updatePlayerPosition();
+      keepPlayerInBounds();
 
       // Draw player
       try {
@@ -242,7 +239,9 @@ export default function GamePage() {
       for (let i = player.fireballs.length - 1; i >= 0; i--) {
         const fireball = player.fireballs[i];
         fireball.x += FIREBALL_SPEED;
-        fireball.y += fireball.curve;
+        
+        // Apply curve if it exists, otherwise default to 0
+        fireball.y += fireball.curve || 0;
 
         // Draw player fireball
         ctx.fillStyle = '#000000';
@@ -257,95 +256,110 @@ export default function GamePage() {
         }
 
         // Check for collision with zombies
-        let hitZombie = false;
-        for (let j = zombies.length - 1; j >= 0; j--) {
+        let hitZombieIndex = -1;
+        
+        for (let j = 0; j < zombies.length; j++) {
           const zombie = zombies[j];
+          // Skip if zombie is somehow undefined (this prevents errors)
+          if (!zombie) continue;
+          
           if (
             fireball.x + FIREBALL_SIZE / 2 > zombie.x &&
             fireball.x - FIREBALL_SIZE / 2 < zombie.x + zombie.width &&
             fireball.y + FIREBALL_SIZE / 2 > zombie.y &&
             fireball.y - FIREBALL_SIZE / 2 < zombie.y + zombie.height
           ) {
-            // Collision detected - remove both fireball and zombie
-            player.fireballs.splice(i, 1);
-            zombies.splice(j, 1);
-            zombiesKilled++;
-            hitZombie = true;
-            
-            // Update score and multiplier
-            const now = Date.now();
-            if (now - lastHitTime < 2000) {
-              consecutiveHits++;
-              scoreMultiplier = Math.min(10, 1 + consecutiveHits * 0.5);
-            } else {
-              consecutiveHits = 1;
-              scoreMultiplier = 1;
-            }
-            lastHitTime = now;
-            
-            setScore(prevScore => Math.floor(prevScore + 100 * scoreMultiplier));
-            
-            // If all zombies are killed, spawn more
-            if (zombies.length === 0) {
-              console.log(`Wave cleared! Doubling zombies from ${currentWaveSize} to ${currentWaveSize * 2}`);
-              currentWaveSize *= 2;
-              spawnZombies(currentWaveSize);
-            }
+            // Found a hit
+            hitZombieIndex = j;
             break;
           }
         }
         
-        if (hitZombie) {
-          continue; // Skip to next fireball since this one has been removed
+        if (hitZombieIndex !== -1) {
+          // Remove the fireball
+          player.fireballs.splice(i, 1);
+          
+          // Remove the zombie
+          if (hitZombieIndex >= 0 && hitZombieIndex < zombies.length) {
+            zombies.splice(hitZombieIndex, 1);
+            gameStateRef.current.zombiesKilled++;
+            
+            // Update score
+            setScore(prevScore => Math.floor(prevScore + 100));
+            
+            // Check if all zombies are gone
+            if (zombies.length === 0) {
+              console.log(`Wave cleared! Doubling zombies from ${gameStateRef.current.currentWaveSize} to ${gameStateRef.current.currentWaveSize * 2}`);
+              
+              // Double the wave size
+              gameStateRef.current.currentWaveSize *= 2;
+              
+              // Spawn new zombies with a slight delay to prevent frame issues
+              setTimeout(() => {
+                spawnZombies(gameStateRef.current.currentWaveSize, GAME_WIDTH, GAME_HEIGHT, ZOMBIE_SIZE, ZOMBIE_SPEED);
+              }, 50);
+            }
+          }
+          
+          continue; // Skip to next fireball
         }
       }
 
-      // Update and draw zombies
-      zombies.forEach(zombie => {
-        // Move zombie towards player
+      // Update and draw zombies with a safer approach
+      const zombiesToRemove: number[] = [];
+      
+      for (let i = 0; i < zombies.length; i++) {
+        const zombie = zombies[i];
+        // Skip if zombie is somehow undefined (this prevents errors)
+        if (!zombie) continue;
+        
+        // Move zombie towards player with safer boundary checking
         const angle = Math.atan2(player.y + player.height / 2 - (zombie.y + zombie.height / 2), 
                                 player.x + player.width / 2 - (zombie.x + zombie.width / 2));
-        zombie.x += Math.cos(angle) * zombie.speed;
-        zombie.y += Math.sin(angle) * zombie.speed;
+        
+        // Calculate new position
+        const newX = zombie.x + Math.cos(angle) * zombie.speed;
+        const newY = zombie.y + Math.sin(angle) * zombie.speed;
+        
+        // Only update position if it's within game boundaries
+        if (newX >= 0 && newX + zombie.width <= GAME_WIDTH) {
+          zombie.x = newX;
+        }
+        
+        if (newY >= 0 && newY + zombie.height <= GAME_HEIGHT) {
+          zombie.y = newY;
+        }
 
         // Check for direct collision with player
         if (
-          player.x < zombie.x + zombie.width &&
-          player.x + player.width > zombie.x &&
-          player.y < zombie.y + zombie.height &&
-          player.y + player.height > zombie.y
+          player.x < zombie.x + zombie.width * 0.7 &&
+          player.x + player.width * 0.7 > zombie.x &&
+          player.y < zombie.y + zombie.height * 0.7 &&
+          player.y + player.height * 0.7 > zombie.y
         ) {
-          // Player collided with zombie
-          setLives(prevLives => {
-            const newLives = prevLives - 1;
-            if (newLives <= 0) {
-              setFinalScore(score);
-              setGameState('gameover');
-            } else {
-              setGameState('countdown');
-              setCountdown(3);
-            }
-            return newLives;
-          });
-          // Remove the zombie that collided
-          zombies.splice(zombies.indexOf(zombie), 1);
+          // Mark zombie for removal instead of removing it during iteration
+          zombiesToRemove.push(i);
           
-          // Don't immediately move the player back to start - this will happen after countdown
-          return;
+          // Player collided with zombie
+          playerHit();
+          continue; // Skip drawing this zombie
         }
 
-        // Rotate and draw zombie
+        // Draw zombie with a safety check
         ctx.save();
-        ctx.translate(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2);
-        ctx.rotate(angle);
         try {
+          // Use default value for angle if undefined
+          const safeAngle = angle || 0;
+          ctx.translate(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2);
+          ctx.rotate(safeAngle);
           ctx.drawImage(zombieImage, -zombie.width / 2, -zombie.height / 2, zombie.width, zombie.height);
         } catch (e) {
-          // Fallback if image fails to load
+          // Fallback if image fails or transform causes issues
           ctx.fillStyle = '#00FF00';
-          ctx.fillRect(-zombie.width / 2, -zombie.height / 2, zombie.width, zombie.height);
+          ctx.fillRect(zombie.x, zombie.y, zombie.width, zombie.height);
+        } finally {
+          ctx.restore();
         }
-        ctx.restore();
 
         // Zombie shoots fireballs
         const now = Date.now();
@@ -358,7 +372,15 @@ export default function GamePage() {
             speed: ENEMY_FIREBALL_SPEED
           });
         }
-      });
+      }
+      
+      // Remove zombies marked for removal (in reverse order to avoid index shifting problems)
+      for (let i = zombiesToRemove.length - 1; i >= 0; i--) {
+        const index = zombiesToRemove[i];
+        if (index >= 0 && index < zombies.length) {
+          zombies.splice(index, 1);
+        }
+      }
 
       // Update and draw enemy fireballs
       for (let i = enemyFireballs.length - 1; i >= 0; i--) {
@@ -367,16 +389,16 @@ export default function GamePage() {
         fireball.y += Math.sin(fireball.angle) * fireball.speed;
 
         // Draw enemy fireball
-        ctx.fillStyle = '#FF4500'; // Orange-red for enemy fireballs
+        ctx.fillStyle = '#FF5500';
         ctx.beginPath();
         ctx.arc(fireball.x, fireball.y, FIREBALL_SIZE / 2, 0, Math.PI * 2);
         ctx.fill();
 
         // Remove fireballs that are off-screen
         if (
-          fireball.x < 0 ||
-          fireball.x > GAME_WIDTH ||
-          fireball.y < 0 ||
+          fireball.x < 0 || 
+          fireball.x > GAME_WIDTH || 
+          fireball.y < 0 || 
           fireball.y > GAME_HEIGHT
         ) {
           enemyFireballs.splice(i, 1);
@@ -390,27 +412,18 @@ export default function GamePage() {
           fireball.y + FIREBALL_SIZE / 2 > player.y &&
           fireball.y - FIREBALL_SIZE / 2 < player.y + player.height
         ) {
-          // Player is hit
+          // Player hit by enemy fireball
           enemyFireballs.splice(i, 1);
-          setLives(prevLives => {
-            const newLives = prevLives - 1;
-            if (newLives <= 0) {
-              setFinalScore(score);
-              setGameState('gameover');
-            } else {
-              setGameState('countdown');
-              setCountdown(3);
-            }
-            return newLives;
-          });
-          break;
+          
+          playerHit();
+          continue;
         }
       }
 
       // Update score based on survival time
       if (gameState === 'playing') {
         const survivalTimeScore = Math.floor((Date.now() - gameStartTime) / 1000);
-        setScore(prevScore => Math.max(prevScore, survivalTimeScore * 10 + zombiesKilled * 100));
+        setScore(prevScore => Math.max(prevScore, survivalTimeScore * 10 + gameStateRef.current.zombiesKilled * 100));
       }
 
       // Continue game loop
@@ -456,7 +469,8 @@ export default function GamePage() {
             player.fireballs.push({
               x: player.x + player.width,
               y: player.y + player.height / 2,
-              curve: (Math.random() - 0.5) * 2 // Random curve for fireballs
+              curve: (Math.random() - 0.5) * 2, // Random curve for fireballs
+              speed: 7 // Add the required speed property
             });
           }
           break;
@@ -502,7 +516,8 @@ export default function GamePage() {
       player.fireballs.push({
         x: player.x + player.width,
         y: player.y + player.height / 2,
-        curve: (Math.random() - 0.5) * 2 // Random curve for fireballs
+        curve: (Math.random() - 0.5) * 2, // Random curve for fireballs
+        speed: 7 // Add the required speed property
       });
       
       // Also handle movement based on mouse position
@@ -577,43 +592,49 @@ export default function GamePage() {
       const GAME_WIDTH = 800;
       const GAME_HEIGHT = 600;
       const PLAYER_SIZE = 64;
+      const PLAYER_SPEED = 5;
       
-      // Force redraw of player in correct position on first frame
+      // Initialize player if needed
+      if (!playerRef.current) {
+        playerRef.current = {
+          x: GAME_WIDTH / 4 - PLAYER_SIZE / 2,
+          y: GAME_HEIGHT / 2 - PLAYER_SIZE / 2,
+          width: PLAYER_SIZE,
+          height: PLAYER_SIZE,
+          speed: PLAYER_SPEED,
+          fireballs: [],
+          isMovingUp: false,
+          isMovingDown: false,
+          isMovingLeft: false,
+          isMovingRight: false,
+          isShooting: false
+        };
+      }
+      
+      // Draw player in current position
       const ctx = canvas.getContext('2d');
-      if (ctx) {
+      if (ctx && playerRef.current) {
         const playerImage = new window.Image() as HTMLImageElement;
         playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64shooter.png";
         playerImage.crossOrigin = "anonymous";
         
-        const x = GAME_WIDTH / 4 - PLAYER_SIZE / 2;
-        const y = GAME_HEIGHT / 2 - PLAYER_SIZE / 2;
-        
         try {
-          ctx.drawImage(playerImage, x, y, PLAYER_SIZE, PLAYER_SIZE);
+          ctx.drawImage(playerImage, playerRef.current.x, playerRef.current.y, PLAYER_SIZE, PLAYER_SIZE);
         } catch (e) {
           // Fallback
           ctx.fillStyle = '#FF0000';
-          ctx.fillRect(x, y, PLAYER_SIZE, PLAYER_SIZE);
+          ctx.fillRect(playerRef.current.x, playerRef.current.y, PLAYER_SIZE, PLAYER_SIZE);
         }
       }
     }
   }, [gameState]);
 
   const startGame = () => {
-    setScore(0);
-    setLives(4);
-    setGameState('playing');
-    // Force a re-render to make sure the game loop starts properly
-    setTimeout(() => {
-      const event = new Event('resize');
-      window.dispatchEvent(event);
-    }, 100);
+    resetGame();
   };
 
   const restartGame = () => {
-    setScore(0);
-    setLives(4);
-    setGameState('playing');
+    resetGame();
   };
 
   const takeScreenshot = () => {
@@ -651,8 +672,12 @@ export default function GamePage() {
           ref={canvasRef}
           width={800}
           height={600}
-          className="border border-gray-300 bg-white"
+          className={`border border-gray-300 bg-white ${hitEffect ? 'opacity-70 shadow-[0_0_10px_5px_rgba(255,0,0,0.7)]' : ''}`}
         />
+        
+        {hitEffect && (
+          <div className="absolute inset-0 bg-red-500/20 pointer-events-none border-2 border-red-500" />
+        )}
         
         {gameState === 'ready' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white">
