@@ -78,7 +78,7 @@ export default function GamePage() {
     zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
     
     const zombieImage2 = new (window.Image as any)() as HTMLImageElement;
-    zombieImage2.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombie2128x128.png";
+    zombieImage2.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png";
     
     // Game constants
     const GAME_WIDTH = 800;
