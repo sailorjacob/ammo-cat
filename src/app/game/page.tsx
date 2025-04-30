@@ -126,6 +126,11 @@ export default function GamePage() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (gameState !== 'playing') return;
       
+      // Prevent default behavior for game controls
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+      
       switch (e.key) {
         case 'ArrowUp':
         case 'w':
@@ -347,6 +352,18 @@ export default function GamePage() {
           zombie.y = newY;
         }
         
+        // Zombie shoots fireballs
+        const now = Date.now();
+        if (now - zombie.lastFireTime > zombie.fireRate) {
+          zombie.lastFireTime = now;
+          enemyFireballs.push({
+            x: zombie.x,
+            y: zombie.y + zombie.height / 2,
+            angle: angle,
+            speed: ENEMY_FIREBALL_SPEED
+          });
+        }
+        
         // Check for collision with player
         if (
           player.x < zombie.x + zombie.width * 0.7 &&
@@ -392,6 +409,45 @@ export default function GamePage() {
         setScore(prevScore => Math.max(prevScore, survivalTimeScore * 10 + gameStateRef.current.zombiesKilled * 100));
       }
       
+      // Update and draw enemy fireballs
+      for (let i = enemyFireballs.length - 1; i >= 0; i--) {
+        const fireball = enemyFireballs[i];
+        const firebAngle = fireball.angle || 0;
+        fireball.x += Math.cos(firebAngle) * fireball.speed;
+        fireball.y += Math.sin(firebAngle) * fireball.speed;
+
+        // Draw enemy fireball
+        ctx.fillStyle = '#FF5500';
+        ctx.beginPath();
+        ctx.arc(fireball.x, fireball.y, FIREBALL_SIZE / 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Remove fireballs that are off-screen
+        if (
+          fireball.x < 0 || 
+          fireball.x > GAME_WIDTH || 
+          fireball.y < 0 || 
+          fireball.y > GAME_HEIGHT
+        ) {
+          enemyFireballs.splice(i, 1);
+          continue;
+        }
+
+        // Check for collision with player
+        if (
+          fireball.x + FIREBALL_SIZE / 2 > player.x &&
+          fireball.x - FIREBALL_SIZE / 2 < player.x + player.width &&
+          fireball.y + FIREBALL_SIZE / 2 > player.y &&
+          fireball.y - FIREBALL_SIZE / 2 < player.y + player.height
+        ) {
+          // Player hit by enemy fireball
+          enemyFireballs.splice(i, 1);
+          
+          playerHit();
+          continue;
+        }
+      }
+      
       // Continue game loop if still playing
       if (gameState === 'playing') {
         animationFrameId = requestAnimationFrame(gameLoop);
@@ -434,6 +490,15 @@ export default function GamePage() {
     
     console.log("Countdown started:", countdown);
     
+    // Reset movement flags when countdown starts
+    if (playerRef.current) {
+      playerRef.current.isMovingUp = false;
+      playerRef.current.isMovingDown = false;
+      playerRef.current.isMovingLeft = false;
+      playerRef.current.isMovingRight = false;
+      playerRef.current.isShooting = false;
+    }
+    
     const countdownInterval = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
@@ -448,6 +513,25 @@ export default function GamePage() {
     return () => clearInterval(countdownInterval);
   }, [gameState, countdown]);
   
+  // Add an additional event listener cleanup to the window object
+  useEffect(() => {
+    // Global key handler to reset movement if keys are still pressed when game state changes
+    const resetKeysOnStateChange = (e: KeyboardEvent) => {
+      if (gameState !== 'playing' && playerRef.current) {
+        playerRef.current.isMovingUp = false;
+        playerRef.current.isMovingDown = false;
+        playerRef.current.isMovingLeft = false;
+        playerRef.current.isMovingRight = false;
+        playerRef.current.isShooting = false;
+      }
+    };
+    
+    window.addEventListener('keyup', resetKeysOnStateChange);
+    return () => {
+      window.removeEventListener('keyup', resetKeysOnStateChange);
+    };
+  }, [gameState]);
+  
   const startGame = () => {
     console.log("Starting game...");
     
@@ -457,6 +541,16 @@ export default function GamePage() {
     gameStateRef.current.zombiesKilled = 0;
     gameStateRef.current.currentWaveSize = 1;
     gameStateRef.current.gameStartTime = Date.now();
+    
+    // Reset player movement flags
+    if (playerRef.current) {
+      playerRef.current.isMovingUp = false;
+      playerRef.current.isMovingDown = false;
+      playerRef.current.isMovingLeft = false;
+      playerRef.current.isMovingRight = false;
+      playerRef.current.isShooting = false;
+      playerRef.current.fireballs = [];
+    }
     
     setScore(0);
     setLives(4);
@@ -470,6 +564,16 @@ export default function GamePage() {
     gameStateRef.current.zombiesKilled = 0;
     gameStateRef.current.currentWaveSize = 1;
     gameStateRef.current.gameStartTime = Date.now();
+    
+    // Reset player movement flags
+    if (playerRef.current) {
+      playerRef.current.isMovingUp = false;
+      playerRef.current.isMovingDown = false;
+      playerRef.current.isMovingLeft = false;
+      playerRef.current.isMovingRight = false;
+      playerRef.current.isShooting = false;
+      playerRef.current.fireballs = [];
+    }
     
     setScore(0);
     setLives(4);
