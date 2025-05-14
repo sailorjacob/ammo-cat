@@ -204,8 +204,21 @@ export default function Home() {
       {/* Only show main content if Landing is dismissed and Coming Soon page is not active */}
       {!showLanding && !comingSoonPageOpen && (
       <div className="flex flex-col min-h-screen">
+        {/* Main video background */}
+          <div className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/60"></div>
+          <video 
+            autoPlay 
+            playsInline
+            muted
+            loop
+              className="w-auto h-auto max-w-[400px] max-h-[400px] object-contain opacity-70"
+            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO2.mp4"
+          />
+        </div>
+
         {/* Navigation */}
-        <header className="sticky top-0 z-40 bg-gray-900/80 backdrop-blur-md shadow-lg">
+        <header className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-md shadow-lg">
           <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
                 <span 
@@ -235,21 +248,8 @@ export default function Home() {
           </nav>
         </header>
 
-        {/* Main video background */}
-          <div className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none overflow-hidden flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/60"></div>
-          <video 
-            autoPlay 
-            playsInline
-            muted
-            loop
-              className="w-auto h-auto max-w-[400px] max-h-[400px] object-contain opacity-70"
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO2.mp4"
-          />
-        </div>
-
         {/* Hero Section */}
-        <section className="bg-transparent text-white py-20 relative z-20">
+        <section className="bg-transparent text-white py-20 relative z-10">
           <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
               <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600">Tactical Gear for Your Feline Force</h1>
@@ -278,7 +278,7 @@ export default function Home() {
             <h2 className="text-4xl font-bold mb-12 text-center">Featured Products</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Sniper Artwork */}
-              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
                 <div className="aspect-[4/3] relative">
                   <Image 
                     src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
@@ -294,7 +294,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-6 relative z-10">
                   <h3 className="font-bold text-2xl mb-2">Sniper</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">A masterpiece capturing the essence of tactical feline precision.</p>
                   <div className="flex justify-between items-center">
@@ -313,7 +313,7 @@ export default function Home() {
               </div>
 
               {/* Tactical Cat Vest */}
-              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
                 <div className="aspect-square relative">
                   <Image 
                     src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
@@ -323,7 +323,7 @@ export default function Home() {
                     sizes="(max-width: 768px) 100vw, 400px"
                   />
                 </div>
-                <div className="p-6">
+                <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Tactical Cat Vest</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">Premium ballistic protection for your feline operative. Level IIIA rated.</p>
                   <div className="flex justify-between items-center">
@@ -342,7 +342,7 @@ export default function Home() {
               </div>
 
               {/* Laser Sight Collar */}
-              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
                 <div className="aspect-square relative">
                   <Image 
                     src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
@@ -352,7 +352,7 @@ export default function Home() {
                     sizes="(max-width: 768px) 100vw, 400px"
                   />
                 </div>
-                <div className="p-6">
+                <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Laser Sight Collar</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">Precision targeting system with night vision capabilities.</p>
                   <div className="flex justify-between items-center">
@@ -371,7 +371,7 @@ export default function Home() {
               </div>
 
               {/* Catnip Grenades */}
-              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
                 <div className="aspect-square relative">
                   <Image 
                     src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
@@ -381,7 +381,7 @@ export default function Home() {
                     sizes="(max-width: 768px) 100vw, 400px"
                   />
                 </div>
-                <div className="p-6">
+                <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Catnip Grenades</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">Tactical distraction devices with enhanced catnip formula.</p>
                   <div className="flex justify-between items-center">
