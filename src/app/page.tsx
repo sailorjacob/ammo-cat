@@ -285,6 +285,7 @@ export default function Home() {
                     alt="Sniper - Limited Edition Artwork"
                     className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110"
                     fill
+                    priority
                     sizes="(max-width: 768px) 100vw, 400px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -294,7 +295,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="p-6 relative z-10">
+                <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Sniper</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">A masterpiece capturing the essence of tactical feline precision.</p>
                   <div className="flex justify-between items-center">
@@ -314,14 +315,17 @@ export default function Home() {
 
               {/* Tactical Cat Vest */}
               <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
-                <div className="aspect-square relative">
-                  <Image 
-                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                    alt="Tactical Cat Vest"
-                    className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
+                <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
+                  <div className="relative h-full w-full p-4 flex items-center justify-center">
+                    <Image 
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                      alt="Tactical Cat Vest"
+                      width={200}
+                      height={200}
+                      className="object-contain max-w-full max-h-full transition-transform duration-500 group-hover:scale-110"
+                      style={{ maxHeight: '100%', maxWidth: '100%' }}
+                    />
+                  </div>
                 </div>
                 <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Tactical Cat Vest</h3>
@@ -343,14 +347,16 @@ export default function Home() {
 
               {/* Laser Sight Collar */}
               <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
-                <div className="aspect-square relative">
-                  <Image 
-                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                    alt="Laser Sight Collar"
-                    className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
+                <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
+                  <div className="relative h-full w-full p-4 flex items-center justify-center">
+                    <Image 
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
+                      alt="Laser Sight Collar"
+                      width={128}
+                      height={128}
+                      className="object-contain transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
                 </div>
                 <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Laser Sight Collar</h3>
@@ -372,14 +378,16 @@ export default function Home() {
 
               {/* Catnip Grenades */}
               <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
-                <div className="aspect-square relative">
-                  <Image 
-                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                    alt="Catnip Grenades"
-                    className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
+                <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
+                  <div className="relative h-full w-full p-4 flex items-center justify-center">
+                    <Image 
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+                      alt="Catnip Grenades"
+                      width={128}
+                      height={128}
+                      className="object-contain transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
                 </div>
                 <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Catnip Grenades</h3>
