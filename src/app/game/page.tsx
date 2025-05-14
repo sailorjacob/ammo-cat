@@ -724,24 +724,24 @@ export default function GamePage() {
         
         {gameState === 'ready' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white">
-            <h1 className="text-5xl font-bold mb-8 tracking-wider" style={{ fontFamily: 'monospace' }}>AMMO CAT: 1</h1>
+            <h1 className="text-5xl font-bold mb-8">AMMO CAT: 1</h1>
             <button
               onClick={startGame}
-              className="bg-orange-500 hover:bg-orange-600 text-white py-4 px-12 rounded-lg text-2xl font-bold mb-8 transform transition-all hover:scale-105 shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 px-16 rounded-lg text-2xl font-bold mb-8 transform transition-all hover:scale-105 shadow-lg hover:shadow-xl border-2 border-orange-400"
             >
               Start Game
             </button>
             <div className="space-y-6 text-lg max-w-md">
               <div className="bg-gray-800/50 p-4 rounded-lg">
-                <h2 className="text-xl font-bold mb-3 text-orange-400">Desktop Controls</h2>
-                <p className="text-gray-200">
-                  Use WASD or arrow keys to move. Spacebar to shoot.
-                </p>
-              </div>
-              <div className="bg-gray-800/50 p-4 rounded-lg">
                 <h2 className="text-xl font-bold mb-3 text-orange-400">Mobile Controls</h2>
                 <p className="text-gray-200">
                   Drag the cat to move. Tap anywhere else to shoot.
+                </p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg">
+                <h2 className="text-xl font-bold mb-3 text-orange-400">Desktop Controls</h2>
+                <p className="text-gray-200">
+                  Use WASD or arrow keys to move. Spacebar to shoot.
                 </p>
               </div>
               <p className="text-center text-gray-300 italic mt-4">
@@ -776,11 +776,8 @@ export default function GamePage() {
       <div className="mt-6">
         <Link 
           href="/" 
-          className="text-lg font-semibold text-orange-400 hover:text-orange-300 transition-colors duration-200 flex items-center gap-2"
+          className="text-lg font-semibold text-orange-400 hover:text-orange-300 transition-colors duration-200"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-          </svg>
           Return Home
         </Link>
       </div>
