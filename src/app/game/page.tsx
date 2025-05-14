@@ -735,7 +735,7 @@ export default function GamePage() {
               <div className="bg-gray-800/50 p-4 rounded-lg">
                 <h2 className="text-xl font-bold mb-3 text-orange-400">Mobile Controls</h2>
                 <p className="text-gray-200">
-                  Drag the cat to move. Tap anywhere else to shoot.
+                  Drag to move. Tap anywhere else to shoot.
                 </p>
               </div>
               <div className="bg-gray-800/50 p-4 rounded-lg">

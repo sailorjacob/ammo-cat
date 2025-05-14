@@ -30,7 +30,7 @@ function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                 <Image 
                   src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
                   alt="Sniper - Limited Edition Artwork"
-                  className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110"
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, 1200px"
@@ -40,7 +40,7 @@ function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                     <h2 className="text-4xl font-bold text-white mb-2">Sniper</h2>
                     <p className="text-xl text-orange-400 font-medium mb-4">Limited Edition Masterpiece</p>
                     <p className="text-gray-300 mb-6 max-w-xl">
-                      A breathtaking masterpiece capturing the essence of tactical feline precision. This exclusive piece represents the perfect blend of art and tactical excellence, a true collector's item.
+                      A breathtaking masterpiece capturing the essence of tactical precision. This exclusive piece represents the perfect blend of art and tactical excellence, a true collector's item.
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-4xl font-bold text-white">$5,000,000,000</span>
@@ -82,8 +82,8 @@ function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                     </button>
                   </div>
                 </div>
-              </div>
-
+        </div>
+        
               {/* Product Card 2 */}
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden group">
                 <div className="aspect-square relative">
@@ -125,7 +125,7 @@ function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                     <span className="text-orange-400 font-bold">$249.99</span>
                     <button className="bg-orange-500/20 hover:bg-orange-500 text-orange-400 hover:text-white px-4 py-2 rounded-lg transition-colors">
                       Coming Soon
-                    </button>
+        </button>
                   </div>
                 </div>
               </div>
@@ -163,7 +163,7 @@ function LandingVideoPage({ onEnterSite }: { onEnterSite: () => void }) {
       {/* Content */}
       <div className="relative z-20 text-center text-black">
         <h1 className="text-6xl md:text-8xl font-bold mb-8 text-orange-500">AMMO CAT</h1>
-        <p className="text-xl md:text-2xl mb-12 max-w-2xl mx-auto">Tactical gear for your feline force. Equip your cat for any mission.</p>
+        <p className="text-xl md:text-2xl mb-12 max-w-2xl mx-auto">Tactical gear for any mission. Equip for success.</p>
         <button 
           onClick={onEnterSite}
           className="bg-orange-500 text-white hover:bg-orange-600 text-xl px-10 py-4 rounded-md font-bold transition-colors"
@@ -252,8 +252,8 @@ export default function Home() {
         <section className="bg-transparent text-white py-20 relative z-10">
           <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600">Tactical Gear for Your Feline Force</h1>
-              <p className="text-xl mb-8 text-gray-200">Equip your cat with the finest tactical gear. Because every mission matters.</p>
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600">Tactical Gear for Your Strike Force</h1>
+              <p className="text-xl mb-8 text-gray-200">Equip with the finest tactical gear. Because every mission matters.</p>
                 <button 
                   className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-lg transition-all hover:scale-105 shadow-lg"
                   onClick={handleInteraction}
@@ -263,9 +263,9 @@ export default function Home() {
             </div>
             <div className="md:w-1/2 flex justify-center">
               <div className="relative w-80 h-80 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
-                  {/* Placeholder for cat image - replaced with coming soon */}
+                  {/* Placeholder for image - replaced with coming soon */}
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center cursor-pointer" onClick={handleInteraction}>
-                  <span className="text-orange-500 font-bold text-2xl">Premium Cat Gear</span>
+                  <span className="text-orange-500 font-bold text-2xl">Premium Tactical Gear</span>
                   </div>
               </div>
             </div>
@@ -313,13 +313,13 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Tactical Cat Vest */}
+              {/* Tactical Vest */}
               <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
                 <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
                   <div className="relative h-full w-full p-4 flex items-center justify-center">
                     <Image 
                       src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                      alt="Tactical Cat Vest"
+                      alt="Tactical Vest"
                       width={200}
                       height={200}
                       className="object-contain max-w-full max-h-full transition-transform duration-500 group-hover:scale-110"
@@ -328,8 +328,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
-                  <h3 className="font-bold text-2xl mb-2">Tactical Cat Vest</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">Premium ballistic protection for your feline operative. Level IIIA rated.</p>
+                  <h3 className="font-bold text-2xl mb-2">Tactical Vest</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">Premium ballistic protection for your operative. Level IIIA rated.</p>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-2xl text-orange-500">$599.99</span>
                     <button 
@@ -351,7 +351,7 @@ export default function Home() {
                   <div className="relative h-full w-full p-4 flex items-center justify-center">
                     <Image 
                       src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                      alt="Laser Sight Collar"
+                      alt="Laser Sight"
                       width={128}
                       height={128}
                       className="object-contain transition-transform duration-500 group-hover:scale-110"
@@ -359,7 +359,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
-                  <h3 className="font-bold text-2xl mb-2">Laser Sight Collar</h3>
+                  <h3 className="font-bold text-2xl mb-2">Laser Sight</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">Precision targeting system with night vision capabilities.</p>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-2xl text-orange-500">$399.99</span>
@@ -376,13 +376,13 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Catnip Grenades */}
+              {/* Tactical Grenades */}
               <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
                 <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
                   <div className="relative h-full w-full p-4 flex items-center justify-center">
                     <Image 
                       src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                      alt="Catnip Grenades"
+                      alt="Tactical Grenades"
                       width={128}
                       height={128}
                       className="object-contain transition-transform duration-500 group-hover:scale-110"
@@ -390,8 +390,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
-                  <h3 className="font-bold text-2xl mb-2">Catnip Grenades</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">Tactical distraction devices with enhanced catnip formula.</p>
+                  <h3 className="font-bold text-2xl mb-2">Tactical Grenades</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">Tactical distraction devices with enhanced formula.</p>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-2xl text-orange-500">$249.99</span>
                     <button 
@@ -426,15 +426,15 @@ export default function Home() {
                   <div className="bg-orange-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer" onClick={handleInteraction}>
                   <span className="text-2xl font-bold">2</span>
                 </div>
-                <h3 className="font-bold text-xl mb-2">Cat-Approved Design</h3>
-                <p className="text-gray-800 dark:text-gray-200 mb-4">Designed with input from tactical cat experts for maximum comfort.</p>
+                <h3 className="font-bold text-xl mb-2">Expert-Approved Design</h3>
+                <p className="text-gray-800 dark:text-gray-200 mb-4">Designed with input from tactical experts for maximum comfort.</p>
               </div>
               <div className="text-center">
                   <div className="bg-orange-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer" onClick={handleInteraction}>
                   <span className="text-2xl font-bold">3</span>
                 </div>
                 <h3 className="font-bold text-xl mb-2">100% Satisfaction</h3>
-                <p className="text-gray-800 dark:text-gray-200 mb-4">If your cat isn&apos;t satisfied, we offer a full money-back guarantee.</p>
+                <p className="text-gray-800 dark:text-gray-200 mb-4">If you aren&apos;t satisfied, we offer a full money-back guarantee.</p>
               </div>
             </div>
           </div>
