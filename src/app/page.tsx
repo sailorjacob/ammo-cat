@@ -8,13 +8,12 @@ import Image from "next/image";
 function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   if (!isOpen) return null;
   
-  // Renders as a completely separate page, replacing the entire UI
   return (
-    <div className="fixed inset-0 z-[1000] bg-white" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000}}>
+    <div className="fixed inset-0 z-[1000] bg-gradient-to-b from-gray-900 to-black" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000}}>
       <div className="absolute inset-0 flex flex-col items-center justify-center py-10 px-4">
         {/* Back button */}
         <button 
-          className="absolute top-6 right-6 text-gray-500 hover:text-gray-800 transition-colors"
+          className="absolute top-6 right-6 text-white hover:text-orange-400 transition-colors"
           onClick={onClose}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -22,33 +21,117 @@ function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
           </svg>
         </button>
         
-        {/* Coming Soon text above image */}
-        <h1 className="text-5xl md:text-6xl font-bold text-red-600 mb-12">COMING SOON!</h1>
-        
-        {/* Centered image */}
-        <div className="w-full max-w-2xl h-[500px] relative mb-12">
-          <Image 
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//IMG_2342%202.jpg"
-            alt="Coming Soon"
-            className="object-contain"
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 800px"
-          />
+        {/* Gallery Section */}
+        <div className="w-full max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 gap-12">
+            {/* Featured Artwork */}
+            <div className="relative group">
+              <div className="aspect-[4/3] relative overflow-hidden rounded-2xl bg-gray-800/50 backdrop-blur-sm">
+                <Image 
+                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
+                  alt="Sniper - Limited Edition Artwork"
+                  className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute bottom-0 left-0 right-0 p-8">
+                    <h2 className="text-4xl font-bold text-white mb-2">Sniper</h2>
+                    <p className="text-xl text-orange-400 font-medium mb-4">Limited Edition Masterpiece</p>
+                    <p className="text-gray-300 mb-6 max-w-xl">
+                      A breathtaking masterpiece capturing the essence of tactical feline precision. This exclusive piece represents the perfect blend of art and tactical excellence, a true collector's item.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-4xl font-bold text-white">$5,000,000,000</span>
+                      <button 
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-3 rounded-lg font-bold text-lg transform transition-all hover:scale-105 shadow-lg"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          alert("This is a priceless piece of art. Contact us for acquisition inquiries.");
+                        }}
+                      >
+                        Inquire
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Products Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Product Card 1 */}
+              <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden group">
+                <div className="aspect-square relative">
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                    alt="Tactical Cat Vest"
+                    className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Tactical Cat Vest</h3>
+                  <p className="text-gray-400 mb-4">Premium ballistic protection for your feline operative.</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-orange-400 font-bold">$599.99</span>
+                    <button className="bg-orange-500/20 hover:bg-orange-500 text-orange-400 hover:text-white px-4 py-2 rounded-lg transition-colors">
+                      Coming Soon
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Card 2 */}
+              <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden group">
+                <div className="aspect-square relative">
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
+                    alt="Laser Sight Collar"
+                    className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Laser Sight Collar</h3>
+                  <p className="text-gray-400 mb-4">Precision targeting system for night operations.</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-orange-400 font-bold">$399.99</span>
+                    <button className="bg-orange-500/20 hover:bg-orange-500 text-orange-400 hover:text-white px-4 py-2 rounded-lg transition-colors">
+                      Coming Soon
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Card 3 */}
+              <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden group">
+                <div className="aspect-square relative">
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+                    alt="Catnip Grenades"
+                    className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Catnip Grenades</h3>
+                  <p className="text-gray-400 mb-4">Tactical distraction devices for any mission.</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-orange-400 font-bold">$249.99</span>
+                    <button className="bg-orange-500/20 hover:bg-orange-500 text-orange-400 hover:text-white px-4 py-2 rounded-lg transition-colors">
+                      Coming Soon
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        {/* Optional subtitle */}
-        <p className="text-xl text-gray-700 max-w-md text-center">
-          We're equipping your feline forces with tactical gear. Stay tuned!
-        </p>
-        
-        {/* Return button at bottom */}
-        <button 
-          className="mt-12 bg-red-600 hover:bg-red-700 text-white text-xl px-10 py-3 rounded-full font-bold"
-          onClick={onClose}
-        >
-          Return to Site
-        </button>
       </div>
     </div>
   );
@@ -192,71 +275,124 @@ export default function Home() {
         {/* Featured Products */}
         <section className="py-16 bg-white/90 dark:bg-slate-800/90 relative z-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-10 text-center">Featured Products</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Product Card 1 */}
-                <div className="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 cursor-pointer" onClick={handleInteraction}>
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-500">Product Image</span>
+            <h2 className="text-4xl font-bold mb-12 text-center">Featured Products</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Sniper Artwork */}
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+                <div className="aspect-[4/3] relative">
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
+                    alt="Sniper - Limited Edition Artwork"
+                    className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <p className="text-gray-300 text-sm mb-2">Limited Edition Masterpiece</p>
+                      <p className="text-white text-lg font-bold mb-2">A breathtaking tactical feline artwork</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-xl mb-2">Tactical Cat Vest</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">Bulletproof protection for your feline companion.</p>
+                <div className="p-6">
+                  <h3 className="font-bold text-2xl mb-2">Sniper</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">A masterpiece capturing the essence of tactical feline precision.</p>
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-orange-500">$59.99</span>
-                      <button 
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setComingSoonPageOpen(true);
-                        }}
-                      >
+                    <span className="font-bold text-2xl text-orange-500">$5,000,000,000</span>
+                    <button 
+                      className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-2 rounded-lg font-bold transition-all hover:scale-105 shadow-lg"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert("This is a priceless piece of art. Contact us for acquisition inquiries.");
+                      }}
+                    >
+                      Inquire
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tactical Cat Vest */}
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+                <div className="aspect-square relative">
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                    alt="Tactical Cat Vest"
+                    className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-bold text-2xl mb-2">Tactical Cat Vest</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">Premium ballistic protection for your feline operative. Level IIIA rated.</p>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-2xl text-orange-500">$599.99</span>
+                    <button 
+                      className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-2 rounded-lg font-bold transition-all hover:scale-105 shadow-lg"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setComingSoonPageOpen(true);
+                      }}
+                    >
                       Add to Cart
                     </button>
                   </div>
                 </div>
               </div>
 
-              {/* Product Card 2 */}
-                <div className="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 cursor-pointer" onClick={handleInteraction}>
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-500">Product Image</span>
+              {/* Laser Sight Collar */}
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+                <div className="aspect-square relative">
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
+                    alt="Laser Sight Collar"
+                    className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-xl mb-2">Laser Sight Collar</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">Precision targeting for nighttime operations.</p>
+                <div className="p-6">
+                  <h3 className="font-bold text-2xl mb-2">Laser Sight Collar</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">Precision targeting system with night vision capabilities.</p>
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-orange-500">$39.99</span>
-                      <button 
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setComingSoonPageOpen(true);
-                        }}
-                      >
+                    <span className="font-bold text-2xl text-orange-500">$399.99</span>
+                    <button 
+                      className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-2 rounded-lg font-bold transition-all hover:scale-105 shadow-lg"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setComingSoonPageOpen(true);
+                      }}
+                    >
                       Add to Cart
                     </button>
                   </div>
                 </div>
               </div>
 
-              {/* Product Card 3 */}
-                <div className="bg-white dark:bg-slate-700 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 cursor-pointer" onClick={handleInteraction}>
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-500">Product Image</span>
+              {/* Catnip Grenades */}
+              <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group">
+                <div className="aspect-square relative">
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+                    alt="Catnip Grenades"
+                    className="object-contain w-full h-full transform transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-xl mb-2">Catnip Grenades</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">Tactical distraction devices for any mission.</p>
+                <div className="p-6">
+                  <h3 className="font-bold text-2xl mb-2">Catnip Grenades</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">Tactical distraction devices with enhanced catnip formula.</p>
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-orange-500">$24.99</span>
-                      <button 
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setComingSoonPageOpen(true);
-                        }}
-                      >
+                    <span className="font-bold text-2xl text-orange-500">$249.99</span>
+                    <button 
+                      className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-2 rounded-lg font-bold transition-all hover:scale-105 shadow-lg"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setComingSoonPageOpen(true);
+                      }}
+                    >
                       Add to Cart
                     </button>
                   </div>
