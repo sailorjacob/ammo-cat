@@ -764,7 +764,7 @@ export default function GamePage() {
             <div className="flex gap-4">
               <button
                 onClick={restartGame}
-                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-6 rounded-lg"
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-2 px-6 rounded-lg font-bold transform transition-all hover:scale-105 shadow-lg"
               >
                 Play Again
               </button>
@@ -776,8 +776,11 @@ export default function GamePage() {
       <div className="mt-6">
         <Link 
           href="/" 
-          className="text-lg font-semibold text-orange-400 hover:text-orange-300 transition-colors duration-200"
+          className="text-lg font-semibold text-orange-400 hover:text-orange-300 transition-colors duration-200 flex items-center"
         >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+          </svg>
           Return Home
         </Link>
       </div>

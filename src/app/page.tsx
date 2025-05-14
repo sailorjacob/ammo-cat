@@ -205,28 +205,28 @@ export default function Home() {
       {!showLanding && !comingSoonPageOpen && (
       <div className="flex flex-col min-h-screen">
         {/* Navigation */}
-        <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 shadow-sm">
+        <header className="sticky top-0 z-40 bg-gray-900/80 backdrop-blur-md shadow-lg">
           <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
                 <span 
-                  className="font-bold text-xl text-orange-500 cursor-pointer" 
+                  className="font-bold text-2xl text-orange-500 cursor-pointer" 
                   onClick={() => setShowLanding(true)}
                 >
                   AMMO CAT
                 </span>
             </div>
-            <div className="hidden md:flex space-x-6">
-                <a href="#" onClick={handleInteraction} className="font-medium hover:text-orange-500 transition-colors">Home</a>
-                <a href="#" onClick={handleInteraction} className="font-medium hover:text-orange-500 transition-colors">Products</a>
-                <a href="#" onClick={handleInteraction} className="font-medium hover:text-orange-500 transition-colors">About</a>
-                <a href="#" onClick={handleInteraction} className="font-medium hover:text-orange-500 transition-colors">Contact</a>
+            <div className="hidden md:flex space-x-8">
+                <a href="#" onClick={handleInteraction} className="font-medium text-gray-300 hover:text-orange-500 transition-colors">Home</a>
+                <a href="#" onClick={handleInteraction} className="font-medium text-gray-300 hover:text-orange-500 transition-colors">Products</a>
+                <a href="#" onClick={handleInteraction} className="font-medium text-gray-300 hover:text-orange-500 transition-colors">About</a>
+                <a href="#" onClick={handleInteraction} className="font-medium text-gray-300 hover:text-orange-500 transition-colors">Contact</a>
             </div>
             <div className="flex items-center space-x-4">
-                <Link href="/game" className="bg-black text-white font-medium py-2 px-4 rounded-md transition-colors hover:bg-gray-800">
+                <Link href="/game" className="bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-all hover:scale-105 shadow-md">
                   Play Game
                 </Link>
                 <button 
-                  className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-2 px-4 rounded-lg transition-all hover:scale-105 shadow-md"
                   onClick={handleInteraction}
                 >
                 Shop Now
@@ -237,13 +237,13 @@ export default function Home() {
 
         {/* Main video background */}
           <div className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none overflow-hidden flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-black/60"></div>
           <video 
             autoPlay 
             playsInline
             muted
             loop
-              className="w-auto h-auto max-w-[650px] max-h-[650px] object-contain"
+              className="w-auto h-auto max-w-[400px] max-h-[400px] object-contain opacity-70"
             src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO2.mp4"
           />
         </div>
@@ -252,20 +252,20 @@ export default function Home() {
         <section className="bg-transparent text-white py-20 relative z-20">
           <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">Tactical Gear for Your Feline Force</h1>
-              <p className="text-lg mb-8">Equip your cat with the finest tactical gear. Because every mission matters.</p>
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600">Tactical Gear for Your Feline Force</h1>
+              <p className="text-xl mb-8 text-gray-200">Equip your cat with the finest tactical gear. Because every mission matters.</p>
                 <button 
-                  className="bg-white text-orange-500 hover:bg-gray-100 font-bold py-3 px-6 rounded-md transition-colors"
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-lg transition-all hover:scale-105 shadow-lg"
                   onClick={handleInteraction}
                 >
                 View Collection
               </button>
             </div>
             <div className="md:w-1/2 flex justify-center">
-              <div className="relative w-80 h-80 bg-white rounded-full shadow-lg overflow-hidden">
+              <div className="relative w-80 h-80 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
                   {/* Placeholder for cat image - replaced with coming soon */}
-                  <div className="absolute inset-0 bg-gray-200 flex items-center justify-center cursor-pointer" onClick={handleInteraction}>
-                  <span className="text-gray-500 font-bold text-xl">Cat Image</span>
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center cursor-pointer" onClick={handleInteraction}>
+                  <span className="text-orange-500 font-bold text-2xl">Premium Cat Gear</span>
                   </div>
               </div>
             </div>
