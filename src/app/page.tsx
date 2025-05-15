@@ -156,7 +156,7 @@ function LandingVideoPage({ onEnterSite }: { onEnterSite: () => void }) {
           playsInline
           muted
           loop
-          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO4.mp4"
+          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images/AMMO.mp4"
         />
       </div>
       
@@ -245,7 +245,7 @@ export default function Home() {
             loop
             className="w-auto h-auto max-w-full max-h-full object-contain opacity-70"
             style={{ maxWidth: '180px', maxHeight: '180px' }}
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO4.mp4"
+            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images/AMMO2.mp4"
           />
         </div>
 
