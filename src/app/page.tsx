@@ -204,19 +204,6 @@ export default function Home() {
       {/* Only show main content if Landing is dismissed and Coming Soon page is not active */}
       {!showLanding && !comingSoonPageOpen && (
       <div className="flex flex-col min-h-screen">
-        {/* Main video background */}
-          <div className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none overflow-hidden flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/60"></div>
-          <video 
-            autoPlay 
-            playsInline
-            muted
-            loop
-              className="w-auto h-auto max-w-[400px] max-h-[400px] object-contain opacity-70"
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO2.mp4"
-          />
-        </div>
-
         {/* Navigation */}
         <header className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-md shadow-lg">
           <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -248,8 +235,22 @@ export default function Home() {
           </nav>
         </header>
 
+        {/* Main video background - moved to bottom and smaller */}
+        <div className="fixed bottom-4 right-4 z-0 pointer-events-none overflow-hidden flex items-center justify-center" style={{ width: '200px', height: '200px' }}>
+          <div className="absolute inset-0 bg-black/60 rounded-xl"></div>
+          <video 
+            autoPlay 
+            playsInline
+            muted
+            loop
+            className="w-auto h-auto max-w-full max-h-full object-contain opacity-70"
+            style={{ maxWidth: '180px', maxHeight: '180px' }}
+            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO2.mp4"
+          />
+        </div>
+
         {/* Hero Section */}
-        <section className="bg-transparent text-white py-20 relative z-10">
+        <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-20 relative z-10">
           <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
               <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600">Tactical Gear for Your Strike Force</h1>
