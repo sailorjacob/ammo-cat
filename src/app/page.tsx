@@ -156,7 +156,7 @@ function LandingVideoPage({ onEnterSite }: { onEnterSite: () => void }) {
           playsInline
           muted
           loop
-          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4"
+          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO4.mp4"
         />
       </div>
       
