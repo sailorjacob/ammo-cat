@@ -162,8 +162,8 @@ function LandingVideoPage({ onEnterSite }: { onEnterSite: () => void }) {
       
       {/* Content */}
       <div className="relative z-20 text-center text-black">
+        <p className="text-xl md:text-2xl mb-6 max-w-2xl mx-auto">Tactical gear for any mission. Equip for success.</p>
         <h1 className="text-6xl md:text-8xl font-bold mb-8 text-orange-500">AMMO CAT</h1>
-        <p className="text-xl md:text-2xl mb-12 max-w-2xl mx-auto">Tactical gear for any mission. Equip for success.</p>
         <button 
           onClick={onEnterSite}
           className="bg-orange-500 text-white hover:bg-orange-600 text-xl px-10 py-4 rounded-md font-bold transition-colors"
