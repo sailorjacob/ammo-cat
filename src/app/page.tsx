@@ -442,55 +442,9 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="bg-gray-800/95 text-white py-10 mt-auto relative z-20">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div>
-                <h3 className="font-bold text-lg mb-4">Ammo Cat</h3>
-                <p className="text-gray-300">Premium tactical gear for cats who mean business.</p>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg mb-4">Quick Links</h3>
-                <ul className="space-y-2">
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Home</a></li>
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Products</a></li>
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg mb-4">Customer Service</h3>
-                <ul className="space-y-2">
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">FAQs</a></li>
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Shipping</a></li>
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Returns</a></li>
-                    <li><a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg mb-4">Connect With Us</h3>
-                <div className="flex space-x-4">
-                    <a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Facebook</a>
-                    <a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Twitter</a>
-                    <a href="#" onClick={handleInteraction} className="text-gray-300 hover:text-white transition-colors">Instagram</a>
-                </div>
-                <div className="mt-4">
-                  <h4 className="font-medium mb-2">Subscribe to our newsletter</h4>
-                  <div className="flex">
-                    <input 
-                      type="email" 
-                      placeholder="Enter your email" 
-                      className="px-4 py-2 rounded-l-md flex-grow text-black"
-                    />
-                      <button 
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-md transition-colors"
-                        onClick={handleInteraction}
-                      >
-                      Subscribe
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="container mx-auto px-4 text-center">
+            <h3 className="font-bold text-2xl mb-2">AMMO CAT</h3>
+            <p className="text-gray-300 max-w-2xl mx-auto mb-6">Premium Tactical Gear - Not for cats. Our advanced equipment is designed for the most demanding tactical operations.</p>
             <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
               <p>&copy; {new Date().getFullYear()} Ammo Cat. All rights reserved.</p>
             </div>
