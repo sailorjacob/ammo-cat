@@ -236,7 +236,7 @@ export default function Home() {
         </header>
 
         {/* Main video background - moved to bottom and smaller */}
-        <div className="fixed bottom-4 right-4 z-20 pointer-events-none overflow-hidden flex items-center justify-center" style={{ width: '200px', height: '200px' }}>
+        <div className="fixed bottom-4 right-4 z-30 pointer-events-none overflow-hidden flex items-center justify-center" style={{ width: '200px', height: '200px' }}>
           <div className="absolute inset-0 bg-black/60 rounded-xl"></div>
           <video 
             autoPlay 
@@ -281,14 +281,16 @@ export default function Home() {
               {/* Sniper Artwork */}
               <div className="bg-white dark:bg-slate-700 rounded-xl shadow-xl overflow-hidden transition-transform hover:scale-105 cursor-pointer group relative z-10">
                 <div className="aspect-[4/3] relative">
-                  <Image 
-                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
-                    alt="Sniper - Limited Edition Artwork"
-                    className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110"
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
+                  <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    <Image 
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
+                      alt="Sniper - Limited Edition Artwork"
+                      width={400}
+                      height={300}
+                      className="object-contain max-w-full max-h-full transform transition-transform duration-700 group-hover:scale-110"
+                      style={{ maxHeight: '100%', maxWidth: '100%' }}
+                    />
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="absolute bottom-0 left-0 right-0 p-6">
                       <p className="text-gray-300 text-sm mb-2">Limited Edition Masterpiece</p>
