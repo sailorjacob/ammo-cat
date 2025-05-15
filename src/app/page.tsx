@@ -236,7 +236,7 @@ export default function Home() {
         </header>
 
         {/* Main video background - moved to bottom and smaller */}
-        <div className="fixed bottom-4 right-4 z-0 pointer-events-none overflow-hidden flex items-center justify-center" style={{ width: '200px', height: '200px' }}>
+        <div className="fixed bottom-4 right-4 z-20 pointer-events-none overflow-hidden flex items-center justify-center" style={{ width: '200px', height: '200px' }}>
           <div className="absolute inset-0 bg-black/60 rounded-xl"></div>
           <video 
             autoPlay 
@@ -245,7 +245,7 @@ export default function Home() {
             loop
             className="w-auto h-auto max-w-full max-h-full object-contain opacity-70"
             style={{ maxWidth: '180px', maxHeight: '180px' }}
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO2.mp4"
+            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images//AMMO4.mp4"
           />
         </div>
 
@@ -292,7 +292,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="absolute bottom-0 left-0 right-0 p-6">
                       <p className="text-gray-300 text-sm mb-2">Limited Edition Masterpiece</p>
-                      <p className="text-white text-lg font-bold mb-2">A breathtaking tactical feline artwork</p>
+                      <p className="text-white text-lg font-bold mb-2">A breathtaking tactical artwork</p>
                     </div>
                   </div>
                 </div>
