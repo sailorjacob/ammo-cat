@@ -86,11 +86,19 @@ function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, 
             />
             <span className="font-sora font-bold text-xl tracking-wider">AMMO<span className="text-[rgb(var(--primary))]">CAT</span></span>
           </div>
-          <nav className="hidden md:block">
-            <ul className="flex space-x-10">
-              <li><button onClick={onEnterGame} className="text-sm font-medium opacity-80 hover:opacity-100 transition-opacity">PLAY</button></li>
-              <li><button onClick={onExploreShop} className="text-sm font-medium opacity-80 hover:opacity-100 transition-opacity">SHOP</button></li>
-            </ul>
+          <nav className="hidden md:flex items-center space-x-2">
+            <button 
+              onClick={onEnterGame} 
+              className="px-5 py-1.5 rounded-full text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+            >
+              PLAY
+            </button>
+            <button 
+              onClick={onExploreShop} 
+              className="px-5 py-1.5 rounded-full text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+            >
+              SHOP
+            </button>
           </nav>
         </header>
         
@@ -104,10 +112,10 @@ function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, 
               Experience the ultimate tactical shooter with cutting-edge gameplay and immersive mechanics.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button onClick={onEnterGame} className="btn-primary">
+              <button onClick={onEnterGame} className="px-8 py-3 rounded-full text-white font-medium bg-gradient-to-r from-[rgba(var(--primary),0.8)] to-[rgba(var(--accent),0.8)] hover:from-[rgb(var(--primary))] hover:to-[rgb(var(--accent))] transition-all duration-300 shadow-[0_4px_15px_rgba(var(--primary),0.3)] hover:shadow-[0_4px_20px_rgba(var(--primary),0.5)]">
                 PLAY NOW
               </button>
-              <button onClick={onExploreShop} className="btn-secondary">
+              <button onClick={onExploreShop} className="px-8 py-3 rounded-full text-white font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
                 EXPLORE SHOP
               </button>
             </div>
@@ -134,6 +142,20 @@ function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, 
           />
         </div>
       </div>
+      
+      {/* Footer - modern & minimalist */}
+      <div className="absolute bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30 z-10">
+        <div className="container mx-auto flex justify-between items-center px-6 py-3">
+          <div className="text-xs text-white/50">© {new Date().getFullYear()} AMMOCAT</div>
+          <div className="flex gap-4">
+            <a href="https://github.com/sailorjacob/ammo-cat" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-all duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-70">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -141,7 +163,7 @@ function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, 
 // Shop section with modern design
 function ShopSection({ onBack }: { onBack: () => void }) {
   return (
-    <div className="min-h-screen bg-gradient">
+    <div className="min-h-screen bg-gradient relative">
       {/* Header */}
       <header className="py-6 px-4 container mx-auto flex justify-between items-center">
         <div className="flex items-center">
@@ -154,8 +176,11 @@ function ShopSection({ onBack }: { onBack: () => void }) {
           />
           <span className="font-sora font-bold text-xl tracking-wider">AMMO<span className="text-[rgb(var(--primary))]">CAT</span></span>
         </div>
-        <button onClick={onBack} className="text-sm font-medium flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2">
+        <button 
+          onClick={onBack} 
+          className="px-5 py-1.5 rounded-full text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-70">
             <path d="M19 12H5M12 19l-7-7 7-7"></path>
           </svg>
           BACK
@@ -163,19 +188,19 @@ function ShopSection({ onBack }: { onBack: () => void }) {
       </header>
       
       {/* Shop content */}
-      <div className="container mx-auto px-4 py-10">
+      <div className="container mx-auto px-4 py-10 pb-24">
         <h1 className="text-4xl font-bold mb-2">TACTICAL SHOP</h1>
         <p className="text-gray-400 mb-12">Premium gear for your gaming missions</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Item 1 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden card-hover">
+          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
             <div className="aspect-square relative bg-black/40">
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
                 alt="Tactical Art"
                 fill
-                className="object-cover transform transition-transform duration-700 group-hover:scale-110"
+                className="object-cover transform transition-transform duration-700 hover:scale-110"
               />
               <div className="absolute top-3 right-3 bg-[rgb(var(--primary))] text-xs font-bold px-2 py-1 rounded">
                 PREMIUM
@@ -186,7 +211,7 @@ function ShopSection({ onBack }: { onBack: () => void }) {
               <p className="text-gray-400 text-sm mb-3 line-clamp-2">Limited edition artwork showcasing tactical excellence</p>
               <div className="flex justify-between items-center">
                 <span className="font-bold text-[rgb(var(--primary))]">$5,000,000</span>
-                <button className="bg-[rgba(var(--primary),0.2)] hover:bg-[rgba(var(--primary),0.3)] text-[rgb(var(--primary))] px-3 py-1 rounded-full text-sm font-medium transition-colors">
+                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
                   DETAILS
                 </button>
               </div>
@@ -194,7 +219,7 @@ function ShopSection({ onBack }: { onBack: () => void }) {
           </div>
           
           {/* Item 2 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden card-hover">
+          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
             <div className="aspect-square relative bg-black/40">
               <div className="w-full h-full flex items-center justify-center p-4">
                 <Image 
@@ -211,7 +236,7 @@ function ShopSection({ onBack }: { onBack: () => void }) {
               <p className="text-gray-400 text-sm mb-3 line-clamp-2">Level IIIA rated protection for intense gaming sessions</p>
               <div className="flex justify-between items-center">
                 <span className="font-bold text-[rgb(var(--primary))]">$599.99</span>
-                <button className="bg-[rgba(var(--primary),0.2)] hover:bg-[rgba(var(--primary),0.3)] text-[rgb(var(--primary))] px-3 py-1 rounded-full text-sm font-medium transition-colors">
+                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
                   DETAILS
                 </button>
               </div>
@@ -219,7 +244,7 @@ function ShopSection({ onBack }: { onBack: () => void }) {
           </div>
           
           {/* Item 3 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden card-hover">
+          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
             <div className="aspect-square relative bg-black/40">
               <div className="w-full h-full flex items-center justify-center p-4">
                 <Image 
@@ -236,7 +261,7 @@ function ShopSection({ onBack }: { onBack: () => void }) {
               <p className="text-gray-400 text-sm mb-3 line-clamp-2">Advanced laser targeting with night vision capabilities</p>
               <div className="flex justify-between items-center">
                 <span className="font-bold text-[rgb(var(--primary))]">$399.99</span>
-                <button className="bg-[rgba(var(--primary),0.2)] hover:bg-[rgba(var(--primary),0.3)] text-[rgb(var(--primary))] px-3 py-1 rounded-full text-sm font-medium transition-colors">
+                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
                   DETAILS
                 </button>
               </div>
@@ -244,7 +269,7 @@ function ShopSection({ onBack }: { onBack: () => void }) {
           </div>
           
           {/* Item 4 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden card-hover">
+          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
             <div className="aspect-square relative bg-black/40">
               <div className="w-full h-full flex items-center justify-center p-4">
                 <Image 
@@ -261,45 +286,17 @@ function ShopSection({ onBack }: { onBack: () => void }) {
               <p className="text-gray-400 text-sm mb-3 line-clamp-2">Specialized distraction devices with enhanced formula</p>
               <div className="flex justify-between items-center">
                 <span className="font-bold text-[rgb(var(--primary))]">$249.99</span>
-                <button className="bg-[rgba(var(--primary),0.2)] hover:bg-[rgba(var(--primary),0.3)] text-[rgb(var(--primary))] px-3 py-1 rounded-full text-sm font-medium transition-colors">
+                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
                   DETAILS
                 </button>
               </div>
             </div>
           </div>
         </div>
-        
-        {/* Features section */}
-        <div className="mt-20 mb-10">
-          <h2 className="text-2xl font-bold mb-10">WHY AMMOCAT GEAR?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-black/30 p-6 rounded-xl border border-[rgba(var(--primary),0.2)]">
-              <div className="w-12 h-12 bg-[rgba(var(--primary),0.2)] rounded-full flex items-center justify-center mb-4">
-                <span className="text-[rgb(var(--primary))] font-bold">1</span>
-              </div>
-              <h3 className="font-bold text-xl mb-2">Premium Quality</h3>
-              <p className="text-gray-400 text-sm">Engineered with the finest materials for unmatched durability and performance</p>
-            </div>
-            <div className="bg-black/30 p-6 rounded-xl border border-[rgba(var(--primary),0.2)]">
-              <div className="w-12 h-12 bg-[rgba(var(--primary),0.2)] rounded-full flex items-center justify-center mb-4">
-                <span className="text-[rgb(var(--primary))] font-bold">2</span>
-              </div>
-              <h3 className="font-bold text-xl mb-2">Expert Design</h3>
-              <p className="text-gray-400 text-sm">Created by gaming professionals to enhance your tactical experience</p>
-            </div>
-            <div className="bg-black/30 p-6 rounded-xl border border-[rgba(var(--primary),0.2)]">
-              <div className="w-12 h-12 bg-[rgba(var(--primary),0.2)] rounded-full flex items-center justify-center mb-4">
-                <span className="text-[rgb(var(--primary))] font-bold">3</span>
-              </div>
-              <h3 className="font-bold text-xl mb-2">Satisfaction</h3>
-              <p className="text-gray-400 text-sm">Guaranteed quality and performance or your money back</p>
-            </div>
-          </div>
-        </div>
       </div>
       
       {/* Ambient video */}
-      <div className="fixed bottom-6 right-6 z-30 pointer-events-none overflow-hidden rounded-xl shadow-lg" style={{ width: '180px', height: '180px' }}>
+      <div className="fixed bottom-16 right-6 z-30 pointer-events-none overflow-hidden rounded-xl shadow-lg" style={{ width: '180px', height: '180px' }}>
         <div className="absolute inset-0 bg-black/40"></div>
         <video 
           autoPlay 
@@ -311,12 +308,19 @@ function ShopSection({ onBack }: { onBack: () => void }) {
         />
       </div>
       
-      {/* Simple footer */}
-      <footer className="py-8 border-t border-[rgba(255,255,255,0.1)]">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} AMMOCAT Studios. All rights reserved.</p>
+      {/* Footer - flush to bottom */}
+      <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30">
+        <div className="container mx-auto flex justify-between items-center px-6 py-3">
+          <div className="text-xs text-white/50">© {new Date().getFullYear()} AMMOCAT</div>
+          <div className="flex gap-4">
+            <a href="https://github.com/sailorjacob/ammo-cat" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-all duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-70">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
+            </a>
+          </div>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
@@ -333,6 +337,17 @@ export default function Home() {
       document.body.style.overflow = 'auto';
     };
   }, []);
+  
+  // Check localStorage for view preference after loading
+  useEffect(() => {
+    if (currentView === 'landing') {
+      const savedView = typeof window !== 'undefined' ? localStorage.getItem('ammocat_view') : null;
+      if (savedView === 'shop') {
+        setCurrentView('shop');
+        localStorage.removeItem('ammocat_view'); // Clear the preference
+      }
+    }
+  }, [currentView]);
   
   // Navigation handlers
   const handleLoadingComplete = () => setCurrentView('landing');
