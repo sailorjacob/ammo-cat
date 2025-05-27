@@ -110,10 +110,10 @@ function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, 
             />
             <span className="font-sora font-bold text-xl tracking-wider">AMMO<span className="text-[rgb(var(--primary))]">CAT</span></span>
           </div>
-          <nav className="hidden md:flex items-center space-x-2">
+          <nav className="flex items-center space-x-2">
             <button 
               onClick={onEnterGame} 
-              className="px-5 py-1.5 rounded-full text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+              className="px-5 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r from-[rgba(var(--primary),0.8)] to-[rgba(var(--accent),0.8)] hover:from-[rgb(var(--primary))] hover:to-[rgb(var(--accent))] transition-all duration-300 shadow-[0_2px_10px_rgba(var(--primary),0.3)] hover:shadow-[0_2px_15px_rgba(var(--primary),0.5)]"
             >
               PLAY
             </button>
@@ -135,14 +135,6 @@ function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, 
             <p className="text-lg text-gray-300 mb-10">
               Experience the ultimate tactical shooter with cutting-edge gameplay and immersive mechanics.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <button onClick={onEnterGame} className="px-8 py-3 rounded-full text-white font-medium bg-gradient-to-r from-[rgba(var(--primary),0.8)] to-[rgba(var(--accent),0.8)] hover:from-[rgb(var(--primary))] hover:to-[rgb(var(--accent))] transition-all duration-300 shadow-[0_4px_15px_rgba(var(--primary),0.3)] hover:shadow-[0_4px_20px_rgba(var(--primary),0.5)]">
-                PLAY NOW
-              </button>
-              <button onClick={onExploreShop} className="px-8 py-3 rounded-full text-white font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-                EXPLORE SHOP
-              </button>
-            </div>
           </div>
         </div>
         

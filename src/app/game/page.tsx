@@ -793,7 +793,7 @@ export default function GamePage() {
           </div>
         )}
         
-        {/* Exit button shown during gameplay */}
+        {/* Exit button shown during gameplay - only visible HOME link */}
         {gameState === 'playing' && (
           <div className="absolute top-4 right-4 flex gap-2">
             <Link 
@@ -810,21 +810,23 @@ export default function GamePage() {
         )}
       </div>
       
-      {/* Fixed footer with home button - flush with bottom */}
-      <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30">
-        <div className="container mx-auto flex justify-center items-center px-4 py-3">
-          <Link 
-            href="/" 
-            className="text-white/80 hover:text-white flex items-center gap-2 transition-all duration-300 px-5 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-            <span>HOME</span>
-          </Link>
+      {/* Fixed footer with home button - flush with bottom - REMOVED FOR GAMEPLAY, ONLY SHOWS WHEN NOT PLAYING */}
+      {gameState !== 'playing' && (
+        <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30">
+          <div className="container mx-auto flex justify-center items-center px-4 py-3">
+            <Link 
+              href="/" 
+              className="text-white/80 hover:text-white flex items-center gap-2 transition-all duration-300 px-5 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span>HOME</span>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 } 
