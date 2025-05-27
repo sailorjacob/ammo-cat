@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat, Sora } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sora",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Ammo Cat | Tactical Feline Gear",
-  description: "Premium gear and accessories for tactical cat operations",
+  title: "AMMOCAT | Tactical Gaming Experience",
+  description: "Experience the future of tactical gameplay with AMMOCAT",
+  keywords: "tactical, gaming, shooter, ammocat, cat, game",
 };
 
 export default function RootLayout({
@@ -20,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} antialiased bg-white`}
+        className={`${montserrat.variable} ${sora.variable} antialiased bg-black text-white`}
       >
         {children}
       </body>

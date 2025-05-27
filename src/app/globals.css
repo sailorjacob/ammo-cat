@@ -3,18 +3,67 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
+  --foreground: 255, 255, 255;
+  --background: 0, 0, 0;
+  --primary: 255, 102, 0;
+  --secondary: 0, 71, 171;
+  --accent: 255, 208, 0;
+  --gray-dark: 30, 30, 30;
+  --gray-light: 200, 200, 200;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-rgb: 255, 255, 255;
+@layer base {
+  body {
+    @apply bg-black text-white font-montserrat;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sora font-bold;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
+@layer components {
+  .btn-primary {
+    @apply bg-[rgb(var(--primary))] text-white px-8 py-3 rounded-full 
+           font-sora font-bold transition-all duration-300 
+           hover:shadow-[0_0_20px_rgba(var(--primary),0.6)] hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply border border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] 
+           px-8 py-3 rounded-full font-sora font-medium transition-all duration-300
+           hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgb(var(--primary))];
+  }
+  
+  .card-hover {
+    @apply transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_10px_40px_rgba(var(--primary),0.15)];
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-[rgb(var(--primary))] to-[rgb(var(--accent))] bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient {
+    @apply bg-gradient-to-br from-[rgb(var(--gray-dark))] to-black;
+  }
+}
+
+/* Custom animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--primary), 0.3); }
+  50% { box-shadow: 0 0 30px rgba(var(--primary), 0.6); }
+}
+
+.animate-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }

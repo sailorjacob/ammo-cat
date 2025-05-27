@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        montserrat: ['var(--font-montserrat)'],
+        sora: ['var(--font-sora)'],
+      },
       colors: {
         orange: {
           500: '#F97316',
@@ -15,7 +19,11 @@ module.exports = {
         amber: {
           500: '#F59E0B'
         }
-      }
+      },
+      animation: {
+        'float': 'float 3s ease-in-out infinite',
+        'glow': 'pulse-glow 2s ease-in-out infinite',
+      },
     },
   },
   plugins: [],
