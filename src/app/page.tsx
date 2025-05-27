@@ -88,9 +88,8 @@ function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, 
           </div>
           <nav className="hidden md:block">
             <ul className="flex space-x-10">
-              <li><Link href="#about" className="text-sm font-medium opacity-80 hover:opacity-100 transition-opacity">ABOUT</Link></li>
-              <li><Link href="#features" className="text-sm font-medium opacity-80 hover:opacity-100 transition-opacity">FEATURES</Link></li>
-              <li><Link href="#shop" className="text-sm font-medium opacity-80 hover:opacity-100 transition-opacity">SHOP</Link></li>
+              <li><button onClick={onEnterGame} className="text-sm font-medium opacity-80 hover:opacity-100 transition-opacity">PLAY</button></li>
+              <li><button onClick={onExploreShop} className="text-sm font-medium opacity-80 hover:opacity-100 transition-opacity">SHOP</button></li>
             </ul>
           </nav>
         </header>

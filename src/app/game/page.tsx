@@ -691,7 +691,7 @@ export default function GamePage() {
   };
   
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient flex flex-col items-center justify-center p-4">
       <div className="mb-4 flex items-center justify-between w-full max-w-[800px]">
         <div className="flex flex-row items-center" style={{ display: 'flex', flexDirection: 'row' }}>
           {Array.from({ length: lives }).map((_, index) => (
@@ -715,7 +715,7 @@ export default function GamePage() {
           ref={canvasRef}
           width={800}
           height={600}
-          className={`border-2 border-gray-800 bg-white ${hitEffect ? 'opacity-70 shadow-[0_0_10px_5px_rgba(255,0,0,0.7)]' : ''}`}
+          className={`border-2 border-[rgba(var(--primary),0.3)] bg-white ${hitEffect ? 'opacity-70 shadow-[0_0_10px_5px_rgba(255,0,0,0.7)]' : ''}`}
         />
         
         {hitEffect && (
@@ -724,22 +724,22 @@ export default function GamePage() {
         
         {gameState === 'ready' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
-            <h1 className="text-5xl font-bold mb-8">AMMO<span className="text-orange-500">CAT</span></h1>
+            <h1 className="text-5xl font-bold mb-8">AMMO<span className="text-[rgb(var(--primary))]">CAT</span></h1>
             <button
               onClick={startGame}
-              className="bg-orange-500 text-white py-4 px-16 rounded-full text-2xl font-bold mb-8 transform transition-all duration-300 hover:bg-orange-600 hover:scale-105 shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+              className="btn-primary text-2xl py-4 px-16 mb-8"
             >
               START GAME
             </button>
             <div className="space-y-6 text-lg max-w-md">
-              <div className="bg-black/50 p-4 rounded-lg border border-gray-800">
-                <h2 className="text-xl font-bold mb-3 text-orange-400">Mobile Controls</h2>
+              <div className="bg-black/50 p-4 rounded-lg border border-[rgba(var(--primary),0.2)]">
+                <h2 className="text-xl font-bold mb-3 text-[rgb(var(--primary))]">Mobile Controls</h2>
                 <p className="text-gray-300">
                   Drag to move. Tap anywhere else to shoot.
                 </p>
               </div>
-              <div className="bg-black/50 p-4 rounded-lg border border-gray-800">
-                <h2 className="text-xl font-bold mb-3 text-orange-400">Desktop Controls</h2>
+              <div className="bg-black/50 p-4 rounded-lg border border-[rgba(var(--primary),0.2)]">
+                <h2 className="text-xl font-bold mb-3 text-[rgb(var(--primary))]">Desktop Controls</h2>
                 <p className="text-gray-300">
                   Use WASD or arrow keys to move. Spacebar to shoot.
                 </p>
@@ -753,39 +753,49 @@ export default function GamePage() {
         
         {gameState === 'countdown' && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-            <div className="text-9xl font-bold text-orange-500">{countdown}</div>
+            <div className="text-9xl font-bold text-[rgb(var(--primary))]">{countdown}</div>
           </div>
         )}
         
         {gameState === 'gameover' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
-            <h2 className="text-5xl mb-4">Game Over</h2>
-            <p className="text-3xl mb-8 text-orange-500">Final Score: {finalScore}</p>
-            <div className="flex gap-6">
-              <button
-                onClick={restartGame}
-                className="bg-orange-500 text-white py-3 px-8 rounded-full font-bold transition-all duration-300 hover:bg-orange-600 hover:scale-105 shadow-[0_0_15px_rgba(249,115,22,0.5)]"
-              >
-                Play Again
-              </button>
-              <Link 
-                href="/" 
-                className="border border-gray-700 text-white hover:border-orange-500 hover:text-orange-500 py-3 px-8 rounded-full font-bold transition-all duration-300"
-              >
-                Return Home
-              </Link>
-            </div>
+            <h2 className="text-6xl font-bold mb-2">GAME OVER</h2>
+            <div className="w-20 h-1 bg-[rgb(var(--primary))] mb-6"></div>
+            <p className="text-3xl mb-8">Final Score: <span className="text-[rgb(var(--primary))] font-bold">{finalScore}</span></p>
+            <button
+              onClick={restartGame}
+              className="btn-primary py-4 px-10 text-xl animate-glow"
+            >
+              PLAY AGAIN
+            </button>
           </div>
         )}
         
+        {/* Exit button shown during gameplay */}
         {gameState === 'playing' && (
-          <Link 
-            href="/" 
-            className="absolute top-4 right-4 bg-black/70 text-white hover:text-orange-500 py-1 px-3 rounded-full text-sm font-medium transition-colors duration-200 border border-gray-800 hover:border-orange-500"
-          >
-            Exit
-          </Link>
+          <div className="absolute top-4 right-4 flex gap-2">
+            <Link 
+              href="/" 
+              className="bg-black/70 text-white hover:text-[rgb(var(--primary))] py-1 px-3 rounded-full text-sm font-medium transition-colors duration-200 border border-gray-800 hover:border-[rgb(var(--primary))]"
+            >
+              EXIT
+            </Link>
+          </div>
         )}
+      </div>
+      
+      {/* Fixed footer with home button */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 flex justify-center">
+        <Link 
+          href="/" 
+          className="bg-black/70 text-gray-400 hover:text-[rgb(var(--primary))] py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2 border border-gray-800 hover:border-[rgb(var(--primary))]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          RETURN TO HOME
+        </Link>
       </div>
     </div>
   );
