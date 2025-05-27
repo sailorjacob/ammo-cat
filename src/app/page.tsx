@@ -38,9 +38,9 @@ function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div className="absolute bottom-0 left-0 right-0 p-8">
                     <h2 className="text-4xl font-bold text-white mb-2">Sniper</h2>
-                    <p className="text-xl text-orange-400 font-medium mb-4">Limited Edition Masterpiece</p>
+                    <p className="text-xl text-orange-400 font-medium mb-4">Limited Edition Artwork</p>
                     <p className="text-gray-300 mb-6 max-w-xl">
-                      A breathtaking masterpiece capturing the essence of tactical precision. This exclusive piece represents the perfect blend of art and tactical excellence, a true collector's item.
+                      Tactical precision artwork representing the blend of art and tactical excellence.
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-4xl font-bold text-white">$5,000,000,000</span>
@@ -48,7 +48,7 @@ function ComingSoonPage({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
                         className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-3 rounded-lg font-bold text-lg transform transition-all hover:scale-105 shadow-lg"
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert("This is a priceless piece of art. Contact us for acquisition inquiries.");
+                          alert("Contact us for acquisition inquiries.");
                         }}
                       >
                         Inquire
@@ -156,7 +156,7 @@ function LandingVideoPage({ onEnterSite }: { onEnterSite: () => void }) {
           playsInline
           muted
           loop
-          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images/AMMO.mp4"
+          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4"
         />
       </div>
       
@@ -293,14 +293,14 @@ export default function Home() {
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="absolute bottom-0 left-0 right-0 p-6">
-                      <p className="text-gray-300 text-sm mb-2">Limited Edition Masterpiece</p>
-                      <p className="text-white text-lg font-bold mb-2">A breathtaking tactical artwork</p>
+                      <p className="text-gray-300 text-sm mb-2">Limited Edition</p>
+                      <p className="text-white text-lg font-bold mb-2">Tactical Artwork</p>
                     </div>
                   </div>
                 </div>
                 <div className="p-6 relative z-10 bg-white dark:bg-slate-700">
                   <h3 className="font-bold text-2xl mb-2">Sniper</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">A masterpiece capturing the essence of tactical feline precision.</p>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">Precision tactical artwork for collectors.</p>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-2xl text-orange-500">$5,000,000,000</span>
                     <button 
@@ -447,7 +447,7 @@ export default function Home() {
         <footer className="bg-gray-800/95 text-white py-10 mt-auto relative z-20">
           <div className="container mx-auto px-4 text-center">
             <h3 className="font-bold text-2xl mb-2">AMMO CAT</h3>
-            <p className="text-gray-300 max-w-2xl mx-auto mb-6">Premium Tactical Gear - Not for cats. Our advanced equipment is designed for the most demanding tactical operations.</p>
+            <p className="text-gray-300 max-w-2xl mx-auto mb-6">Premium Tactical Gear for professional operations.</p>
             <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
               <p>&copy; {new Date().getFullYear()} Ammo Cat. All rights reserved.</p>
             </div>
