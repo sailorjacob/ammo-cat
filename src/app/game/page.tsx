@@ -774,20 +774,20 @@ export default function GamePage() {
               </button>
               
               <Link href="/" className="min-w-[180px] py-3 px-8 rounded-full text-white font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
                   <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                   <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                RETURN HOME
+                HOME
               </Link>
               
-              <Link href="/" className="min-w-[180px] py-3 px-8 rounded-full text-white/70 font-medium bg-transparent hover:text-white transition-all duration-300 flex items-center justify-center gap-2" onClick={() => { localStorage.setItem('ammocat_view', 'shop'); }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <Link href="/" className="min-w-[180px] py-3 px-8 rounded-full text-white font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2" onClick={() => { localStorage.setItem('ammocat_view', 'shop'); }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
                   <circle cx="9" cy="21" r="1"></circle>
                   <circle cx="20" cy="21" r="1"></circle>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                VISIT SHOP
+                SHOP
               </Link>
             </div>
           </div>
@@ -798,9 +798,13 @@ export default function GamePage() {
           <div className="absolute top-4 right-4 flex gap-2">
             <Link 
               href="/" 
-              className="bg-black/60 backdrop-blur-sm text-white/70 hover:text-white py-1 px-4 rounded-full text-xs font-medium transition-all duration-200 border border-white/10 hover:border-white/30 hover:bg-black/70"
+              className="text-white/80 hover:text-white flex items-center gap-2 transition-all duration-300 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-xs"
             >
-              EXIT
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              HOME
             </Link>
           </div>
         )}
@@ -808,40 +812,17 @@ export default function GamePage() {
       
       {/* Fixed footer with home button - flush with bottom */}
       <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30">
-        <div className="container mx-auto flex justify-between items-center px-4 py-3">
-          <div className="flex items-center">
-            <Link 
-              href="/" 
-              className="text-white/70 hover:text-white flex items-center gap-2 transition-all duration-300 text-sm font-medium"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-70">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-              <span>HOME</span>
-            </Link>
-          </div>
-          
-          <div className="flex gap-3">
-            <Link 
-              href="https://github.com/sailorjacob/ammo-cat" 
-              target="_blank"
-              className="text-white/70 hover:text-white transition-all duration-300 text-xs"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-70">
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-              </svg>
-            </Link>
-            
-            <Link 
-              href="/game" 
-              className="text-white/70 hover:text-white transition-all duration-300 text-xs"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-70">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
-            </Link>
-          </div>
+        <div className="container mx-auto flex justify-center items-center px-4 py-3">
+          <Link 
+            href="/" 
+            className="text-white/80 hover:text-white flex items-center gap-2 transition-all duration-300 px-5 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>HOME</span>
+          </Link>
         </div>
       </div>
     </div>
