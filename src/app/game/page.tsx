@@ -691,7 +691,7 @@ export default function GamePage() {
   };
   
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
       <div className="mb-4 flex items-center justify-between w-full max-w-[800px]">
         <div className="flex flex-row items-center" style={{ display: 'flex', flexDirection: 'row' }}>
           {Array.from({ length: lives }).map((_, index) => (
@@ -707,15 +707,15 @@ export default function GamePage() {
             </div>
           ))}
         </div>
-        <div className="text-2xl font-bold">Score: {score}</div>
+        <div className="text-2xl font-bold text-white">Score: {score}</div>
       </div>
 
-      <div className="relative">
+      <div className="relative shadow-2xl">
         <canvas
           ref={canvasRef}
           width={800}
           height={600}
-          className={`border border-gray-300 bg-white ${hitEffect ? 'opacity-70 shadow-[0_0_10px_5px_rgba(255,0,0,0.7)]' : ''}`}
+          className={`border-2 border-gray-800 bg-white ${hitEffect ? 'opacity-70 shadow-[0_0_10px_5px_rgba(255,0,0,0.7)]' : ''}`}
         />
         
         {hitEffect && (
@@ -723,24 +723,24 @@ export default function GamePage() {
         )}
         
         {gameState === 'ready' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white">
-            <h1 className="text-5xl font-bold mb-8">AMMO CAT: 1</h1>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
+            <h1 className="text-5xl font-bold mb-8">AMMO<span className="text-orange-500">CAT</span></h1>
             <button
               onClick={startGame}
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 px-16 rounded-lg text-2xl font-bold mb-8 transform transition-all hover:scale-105 shadow-lg hover:shadow-xl border-2 border-orange-400"
+              className="bg-orange-500 text-white py-4 px-16 rounded-full text-2xl font-bold mb-8 transform transition-all duration-300 hover:bg-orange-600 hover:scale-105 shadow-[0_0_15px_rgba(249,115,22,0.5)]"
             >
-              Start Game
+              START GAME
             </button>
             <div className="space-y-6 text-lg max-w-md">
-              <div className="bg-gray-800/50 p-4 rounded-lg">
+              <div className="bg-black/50 p-4 rounded-lg border border-gray-800">
                 <h2 className="text-xl font-bold mb-3 text-orange-400">Mobile Controls</h2>
-                <p className="text-gray-200">
+                <p className="text-gray-300">
                   Drag to move. Tap anywhere else to shoot.
                 </p>
               </div>
-              <div className="bg-gray-800/50 p-4 rounded-lg">
+              <div className="bg-black/50 p-4 rounded-lg border border-gray-800">
                 <h2 className="text-xl font-bold mb-3 text-orange-400">Desktop Controls</h2>
-                <p className="text-gray-200">
+                <p className="text-gray-300">
                   Use WASD or arrow keys to move. Spacebar to shoot.
                 </p>
               </div>
@@ -752,34 +752,40 @@ export default function GamePage() {
         )}
         
         {gameState === 'countdown' && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
-            <div className="text-7xl font-bold">{countdown}</div>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
+            <div className="text-9xl font-bold text-orange-500">{countdown}</div>
           </div>
         )}
         
         {gameState === 'gameover' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white">
-            <h2 className="text-4xl mb-2">Game Over</h2>
-            <p className="text-2xl mb-6">Final Score: {finalScore}</p>
-            <div className="flex gap-4">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
+            <h2 className="text-5xl mb-4">Game Over</h2>
+            <p className="text-3xl mb-8 text-orange-500">Final Score: {finalScore}</p>
+            <div className="flex gap-6">
               <button
                 onClick={restartGame}
-                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-2 px-6 rounded-lg font-bold transform transition-all hover:scale-105 shadow-lg"
+                className="bg-orange-500 text-white py-3 px-8 rounded-full font-bold transition-all duration-300 hover:bg-orange-600 hover:scale-105 shadow-[0_0_15px_rgba(249,115,22,0.5)]"
               >
                 Play Again
               </button>
+              <Link 
+                href="/" 
+                className="border border-gray-700 text-white hover:border-orange-500 hover:text-orange-500 py-3 px-8 rounded-full font-bold transition-all duration-300"
+              >
+                Return Home
+              </Link>
             </div>
           </div>
         )}
-      </div>
-      
-      <div className="mt-6">
-        <Link 
-          href="/" 
-          className="text-lg font-semibold text-orange-400 hover:text-orange-300 transition-colors duration-200"
-        >
-          Return Home
-        </Link>
+        
+        {gameState === 'playing' && (
+          <Link 
+            href="/" 
+            className="absolute top-4 right-4 bg-black/70 text-white hover:text-orange-500 py-1 px-3 rounded-full text-sm font-medium transition-colors duration-200 border border-gray-800 hover:border-orange-500"
+          >
+            Exit
+          </Link>
+        )}
       </div>
     </div>
   );
