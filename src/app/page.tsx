@@ -10,6 +10,30 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [fadeOut, setFadeOut] = useState(false);
   
   useEffect(() => {
+    // Preload critical images to prevent layout shifts and glitches
+    const preloadImages = async () => {
+      const imagesToPreload = [
+        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg",
+        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png",
+        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png",
+        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+      ];
+      
+      const preloadPromises = imagesToPreload.map(src => {
+        return new Promise<void>((resolve) => {
+          const img = new window.Image();
+          img.src = src;
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // Resolve even on error to continue loading
+        });
+      });
+      
+      await Promise.all(preloadPromises);
+    };
+    
+    // Start preloading
+    preloadImages();
+    
     // Simulate loading progress
     const interval = setInterval(() => {
       setProgress((prev) => {
@@ -199,8 +223,16 @@ function ShopSection({ onBack }: { onBack: () => void }) {
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
                 alt="Tactical Art"
-                fill
-                className="object-cover transform transition-transform duration-700 hover:scale-110"
+                width={500}
+                height={500}
+                className="object-cover w-full h-full transform transition-transform duration-700 hover:scale-110"
+                priority={true}
+                onError={(e) => {
+                  // Fallback if image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.style.display = 'none';
+                }}
               />
               <div className="absolute top-3 right-3 bg-[rgb(var(--primary))] text-xs font-bold px-2 py-1 rounded">
                 PREMIUM
@@ -327,6 +359,7 @@ function ShopSection({ onBack }: { onBack: () => void }) {
 
 export default function Home() {
   const [currentView, setCurrentView] = useState<'loading' | 'landing' | 'shop'>('loading');
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   
   // Handle initial loading sequence
   useEffect(() => {
@@ -338,13 +371,23 @@ export default function Home() {
     };
   }, []);
   
+  // Ensure images are loaded before showing content
+  useEffect(() => {
+    if (currentView !== 'loading' && !imagesLoaded) {
+      setImagesLoaded(true);
+    }
+  }, [currentView, imagesLoaded]);
+  
   // Check localStorage for view preference after loading
   useEffect(() => {
     if (currentView === 'landing') {
       const savedView = typeof window !== 'undefined' ? localStorage.getItem('ammocat_view') : null;
       if (savedView === 'shop') {
-        setCurrentView('shop');
-        localStorage.removeItem('ammocat_view'); // Clear the preference
+        // Short delay before switching to shop to ensure smooth transition
+        setTimeout(() => {
+          setCurrentView('shop');
+          localStorage.removeItem('ammocat_view'); // Clear the preference
+        }, 100);
       }
     }
   }, [currentView]);
@@ -359,7 +402,7 @@ export default function Home() {
     <main>
       {currentView === 'loading' && <LoadingScreen onComplete={handleLoadingComplete} />}
       {currentView === 'landing' && <LandingPage onEnterGame={handleEnterGame} onExploreShop={handleExploreShop} />}
-      {currentView === 'shop' && <ShopSection onBack={handleBackToLanding} />}
+      {currentView === 'shop' && imagesLoaded && <ShopSection onBack={handleBackToLanding} />}
     </main>
   );
 }
