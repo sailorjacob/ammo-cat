@@ -1,386 +1,906 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
-// Loading screen component that transitions into the main site
-function LoadingScreen({ onComplete }: { onComplete: () => void }) {
-  const [progress, setProgress] = useState(0);
-  const [fadeOut, setFadeOut] = useState(false);
-  
+export default function Home() {
+  const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [currentView, setCurrentView] = useState<'home' | 'shop'>('home');
+  const [isGlassMode, setIsGlassMode] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
-    // Preload critical images to prevent layout shifts and glitches
-    const preloadImages = async () => {
-      const imagesToPreload = [
-        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg",
-        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png",
-        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png",
-        "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-      ];
-      
-      const preloadPromises = imagesToPreload.map(src => {
-        return new Promise<void>((resolve) => {
-          const img = new window.Image();
-          img.src = src;
-          img.onload = () => resolve();
-          img.onerror = () => resolve(); // Resolve even on error to continue loading
-        });
-      });
-      
-      await Promise.all(preloadPromises);
-    };
-    
-    // Start preloading
-    preloadImages();
-    
-    // Simulate loading progress
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        const newProgress = prev + Math.random() * 10;
-        if (newProgress >= 100) {
-          clearInterval(interval);
-          
-          // Fade out then complete
-          setTimeout(() => {
-            setFadeOut(true);
-            setTimeout(onComplete, 1000);
-          }, 500);
-          
+    // Animate loading progress from 0 to 100
+    const progressInterval = setInterval(() => {
+      setLoadingProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          setTimeout(() => setLoading(false), 500); // Small delay after reaching 100%
           return 100;
         }
-        return newProgress;
+        return prev + Math.random() * 8 + 2; // Smooth random increments
       });
-    }, 200);
-    
-    return () => clearInterval(interval);
-  }, [onComplete]);
-  
-  return (
-    <div className={`fixed inset-0 bg-black flex flex-col items-center justify-center z-50 transition-opacity duration-1000 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}>
-      <div className="w-32 h-32 mb-10 animate-float">
-        <Image 
-          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-          alt="AMMOCAT"
-          width={128}
-          height={128}
-          className="object-contain"
-        />
-      </div>
-      <h1 className="text-4xl font-bold mb-10 text-gradient">AMMOCAT</h1>
-      <div className="w-64 h-2 bg-gray-800 rounded-full overflow-hidden mb-3">
+    }, 100);
+
+    return () => clearInterval(progressInterval);
+  }, []);
+
+  // Mouse tracking effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+
+    if (currentView === 'home' && !loading) {
+      window.addEventListener('mousemove', handleMouseMove);
+    }
+
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [currentView, loading]);
+
+  // Smooth crosshair following effect
+  useEffect(() => {
+    const smoothFollow = () => {
+      setCrosshairPos(prev => ({
+        x: prev.x + (mousePos.x - prev.x) * 0.08, // Smooth lag factor
+        y: prev.y + (mousePos.y - prev.y) * 0.08
+      }));
+    };
+
+    if (currentView === 'home' && !loading) {
+      const animationFrame = requestAnimationFrame(smoothFollow);
+      const interval = setInterval(smoothFollow, 16); // ~60fps
+      
+      return () => {
+        cancelAnimationFrame(animationFrame);
+        clearInterval(interval);
+      };
+    }
+  }, [mousePos, currentView, loading]);
+
+  // Simple Shop Component
+  const ShopView = () => (
+    <div 
+      style={{
+        width: '100vw',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
+        overflow: 'auto',
+        background: '#f5f5f5'
+      }}
+    >
+             {/* CLEAN SHOP HEADER */}
+       <div 
+         style={{
+           position: 'fixed',
+           top: 0,
+           left: 0,
+           right: 0,
+           width: '100%',
+           zIndex: 50,
+           background: '#f5f5f5',
+           borderBottom: '1px solid #e0e0e0',
+           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+         }}
+       >
+         <div 
+           style={{ 
+             width: '100%',
+             display: 'grid',
+             gridTemplateColumns: '1fr auto 1fr',
+             alignItems: 'center',
+             padding: '16px 40px'
+           }}
+         >
+           {/* Left side - Clean Logo */}
+           <div style={{ display: 'flex', alignItems: 'center' }}>
+             <div 
+               style={{
+                 position: 'relative',
+                 marginRight: '16px'
+               }}
+             >
+               <Image 
+                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                 alt="AMMOCAT" 
+                 width={35} 
+                 height={35}
+               />
+             </div>
+             <span 
+               style={{
+                 color: '#000000',
+                 fontSize: '22px',
+                 fontWeight: '900',
+                 letterSpacing: '2px'
+               }}
+             >
+               SHOP
+             </span>
+           </div>
+           
+           {/* Center - Clean Back Button */}
+           <div style={{ justifyContent: 'center', display: 'flex' }}>
+             <button 
+               onClick={() => setCurrentView('home')}
+               style={{
+                 position: 'relative',
+                 padding: '12px 24px',
+                 background: '#ffffff',
+                 border: '1px solid #e0e0e0',
+                 borderRadius: '8px',
+                 color: '#000000',
+                 fontSize: '16px',
+                 fontWeight: '600',
+                 letterSpacing: '1px',
+                 display: 'flex',
+                 alignItems: 'center',
+                 gap: '8px',
+                 transition: 'all 0.3s ease',
+                 cursor: 'pointer',
+                 fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+               }}
+               onMouseEnter={(e) => {
+                 const target = e.target as HTMLElement;
+                 target.style.background = '#f8f8f8';
+                 target.style.border = '1px solid #d0d0d0';
+                 target.style.transform = 'translateY(-1px)';
+               }}
+               onMouseLeave={(e) => {
+                 const target = e.target as HTMLElement;
+                 target.style.background = '#ffffff';
+                 target.style.border = '1px solid #e0e0e0';
+                 target.style.transform = 'translateY(0)';
+               }}
+             >
+               ←
+               BACK
+             </button>
+           </div>
+           
+           {/* Right side - Home Icon */}
+           <div 
+             style={{ 
+               display: 'flex', 
+               justifyContent: 'flex-end', 
+               alignItems: 'center',
+               paddingRight: '80px'
+             }}
+           >
+             <button
+               onClick={() => setCurrentView('home')}
+               style={{
+                 background: 'transparent',
+                 border: 'none',
+                 cursor: 'pointer',
+                 padding: '8px',
+                 borderRadius: '50%',
+                 transition: 'all 0.3s ease',
+                 display: 'flex',
+                 alignItems: 'center',
+                 justifyContent: 'center',
+                 opacity: 0.8
+               }}
+               onMouseEnter={(e) => {
+                 e.currentTarget.style.opacity = '1';
+                 e.currentTarget.style.transform = 'scale(1.1)';
+                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+               }}
+               onMouseLeave={(e) => {
+                 e.currentTarget.style.opacity = '0.8';
+                 e.currentTarget.style.transform = 'scale(1)';
+                 e.currentTarget.style.background = 'transparent';
+               }}
+             >
+               <svg 
+                 xmlns="http://www.w3.org/2000/svg" 
+                 width="24" 
+                 height="24" 
+                 viewBox="0 0 24 24" 
+                 fill="#000000" 
+                 stroke="none"
+               >
+                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
+               </svg>
+             </button>
+           </div>
+         </div>
+       </div>
+
+      {/* Shop Content */}
+      <div style={{ paddingTop: '80px', padding: '80px 40px 40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+        </div>
+
+        {/* Products Grid */}
         <div 
-          className="h-full bg-[rgb(var(--primary))]"
-          style={{ width: `${progress}%`, transition: 'width 0.3s ease-out' }}
-        ></div>
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '40px',
+            maxWidth: '1200px',
+            margin: '0 auto'
+          }}
+        >
+          {/* Product 1 */}
+          <div 
+            style={{
+              padding: '24px',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(-4px)';
+            }}
+            onMouseLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(0)';
+            }}
+          >
+            <div 
+              style={{
+                width: '100%',
+                height: '192px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Tactical Rifle"
+                width={120}
+                height={120}
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
+              AMMOCAT AR-15 Tactical
+            </h3>
+            <p style={{ color: '#666666', marginBottom: '16px' }}>
+              Military-grade tactical rifle with custom modifications
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$1,299</span>
+              <button 
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid #e0e0e0',
+                  color: '#000000',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#f8f8f8';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#ffffff';
+                }}
+              >
+                ADD TO CART
+              </button>
+            </div>
+          </div>
+
+          {/* Product 2 */}
+          <div 
+            style={{
+              padding: '24px',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(-4px)';
+            }}
+            onMouseLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(0)';
+            }}
+          >
+            <div 
+              style={{
+                width: '100%',
+                height: '192px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+                alt="Tactical Vest"
+                width={120}
+                height={120}
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
+              Level IIIA Tactical Vest
+            </h3>
+            <p style={{ color: '#666666', marginBottom: '16px' }}>
+              NIJ certified ballistic protection
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$599</span>
+              <button 
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid #e0e0e0',
+                  color: '#000000',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#f8f8f8';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#ffffff';
+                }}
+              >
+                ADD TO CART
+              </button>
+            </div>
+          </div>
+
+          {/* Product 3 */}
+          <div 
+            style={{
+              padding: '24px',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(-4px)';
+            }}
+            onMouseLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(0)';
+            }}
+          >
+            <div 
+              style={{
+                width: '100%',
+                height: '192px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
+                alt="Night Vision"
+                width={120}
+                height={120}
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
+              Night Vision Scope Pro
+            </h3>
+            <p style={{ color: '#666666', marginBottom: '16px' }}>
+              Advanced thermal imaging with 8x zoom
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$899</span>
+              <button 
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid #e0e0e0',
+                  color: '#000000',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#f8f8f8';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#ffffff';
+                }}
+              >
+                ADD TO CART
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <p className="text-gray-400 text-sm">{Math.floor(progress)}% LOADED</p>
     </div>
   );
-}
 
-// Main landing page with immersive design
-function LandingPage({ onEnterGame, onExploreShop }: { onEnterGame: () => void, onExploreShop: () => void }) {
-  return (
-    <div className="min-h-screen relative overflow-hidden bg-black">
-      {/* Background video */}
-      <div className="absolute inset-0 z-0">
-        <video 
-          className="w-full h-full object-cover"
-          autoPlay 
-          playsInline
-          muted
-          loop
-          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
-      </div>
-      
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 h-screen flex flex-col">
-        {/* Header */}
-        <header className="py-6 flex justify-between items-center">
-          <div className="flex items-center">
+  if (loading) {
+    return (
+      <div 
+        className="fixed inset-0 bg-black z-50"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100vw',
+          height: '100vh',
+          margin: 0,
+          padding: 0
+        }}
+      >
+        <div 
+          className="text-center"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <div className="w-40 h-40 mb-8 animate-pulse">
             <Image 
-              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png" 
-              alt="AMMOCAT" 
-              width={40} 
-              height={40}
-              className="mr-2"
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+              alt="AMMOCAT"
+              width={160}
+              height={160}
+              className="object-contain"
+              style={{ width: '100%', height: '100%' }}
             />
-            <span className="font-sora font-bold text-xl tracking-wider">AMMO<span className="text-[rgb(var(--primary))]">CAT</span></span>
           </div>
-          <nav className="flex items-center space-x-2">
-            <button 
-              onClick={onEnterGame} 
-              className="px-5 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r from-[rgba(var(--primary),0.8)] to-[rgba(var(--accent),0.8)] hover:from-[rgb(var(--primary))] hover:to-[rgb(var(--accent))] transition-all duration-300 shadow-[0_2px_10px_rgba(var(--primary),0.3)] hover:shadow-[0_2px_15px_rgba(var(--primary),0.5)]"
+          <h1 
+            className="text-5xl font-bold mb-6"
+            style={{
+              color: '#000000',
+              textShadow: '0 0 30px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            AMMOCAT
+          </h1>
+          <div 
+            className="bg-gray-800 rounded-full mb-4"
+            style={{ width: '300px', height: '6px' }}
+          >
+            <div 
+              className="h-full rounded-full transition-all duration-300 ease-out"
+              style={{ 
+                width: `${Math.min(loadingProgress, 100)}%`,
+                background: 'linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%)',
+                boxShadow: '0 0 20px rgba(0, 212, 255, 0.6)'
+              }}
+            ></div>
+          </div>
+          <p 
+            className="text-lg font-mono"
+            style={{
+              color: '#000000',
+              textShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            {Math.floor(loadingProgress)}%
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show shop view if selected
+  if (currentView === 'shop') {
+    return <ShopView />;
+  }
+
+  // Main homepage
+  return (
+    <div 
+      className="bg-black relative"
+      style={{
+        width: '100vw',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
+        overflow: 'hidden'
+      }}
+    >
+      {/* DYNAMIC HOMEPAGE HEADER */}
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          zIndex: 50,
+          background: isGlassMode ? 'rgba(0, 0, 0, 0.1)' : '#f5f5f5',
+          backdropFilter: isGlassMode ? 'blur(20px)' : 'none',
+          borderBottom: isGlassMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e0e0e0',
+          boxShadow: isGlassMode ? '0 8px 32px rgba(0, 0, 0, 0.3)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+        }}
+      >
+        <div 
+          style={{ 
+            width: '100%',
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            alignItems: 'center',
+            padding: '16px 40px'
+          }}
+        >
+          {/* Left side - Clean Logo */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div 
+              style={{
+                position: 'relative',
+                marginRight: '16px'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="AMMOCAT" 
+                width={35} 
+                height={35}
+              />
+            </div>
+            <span 
+              style={{
+                color: isGlassMode ? '#ffffff' : '#000000',
+                fontSize: '22px',
+                fontWeight: '900',
+                letterSpacing: '2px',
+                textShadow: isGlassMode ? '0 0 20px rgba(255, 255, 255, 0.4)' : 'none',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
+              AMMOCAT
+            </span>
+          </div>
+          
+          {/* Center - Clean Buttons */}
+          <div 
+            style={{
+              display: 'flex',
+              gap: '24px',
+              alignItems: 'center'
+            }}
+          >
+            {/* PLAY - Dynamic Button */}
+            <Link 
+              href="/game"
+              style={{
+                position: 'relative',
+                padding: '12px 24px',
+                background: isGlassMode ? 'rgba(255, 255, 255, 0.15)' : '#ffffff',
+                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid #e0e0e0',
+                borderRadius: isGlassMode ? '50px' : '8px',
+                color: isGlassMode ? '#ffffff' : '#000000',
+                fontSize: '16px',
+                fontWeight: isGlassMode ? '700' : '600',
+                letterSpacing: '1px',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                backdropFilter: isGlassMode ? 'blur(20px)' : 'none',
+                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-2px) scale(1.02)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.25)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                } else {
+                  target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
+                  target.style.background = '#f8f8f8';
+                }
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0) scale(1)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.15)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                } else {
+                  target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                  target.style.background = '#ffffff';
+                }
+              }}
             >
               PLAY
-            </button>
+            </Link>
+
+            {/* SHOP - Dynamic Button */}
             <button 
-              onClick={onExploreShop} 
-              className="px-5 py-1.5 rounded-full text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+              onClick={() => setCurrentView('shop')}
+              style={{
+                position: 'relative',
+                padding: '12px 24px',
+                background: isGlassMode ? 'rgba(255, 255, 255, 0.1)' : '#ffffff',
+                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid #e0e0e0',
+                borderRadius: isGlassMode ? '50px' : '8px',
+                color: isGlassMode ? '#ffffff' : '#000000',
+                fontSize: '16px',
+                fontWeight: isGlassMode ? '700' : '600',
+                letterSpacing: '1px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                backdropFilter: isGlassMode ? 'blur(20px)' : 'none',
+                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
+                cursor: 'pointer',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-2px) scale(1.02)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.2)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.25)';
+                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                } else {
+                  target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
+                  target.style.background = '#f8f8f8';
+                }
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0) scale(1)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.1)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
+                } else {
+                  target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                  target.style.background = '#ffffff';
+                }
+              }}
             >
               SHOP
             </button>
-          </nav>
-        </header>
-        
-        {/* Hero section */}
-        <div className="flex-1 flex items-center">
-          <div className="max-w-xl">
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-4">
-              TACTICAL <span className="text-gradient">GAMING</span> REIMAGINED
-            </h1>
-            <p className="text-lg text-gray-300 mb-10">
-              Experience the ultimate tactical shooter with cutting-edge gameplay and immersive mechanics.
-            </p>
           </div>
-        </div>
-        
-        {/* Floating elements */}
-        <div className="absolute right-10 top-1/3 animate-float" style={{ animationDelay: '0.5s' }}>
-          <Image 
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-            alt="Floating element"
-            width={70}
-            height={70}
-            className="opacity-70"
-          />
-        </div>
-        <div className="absolute right-40 bottom-1/4 animate-float" style={{ animationDelay: '1s' }}>
-          <Image 
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-            alt="Floating element"
-            width={90}
-            height={90}
-            className="opacity-70"
-          />
-        </div>
-      </div>
-      
-      {/* Footer - modern & minimalist */}
-      <div className="absolute bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30 z-10">
-        <div className="container mx-auto flex justify-center items-center px-6 py-3">
-          <div className="text-xs text-white/50">© {new Date().getFullYear()} AMMOCAT</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Shop section with modern design
-function ShopSection({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="min-h-screen bg-gradient relative">
-      {/* Header */}
-      <header className="py-6 px-4 container mx-auto flex justify-between items-center">
-        <div className="flex items-center">
-          <Image 
-            src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png" 
-            alt="AMMOCAT" 
-            width={30} 
-            height={30}
-            className="mr-2"
-          />
-          <span className="font-sora font-bold text-xl tracking-wider">AMMO<span className="text-[rgb(var(--primary))]">CAT</span></span>
-        </div>
-        <button 
-          onClick={onBack} 
-          className="px-5 py-1.5 rounded-full text-sm font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center gap-2"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-70">
-            <path d="M19 12H5M12 19l-7-7 7-7"></path>
-          </svg>
-          BACK
-        </button>
-      </header>
-      
-      {/* Shop content */}
-      <div className="container mx-auto px-4 py-10 pb-24">
-        <h1 className="text-4xl font-bold mb-2">TACTICAL SHOP</h1>
-        <p className="text-gray-400 mb-12">Premium gear for your gaming missions</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Item 1 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
-            <div className="aspect-square relative bg-black/40">
-              <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//IMG_16562.jpg"
-                alt="Tactical Art"
-                width={500}
-                height={500}
-                className="object-cover w-full h-full transform transition-transform duration-700 hover:scale-110"
-                priority={true}
-                onError={(e) => {
-                  // Fallback if image fails to load
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.style.display = 'none';
+          
+          {/* Right side - Crescent Moon Toggle */}
+          <div 
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end', 
+              alignItems: 'center',
+              paddingRight: '80px'
+            }}
+          >
+            <button
+              onClick={() => setIsGlassMode(!isGlassMode)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '50%',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.15) rotate(15deg)';
+                e.currentTarget.style.background = isGlassMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <svg 
+                width="28" 
+                height="28" 
+                viewBox="0 0 24 24" 
+                fill="none"
+                style={{
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  filter: isGlassMode ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                 }}
-              />
-              <div className="absolute top-3 right-3 bg-[rgb(var(--primary))] text-xs font-bold px-2 py-1 rounded">
-                PREMIUM
-              </div>
-            </div>
-            <div className="p-4">
-              <h3 className="font-bold text-lg mb-1">Tactical Art</h3>
-              <p className="text-gray-400 text-sm mb-3 line-clamp-2">Limited edition artwork showcasing tactical excellence</p>
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-[rgb(var(--primary))]">$5,000,000</span>
-                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
-                  DETAILS
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          {/* Item 2 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
-            <div className="aspect-square relative bg-black/40">
-              <div className="w-full h-full flex items-center justify-center p-4">
-                <Image 
-                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                  alt="Tactical Vest"
-                  width={200}
-                  height={200}
-                  className="object-contain transition-transform duration-500 hover:scale-110"
+              >
+                <path 
+                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" 
+                  fill={isGlassMode ? '#ffffff' : '#000000'}
+                  stroke={isGlassMode ? '#ffffff' : '#000000'}
+                  strokeWidth="1.5"
                 />
-              </div>
-            </div>
-            <div className="p-4">
-              <h3 className="font-bold text-lg mb-1">Tactical Vest</h3>
-              <p className="text-gray-400 text-sm mb-3 line-clamp-2">Level IIIA rated protection for intense gaming sessions</p>
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-[rgb(var(--primary))]">$599.99</span>
-                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
-                  DETAILS
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          {/* Item 3 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
-            <div className="aspect-square relative bg-black/40">
-              <div className="w-full h-full flex items-center justify-center p-4">
-                <Image 
-                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                  alt="Targeting System"
-                  width={150}
-                  height={150}
-                  className="object-contain transition-transform duration-500 hover:scale-110"
-                />
-              </div>
-            </div>
-            <div className="p-4">
-              <h3 className="font-bold text-lg mb-1">Targeting System</h3>
-              <p className="text-gray-400 text-sm mb-3 line-clamp-2">Advanced laser targeting with night vision capabilities</p>
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-[rgb(var(--primary))]">$399.99</span>
-                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
-                  DETAILS
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          {/* Item 4 */}
-          <div className="bg-[rgb(var(--gray-dark))] rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(var(--primary),0.15)]">
-            <div className="aspect-square relative bg-black/40">
-              <div className="w-full h-full flex items-center justify-center p-4">
-                <Image 
-                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                  alt="Tactical Grenades"
-                  width={150}
-                  height={150}
-                  className="object-contain transition-transform duration-500 hover:scale-110"
-                />
-              </div>
-            </div>
-            <div className="p-4">
-              <h3 className="font-bold text-lg mb-1">Tactical Grenades</h3>
-              <p className="text-gray-400 text-sm mb-3 line-clamp-2">Specialized distraction devices with enhanced formula</p>
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-[rgb(var(--primary))]">$249.99</span>
-                <button className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 backdrop-blur-sm border border-[rgba(var(--primary),0.3)] hover:bg-[rgba(var(--primary),0.1)] hover:border-[rgba(var(--primary),0.5)] text-[rgb(var(--primary))] transition-all duration-300">
-                  DETAILS
-                </button>
-              </div>
-            </div>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
-      
-      {/* Ambient video */}
-      <div className="fixed bottom-16 right-6 z-30 pointer-events-none overflow-hidden rounded-xl shadow-lg" style={{ width: '180px', height: '180px' }}>
-        <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* Background Video - ABSOLUTELY CENTERED */}
+      <div 
+        className="absolute"
+        style={{
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden'
+        }}
+      >
         <video 
           autoPlay 
+          muted 
+          loop 
           playsInline
-          muted
-          loop
-          className="w-full h-full object-cover opacity-80"
-          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/images/AMMO2.mp4"
+          style={{
+            minWidth: '100%',
+            minHeight: '100%',
+            width: 'auto',
+            height: 'auto',
+            objectFit: 'cover'
+          }}
+          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4"
         />
+        <div 
+          className="absolute bg-black/40"
+          style={{
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%'
+          }}
+        ></div>
       </div>
-      
-      {/* Footer - flush to bottom */}
-      <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30">
-        <div className="container mx-auto flex justify-center items-center px-6 py-3">
-          <div className="text-xs text-white/50">© {new Date().getFullYear()} AMMOCAT</div>
+
+      {/* Crosshairs - Above video, below header */}
+      {currentView === 'home' && !loading && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            pointerEvents: 'none',
+            zIndex: 10
+          }}
+        >
+          {/* Horizontal line */}
+          <div 
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: `${crosshairPos.y}px`,
+              width: '100vw',
+              height: '1px',
+              backgroundColor: 'rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 0 4px rgba(255, 255, 255, 0.3)',
+              transform: 'translateY(-0.5px)',
+              transition: 'opacity 0.3s ease'
+            }}
+          />
+          {/* Vertical line */}
+          <div 
+            style={{
+              position: 'absolute',
+              left: `${crosshairPos.x}px`,
+              top: 0,
+              width: '1px',
+              height: '100vh',
+              backgroundColor: 'rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 0 4px rgba(255, 255, 255, 0.3)',
+              transform: 'translateX(-0.5px)',
+              transition: 'opacity 0.3s ease'
+            }}
+          />
+        </div>
+      )}
+
+      {/* Main Content - ABSOLUTELY CENTERED */}
+      <div 
+        className="absolute z-20"
+        style={{
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div 
+          className="text-center"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <div className="w-48 h-48 animate-bounce">
+            <Image 
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+              alt="AMMOCAT"
+              width={192}
+              height={192}
+              className="object-contain drop-shadow-2xl"
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Assets - ABSOLUTELY CENTERED HORIZONTAL */}
+      <div 
+        className="absolute z-20"
+        style={{
+          bottom: '80px',
+          left: 0,
+          width: '100vw',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '60px'
+          }}
+        >
+          <div className="animate-float">
+            <Image 
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+              alt="Asset 1"
+              width={80}
+              height={80}
+              className="opacity-80 hover:opacity-100 transition-all duration-300 hover:scale-110"
+            />
+          </div>
+          <div className="animate-float" style={{animationDelay: '1s'}}>
+            <Image 
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
+              alt="Asset 2"
+              width={120}
+              height={120}
+              className="opacity-80 hover:opacity-100 transition-all duration-300 hover:scale-110"
+            />
+          </div>
+          <div className="animate-float" style={{animationDelay: '2s'}}>
+            <Image 
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+              alt="Asset 3"
+              width={80}
+              height={80}
+              className="opacity-80 hover:opacity-100 transition-all duration-300 hover:scale-110"
+            />
+          </div>
         </div>
       </div>
     </div>
-  );
-}
-
-export default function Home() {
-  const [currentView, setCurrentView] = useState<'loading' | 'landing' | 'shop'>('loading');
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  
-  // Handle initial loading sequence
-  useEffect(() => {
-    // Disable scroll during loading
-    document.body.style.overflow = 'hidden';
-    
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
-  
-  // Ensure images are loaded before showing content
-  useEffect(() => {
-    if (currentView !== 'loading' && !imagesLoaded) {
-      setImagesLoaded(true);
-    }
-  }, [currentView, imagesLoaded]);
-  
-  // Check localStorage for view preference after loading
-  useEffect(() => {
-    if (currentView === 'landing') {
-      const savedView = typeof window !== 'undefined' ? localStorage.getItem('ammocat_view') : null;
-      if (savedView === 'shop') {
-        // Short delay before switching to shop to ensure smooth transition
-        setTimeout(() => {
-          setCurrentView('shop');
-          localStorage.removeItem('ammocat_view'); // Clear the preference
-        }, 100);
-      }
-    }
-  }, [currentView]);
-  
-  // Navigation handlers
-  const handleLoadingComplete = () => setCurrentView('landing');
-  const handleEnterGame = () => window.location.href = '/game';
-  const handleExploreShop = () => setCurrentView('shop');
-  const handleBackToLanding = () => setCurrentView('landing');
-  
-  return (
-    <main>
-      {currentView === 'loading' && <LoadingScreen onComplete={handleLoadingComplete} />}
-      {currentView === 'landing' && <LandingPage onEnterGame={handleEnterGame} onExploreShop={handleExploreShop} />}
-      {currentView === 'shop' && imagesLoaded && <ShopSection onBack={handleBackToLanding} />}
-    </main>
   );
 }

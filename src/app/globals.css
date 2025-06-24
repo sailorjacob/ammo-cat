@@ -20,6 +20,11 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-sora font-bold;
   }
+  
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 @layer components {
@@ -46,17 +51,26 @@
   .bg-gradient {
     @apply bg-gradient-to-br from-[rgb(var(--gray-dark))] to-black;
   }
+  
+  .glass-morphism {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .glow-on-hover {
+    @apply transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary),0.4)] hover:scale-105;
+  }
 }
 
-/* Custom animations */
+/* Enhanced animations */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(1deg); }
+  66% { transform: translateY(4px) rotate(-1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite;
 }
 
 @keyframes pulse-glow {
@@ -66,4 +80,110 @@
 
 .animate-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.6s ease-out;
+}
+
+/* NO SCROLLBARS AT ALL */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* CYBERPUNK FOCUS STYLES */
+button:focus,
+a:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.5) !important;
+  border-radius: 50px;
+}
+
+/* BUTTON HIGHLIGHT OVERRIDE */
+button:active,
+button:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6) !important;
+}
+
+/* REMOVE ALL PURPLE HIGHLIGHTS */
+*:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.5) !important;
+}
+
+/* ALLOW TEXT SELECTION */
+* {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+::selection {
+  background: rgba(0, 212, 255, 0.3) !important;
+  color: inherit !important;
+}
+
+::-moz-selection {
+  background: rgba(0, 212, 255, 0.3) !important;
+  color: inherit !important;
+}
+
+::-webkit-selection {
+  background: rgba(0, 212, 255, 0.3) !important;
+  color: inherit !important;
+}
+
+/* Remove any possible highlight colors */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+*::-webkit-focus-ring-color {
+  outline-color: transparent !important;
 }

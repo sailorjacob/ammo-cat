@@ -15,7 +15,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "AMMOCAT | Tactical Gaming Experience",
+  title: "AMMOCAT",
   description: "Experience the future of tactical gameplay with AMMOCAT",
   keywords: "tactical, gaming, shooter, ammocat, cat, game",
 };
@@ -28,9 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${sora.variable} antialiased bg-black text-white`}
+        className={`${montserrat.variable} ${sora.variable} antialiased bg-black text-white min-h-screen`}
       >
-        {children}
+        <div className="flex flex-col min-h-screen">
+          <main className="flex-1">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

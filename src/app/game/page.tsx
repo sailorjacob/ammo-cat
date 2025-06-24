@@ -90,7 +90,7 @@ export default function GamePage() {
     const ZOMBIE_SPEED = 1.5;
     const ENEMY_FIREBALL_SPEED = 3;
     const BOUNDARY_LEFT = 0;
-    const BOUNDARY_RIGHT = GAME_WIDTH / 2;
+    const BOUNDARY_RIGHT = GAME_WIDTH;
     const BOUNDARY_TOP = 0;
     const BOUNDARY_BOTTOM = GAME_HEIGHT;
     
@@ -691,31 +691,260 @@ export default function GamePage() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient flex flex-col items-center justify-center p-4">
-      <div className="mb-4 flex items-center justify-between w-full max-w-[800px]">
-        <div className="flex flex-row items-center" style={{ display: 'flex', flexDirection: 'row' }}>
-          {Array.from({ length: lives }).map((_, index) => (
-            <div key={index} className="inline-block" style={{ width: '32px', height: '32px', marginRight: '8px', display: 'inline-block' }}>
-              <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                alt="Life"
-                width={32}
-                height={32}
-                unoptimized={true}
-                style={{ display: 'inline-block' }}
-              />
+    <div 
+      className="bg-black relative"
+      style={{
+        width: '100vw',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      {/* ULTRA MODERN GLASSMORPHISM HEADER */}
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          zIndex: 50,
+          background: 'rgba(0, 0, 0, 0.1)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        <div 
+          style={{ 
+            width: '100%',
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            alignItems: 'center',
+            padding: '16px 40px'
+          }}
+        >
+          {/* Left side - Lives */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div className="flex flex-row items-center" style={{ display: 'flex', flexDirection: 'row' }}>
+              {Array.from({ length: lives }).map((_, index) => (
+                <div key={index} className="inline-block" style={{ width: '32px', height: '32px', marginRight: '8px', display: 'inline-block' }}>
+                  <Image 
+                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                    alt="Life"
+                    width={32}
+                    height={32}
+                    unoptimized={true}
+                    style={{ display: 'inline-block', filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))' }}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+          
+          {/* Center - AMMOCAT Title */}
+          <div className="text-center">
+            <span 
+              style={{
+                color: '#000000',
+                fontSize: '22px',
+                fontWeight: '900',
+                letterSpacing: '2px',
+                textShadow: '0 0 20px rgba(0, 0, 0, 0.4)'
+              }}
+            >
+              AMMOCAT
+            </span>
+          </div>
+          
+          {/* Right side - Home Icon (positioned right) */}
+          <div 
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end', 
+              alignItems: 'center',
+              paddingRight: '80px'
+            }}
+          >
+            <Link 
+              href="/" 
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '50%',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: 0.8,
+                textDecoration: 'none'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.currentTarget as HTMLElement;
+                target.style.opacity = '1';
+                target.style.transform = 'scale(1.1)';
+                target.style.background = 'rgba(0, 0, 0, 0.05)';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.currentTarget as HTMLElement;
+                target.style.opacity = '0.8';
+                target.style.transform = 'scale(1)';
+                target.style.background = 'transparent';
+              }}
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="#000000" 
+                stroke="none"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </Link>
+          </div>
         </div>
-        <div className="text-2xl font-bold text-white">Score: {score}</div>
       </div>
 
-      <div className="relative shadow-2xl">
+      {/* Left Sidebar - Clean Minimalistic Controls */}
+      <div 
+        style={{
+          position: 'fixed',
+          left: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 40,
+          background: '#f5f5f5',
+          borderRadius: '8px',
+          padding: '20px 16px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          minWidth: '200px'
+        }}
+      >
+        <div style={{ marginBottom: '24px' }}>
+          <h3 
+            style={{
+              color: '#000000',
+              fontSize: '14px',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.5px'
+            }}
+          >
+            MOBILE
+          </h3>
+          <p 
+            style={{
+              color: '#666666',
+              fontSize: '12px',
+              lineHeight: '1.4',
+              margin: 0
+            }}
+          >
+            Drag to move<br/>
+            Tap to shoot
+          </p>
+        </div>
+        
+        <div>
+          <h3 
+            style={{
+              color: '#000000',
+              fontSize: '14px',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.5px'
+            }}
+          >
+            DESKTOP
+          </h3>
+          <p 
+            style={{
+              color: '#666666',
+              fontSize: '12px',
+              lineHeight: '1.4',
+              margin: 0
+            }}
+          >
+            WASD / Arrows to move<br/>
+            Spacebar to shoot
+          </p>
+        </div>
+      </div>
+
+      {/* Right Sidebar - Score */}
+      <div 
+        style={{
+          position: 'fixed',
+          right: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 40,
+          background: '#f5f5f5',
+          borderRadius: '8px',
+          padding: '16px 12px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          minWidth: '120px',
+          textAlign: 'center'
+        }}
+      >
+        <div>
+          <h3 
+            style={{
+              color: '#000000',
+              fontSize: '12px',
+              fontWeight: '600',
+              marginBottom: '8px',
+              letterSpacing: '0.5px'
+            }}
+          >
+            SCORE
+          </h3>
+          <p 
+            style={{
+              color: '#B91C1C',
+              fontSize: '20px',
+              fontWeight: '700',
+              margin: 0
+            }}
+          >
+            {score}
+          </p>
+        </div>
+      </div>
+
+      {/* Game Canvas Container - CENTERED */}
+      <div 
+        className="relative"
+        style={{
+          marginTop: '80px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          border: '1px solid #e0e0e0',
+          background: '#f5f5f5'
+        }}
+      >
         <canvas
           ref={canvasRef}
           width={800}
           height={600}
-          className={`border-2 border-[rgba(var(--primary),0.3)] bg-white ${hitEffect ? 'opacity-70 shadow-[0_0_10px_5px_rgba(255,0,0,0.7)]' : ''}`}
+          className={`bg-white ${hitEffect ? 'opacity-70' : ''}`}
+          style={{
+            display: 'block',
+            filter: hitEffect ? 'drop-shadow(0 0 20px rgba(255, 0, 0, 0.8))' : 'none'
+          }}
         />
         
         {hitEffect && (
@@ -723,110 +952,199 @@ export default function GamePage() {
         )}
         
         {gameState === 'ready' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
-            <h1 className="text-5xl font-bold mb-8">AMMO<span className="text-[rgb(var(--primary))]">CAT</span></h1>
+          <div 
+            className="absolute inset-0 flex flex-col items-center justify-center"
+            style={{
+              background: '#f5f5f5',
+              border: '1px solid #e0e0e0'
+            }}
+          >
+            {/* Floating Character Asset */}
+            <div 
+              className="floating-character"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 1,
+                width: '120px',
+                height: '120px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Character"
+                width={120}
+                height={120}
+                style={{ 
+                  objectFit: 'contain',
+                  opacity: 0.6,
+                  filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1))',
+                  width: '120px',
+                  height: '120px'
+                }}
+              />
+            </div>
+
+            <h1 
+              className="text-5xl font-bold mb-8"
+              style={{
+                color: '#000000',
+                letterSpacing: '2px',
+                zIndex: 10,
+                position: 'relative'
+              }}
+            >
+              AMMOCAT
+            </h1>
             <button
               onClick={startGame}
-              className="btn-primary text-2xl py-4 px-16 mb-8"
+              style={{
+                position: 'relative',
+                padding: '16px 48px',
+                background: '#ffffff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                color: '#000000',
+                fontSize: '20px',
+                fontWeight: '600',
+                letterSpacing: '1px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                marginBottom: '32px',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-1px)';
+                target.style.background = '#f8f8f8';
+                target.style.border = '1px solid #d0d0d0';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0)';
+                target.style.background = '#ffffff';
+                target.style.border = '1px solid #e0e0e0';
+              }}
             >
               START GAME
             </button>
-            <div className="space-y-6 text-lg max-w-md">
-              <div className="bg-black/50 p-4 rounded-lg border border-[rgba(var(--primary),0.2)]">
-                <h2 className="text-xl font-bold mb-3 text-[rgb(var(--primary))]">Mobile Controls</h2>
-                <p className="text-gray-300">
-                  Drag to move. Tap anywhere else to shoot.
-                </p>
-              </div>
-              <div className="bg-black/50 p-4 rounded-lg border border-[rgba(var(--primary),0.2)]">
-                <h2 className="text-xl font-bold mb-3 text-[rgb(var(--primary))]">Desktop Controls</h2>
-                <p className="text-gray-300">
-                  Use WASD or arrow keys to move. Spacebar to shoot.
-                </p>
-              </div>
-              <p className="text-center text-gray-300 italic mt-4">
-                Survive as long as possible and defeat the zombies!
-              </p>
-            </div>
-          </div>
-        )}
-        
-        {gameState === 'countdown' && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-            <div className="text-9xl font-bold text-[rgb(var(--primary))]">{countdown}</div>
-          </div>
-        )}
-        
-        {gameState === 'gameover' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
-            <h2 className="text-6xl font-bold mb-2">GAME OVER</h2>
-            <div className="w-20 h-1 bg-[rgb(var(--primary))] mb-6"></div>
-            <p className="text-3xl mb-8">Final Score: <span className="text-[rgb(var(--primary))] font-bold">{finalScore}</span></p>
-            <div className="space-y-3">
-              <button
-                onClick={restartGame}
-                className="min-w-[180px] py-3 px-8 rounded-full text-white font-medium bg-gradient-to-r from-[rgba(var(--primary),0.8)] to-[rgba(var(--accent),0.8)] hover:from-[rgb(var(--primary))] hover:to-[rgb(var(--accent))] transition-all duration-300 shadow-[0_0_15px_rgba(var(--primary),0.5)] hover:shadow-[0_0_25px_rgba(var(--primary),0.7)] flex items-center justify-center gap-2"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-                PLAY AGAIN
-              </button>
+
+            {/* Floating Animation Keyframes */}
+            <style jsx>{`
+              .floating-character {
+                animation: float 3s ease-in-out infinite;
+              }
               
-              <Link href="/" className="min-w-[180px] py-3 px-8 rounded-full text-white font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                HOME
-              </Link>
-              
-              <Link href="/" className="min-w-[180px] py-3 px-8 rounded-full text-white font-medium bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center justify-center gap-2" onClick={() => { localStorage.setItem('ammocat_view', 'shop'); }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                SHOP
-              </Link>
-            </div>
+              @keyframes float {
+                0%, 100% {
+                  transform: translate(-50%, -50%) translateY(0px);
+                }
+                50% {
+                  transform: translate(-50%, -50%) translateY(-20px);
+                }
+              }
+            `}</style>
           </div>
         )}
         
-        {/* Exit button shown during gameplay - only visible HOME link */}
-        {gameState === 'playing' && (
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Link 
-              href="/" 
-              className="text-white/80 hover:text-white flex items-center gap-2 transition-all duration-300 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-xs"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-              HOME
-            </Link>
-          </div>
-        )}
+
+        
+
+        
+
       </div>
       
-      {/* Fixed footer with home button - flush with bottom - REMOVED FOR GAMEPLAY, ONLY SHOWS WHEN NOT PLAYING */}
-      {gameState !== 'playing' && (
-        <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md border-t border-white/10 bg-black/30">
-          <div className="container mx-auto flex justify-center items-center px-4 py-3">
-            <Link 
-              href="/" 
-              className="text-white/80 hover:text-white flex items-center gap-2 transition-all duration-300 px-5 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-80">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-              <span>HOME</span>
-            </Link>
-          </div>
+      {/* Countdown Display - Fixed Position Below Canvas */}
+      {gameState === 'countdown' && (
+        <div 
+          style={{
+            position: 'fixed',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, calc(-50% + 320px))',
+            textAlign: 'center',
+            color: '#666666',
+            fontSize: '14px',
+            fontWeight: '600',
+            zIndex: 100,
+            pointerEvents: 'none'
+          }}
+        >
+          Starting in {countdown}...
         </div>
       )}
+
+      {/* Game Over Display - Fixed Position Below Canvas */}
+      {gameState === 'gameover' && (
+        <div 
+          style={{
+            position: 'fixed',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, calc(-50% + 350px))',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            zIndex: 100,
+            pointerEvents: 'auto'
+          }}
+        >
+          <p 
+            style={{
+              color: '#000000',
+              fontSize: '18px',
+              fontWeight: '600',
+              margin: '0 0 8px 0'
+            }}
+          >
+            GAME OVER
+          </p>
+          <p 
+            style={{
+              color: '#666666',
+              fontSize: '14px',
+              margin: '0 0 16px 0'
+            }}
+          >
+            Final Score: <span style={{ color: '#B91C1C', fontWeight: 'bold' }}>{finalScore}</span>
+          </p>
+          <button
+            onClick={restartGame}
+            style={{
+              padding: '8px 20px',
+              borderRadius: '6px',
+              color: '#000000',
+              fontWeight: '600',
+              background: '#ffffff',
+              border: '1px solid #e0e0e0',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            }}
+            onMouseEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.background = '#f8f8f8';
+            }}
+            onMouseLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.background = '#ffffff';
+            }}
+          >
+            PLAY AGAIN
+          </button>
+        </div>
+      )}
+
     </div>
   );
 } 
