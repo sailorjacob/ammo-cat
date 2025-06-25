@@ -11,6 +11,7 @@ export default function Home() {
   const [isGlassMode, setIsGlassMode] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
+  const [showArtModal, setShowArtModal] = useState(false);
 
   useEffect(() => {
     // Animate loading progress from 0 to 100
@@ -227,7 +228,7 @@ export default function Home() {
             margin: '0 auto'
           }}
         >
-          {/* Product 1 */}
+          {/* Product 1 - Limited Art Print (Available) */}
           <div 
             style={{
               padding: '24px',
@@ -243,32 +244,65 @@ export default function Home() {
             }}
           >
             <div 
+              onClick={() => setShowArtModal(true)}
               style={{
                 width: '100%',
                 height: '192px',
                 marginBottom: '16px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                background: '#f8f8f8',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'scale(1.02)';
+                target.style.background = '#f0f0f0';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'scale(1)';
+                target.style.background = '#f8f8f8';
               }}
             >
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                alt="Tactical Rifle"
-                width={120}
-                height={120}
-                style={{ objectFit: 'contain' }}
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg"
+                alt="Limited Art Print Series I"
+                width={200}
+                height={200}
+                style={{ 
+                  objectFit: 'cover',
+                  borderRadius: '8px',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none',
+                  pointerEvents: 'none'
+                } as React.CSSProperties}
+                unoptimized={true}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
               />
             </div>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
-              AMMOCAT AR-15 Tactical
+              Art Print 1 - Series I
             </h3>
-            <p style={{ color: '#666666', marginBottom: '16px' }}>
-              Military-grade tactical rifle with custom modifications
+            <p style={{ color: '#666666', marginBottom: '8px' }}>
+              Limited edition art print
+            </p>
+            <p style={{ color: '#666666', fontSize: '14px', fontWeight: '400', marginBottom: '16px' }}>
+              800 total prints
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$1,299</span>
-              <button 
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$1500</span>
+              <a 
+                href="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   background: '#ffffff',
                   border: '1px solid #e0e0e0',
@@ -278,7 +312,9 @@ export default function Home() {
                   fontSize: '14px',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  textDecoration: 'none',
+                  display: 'inline-block'
                 }}
                 onMouseEnter={(e) => {
                   const target = e.target as HTMLElement;
@@ -290,23 +326,26 @@ export default function Home() {
                 }}
               >
                 ADD TO CART
-              </button>
+              </a>
             </div>
           </div>
 
-          {/* Product 2 */}
+          {/* Product 2 - Art Print Series II (Coming Soon) */}
           <div 
             style={{
               padding: '24px',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              opacity: 0.7
             }}
             onMouseEnter={(e) => {
               const target = e.target as HTMLElement;
               target.style.transform = 'translateY(-4px)';
+              target.style.opacity = '0.9';
             }}
             onMouseLeave={(e) => {
               const target = e.target as HTMLElement;
               target.style.transform = 'translateY(0)';
+              target.style.opacity = '0.7';
             }}
           >
             <div 
@@ -321,59 +360,55 @@ export default function Home() {
             >
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                alt="Tactical Vest"
+                alt="Art Print Series II"
                 width={120}
                 height={120}
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: 'contain', filter: 'grayscale(50%)' }}
               />
             </div>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
-              Level IIIA Tactical Vest
+              Art Print 2 - Series II
             </h3>
             <p style={{ color: '#666666', marginBottom: '16px' }}>
-              NIJ certified ballistic protection
+              Next exclusive art print collection featuring tactical designs
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$599</span>
+              <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#666666' }}>COMING SOON</span>
               <button 
+                disabled
                 style={{
-                  background: '#ffffff',
+                  background: '#f5f5f5',
                   border: '1px solid #e0e0e0',
-                  color: '#000000',
+                  color: '#999999',
                   padding: '8px 16px',
                   borderRadius: '8px',
                   fontSize: '14px',
                   fontWeight: '600',
-                  cursor: 'pointer',
+                  cursor: 'not-allowed',
                   transition: 'all 0.3s ease'
                 }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = '#f8f8f8';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = '#ffffff';
-                }}
               >
-                ADD TO CART
+                NOTIFY ME
               </button>
             </div>
           </div>
 
-          {/* Product 3 */}
+          {/* Product 3 - Art Print Series III (Coming Soon) */}
           <div 
             style={{
               padding: '24px',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              opacity: 0.7
             }}
             onMouseEnter={(e) => {
               const target = e.target as HTMLElement;
               target.style.transform = 'translateY(-4px)';
+              target.style.opacity = '0.9';
             }}
             onMouseLeave={(e) => {
               const target = e.target as HTMLElement;
               target.style.transform = 'translateY(0)';
+              target.style.opacity = '0.7';
             }}
           >
             <div 
@@ -388,47 +423,208 @@ export default function Home() {
             >
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                alt="Night Vision"
+                alt="Art Print Series III"
                 width={120}
                 height={120}
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: 'contain', filter: 'grayscale(50%)' }}
               />
             </div>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
-              Night Vision Scope Pro
+              Art Print 3 - Series III
             </h3>
             <p style={{ color: '#666666', marginBottom: '16px' }}>
-              Advanced thermal imaging with 8x zoom
+              Limited edition tactical warfare art collection
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$899</span>
+              <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#666666' }}>COMING SOON</span>
               <button 
+                disabled
                 style={{
-                  background: '#ffffff',
+                  background: '#f5f5f5',
                   border: '1px solid #e0e0e0',
-                  color: '#000000',
+                  color: '#999999',
                   padding: '8px 16px',
                   borderRadius: '8px',
                   fontSize: '14px',
                   fontWeight: '600',
-                  cursor: 'pointer',
+                  cursor: 'not-allowed',
                   transition: 'all 0.3s ease'
                 }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = '#f8f8f8';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = '#ffffff';
-                }}
               >
-                ADD TO CART
+                NOTIFY ME
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Art Print Modal */}
+      {showArtModal && (
+        <div 
+          onClick={() => setShowArtModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '40px',
+              maxWidth: '900px',
+              width: '90vw',
+              maxHeight: '70vh',
+              overflow: 'auto',
+              position: 'relative',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setShowArtModal(false)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'transparent',
+                border: 'none',
+                fontSize: '28px',
+                cursor: 'pointer',
+                color: '#999999',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '50%',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#f5f5f5';
+                target.style.color = '#000000';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = 'transparent';
+                target.style.color = '#999999';
+              }}
+            >
+              ×
+            </button>
+
+            {/* Modal content */}
+            <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+              {/* Image */}
+              <div style={{ flex: '0 0 400px' }}>
+                <Image 
+                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg"
+                  alt="Limited Art Print Series I"
+                  width={400}
+                  height={400}
+                  style={{ 
+                    objectFit: 'cover',
+                    borderRadius: '12px',
+                    width: '100%',
+                    height: 'auto',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+                  } as React.CSSProperties}
+                  unoptimized={true}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
+
+              {/* Details */}
+              <div style={{ flex: 1 }}>
+                <h2 style={{ fontSize: '32px', fontWeight: '900', color: '#000000', marginBottom: '20px', letterSpacing: '1px' }}>
+                  Art Print 1 - Series I
+                </h2>
+                
+                <div style={{ marginBottom: '32px' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                    Specifications
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', color: '#666666', lineHeight: '1.8' }}>
+                    <div>• Limited fine art print</div>
+                    <div>• 8" × 10" dimensions</div>
+                    <div>• Premium fine art paper</div>
+                    <div>• Museum-quality archival inks</div>
+                    <div>• Limited to 800 total prints</div>
+                    <div>• Numbered and authenticated</div>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '32px' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                    About This Print
+                  </h3>
+                  <p style={{ color: '#666666', lineHeight: '1.7', fontSize: '16px' }}>
+                    This exclusive limited edition fine art print is meticulously crafted on premium 
+                    fine art paper using museum-quality archival inks. Each print is individually 
+                    numbered and comes with a certificate of authenticity, making it a valuable 
+                    collector's item.
+                  </p>
+                </div>
+
+                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: '28px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#B91C1C', letterSpacing: '-1px' }}>$1500</span>
+                    <a 
+                      href="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        background: '#000000',
+                        border: 'none',
+                        color: '#ffffff',
+                        padding: '18px 36px',
+                        borderRadius: '8px',
+                        fontSize: '16px',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                        letterSpacing: '0.5px'
+                      }}
+                      onMouseEnter={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = '#333333';
+                        target.style.transform = 'translateY(-2px)';
+                        target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = '#000000';
+                        target.style.transform = 'translateY(0)';
+                        target.style.boxShadow = 'none';
+                      }}
+                    >
+                      BUY NOW
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -620,7 +816,7 @@ export default function Home() {
                 if (isGlassMode) {
                   target.style.background = 'rgba(255, 255, 255, 0.15)';
                   target.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
                 } else {
                   target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
                   target.style.background = '#ffffff';
