@@ -731,22 +731,22 @@ export default function GamePage() {
         >
           {/* Left side - Lives */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div className="flex flex-row items-center" style={{ display: 'flex', flexDirection: 'row' }}>
-              {Array.from({ length: lives }).map((_, index) => (
-                <div key={index} className="inline-block" style={{ width: '32px', height: '32px', marginRight: '8px', display: 'inline-block' }}>
-                  <Image 
-                    src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                    alt="Life"
-                    width={32}
-                    height={32}
-                    unoptimized={true}
+        <div className="flex flex-row items-center" style={{ display: 'flex', flexDirection: 'row' }}>
+          {Array.from({ length: lives }).map((_, index) => (
+            <div key={index} className="inline-block" style={{ width: '32px', height: '32px', marginRight: '8px', display: 'inline-block' }}>
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Life"
+                width={32}
+                height={32}
+                unoptimized={true}
                     style={{ display: 'inline-block', filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))' }}
-                  />
-                </div>
-              ))}
+              />
             </div>
-          </div>
-          
+          ))}
+        </div>
+      </div>
+
           {/* Center - AMMOCAT Title */}
           <div className="text-center">
             <span 
@@ -815,7 +815,7 @@ export default function GamePage() {
         </div>
       </div>
 
-      {/* Left Sidebar - Clean Minimalistic Controls - HIDDEN ON MOBILE */}
+      {/* Left Sidebar - Clean Minimalistic Controls */}
       <div 
         style={{
           position: 'fixed',
@@ -828,10 +828,8 @@ export default function GamePage() {
           padding: '20px 16px',
           border: '1px solid #e0e0e0',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          minWidth: '200px',
-          display: 'none' // Hidden on mobile by default
+          minWidth: '200px'
         }}
-        className="hidden md:block" // Show only on medium screens and up
       >
         <div style={{ marginBottom: '24px' }}>
           <h3 
@@ -884,7 +882,7 @@ export default function GamePage() {
         </div>
       </div>
 
-      {/* Right Sidebar - Score - HIDDEN ON MOBILE */}
+      {/* Right Sidebar - Score */}
       <div 
         style={{
           position: 'fixed',
@@ -898,10 +896,8 @@ export default function GamePage() {
           border: '1px solid #e0e0e0',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
           minWidth: '120px',
-          textAlign: 'center',
-          display: 'none' // Hidden on mobile by default
+          textAlign: 'center'
         }}
-        className="hidden md:block" // Show only on medium screens and up
       >
         <div>
           <h3 
@@ -928,67 +924,7 @@ export default function GamePage() {
         </div>
       </div>
 
-      {/* Mobile Score Display - ONLY VISIBLE ON MOBILE */}
-      <div 
-        style={{
-          position: 'fixed',
-          top: '80px',
-          right: '20px',
-          zIndex: 40,
-          background: 'rgba(245, 245, 245, 0.95)',
-          borderRadius: '6px',
-          padding: '8px 12px',
-          border: '1px solid #e0e0e0',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center',
-          backdropFilter: 'blur(10px)'
-        }}
-        className="block md:hidden" // Show only on mobile
-      >
-        <p 
-          style={{
-            color: '#B91C1C',
-            fontSize: '16px',
-            fontWeight: '700',
-            margin: 0,
-            lineHeight: 1
-          }}
-        >
-          {score}
-        </p>
-      </div>
-
-      {/* Mobile Controls Hint - ONLY VISIBLE ON MOBILE */}
-      <div 
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 40,
-          background: 'rgba(245, 245, 245, 0.95)',
-          borderRadius: '6px',
-          padding: '8px 16px',
-          border: '1px solid #e0e0e0',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center',
-          backdropFilter: 'blur(10px)'
-        }}
-        className="block md:hidden" // Show only on mobile
-      >
-        <p 
-          style={{
-            color: '#666666',
-            fontSize: '12px',
-            margin: 0,
-            lineHeight: 1.2
-          }}
-        >
-          Drag to move • Tap to shoot
-        </p>
-      </div>
-
-      {/* Game Canvas Container - CENTERED AND MOBILE RESPONSIVE */}
+      {/* Game Canvas Container - CENTERED */}
       <div 
         className="relative"
         style={{
@@ -997,9 +933,7 @@ export default function GamePage() {
           borderRadius: '8px',
           overflow: 'hidden',
           border: '1px solid #e0e0e0',
-          background: '#f5f5f5',
-          maxWidth: '100vw',
-          maxHeight: 'calc(100vh - 160px)'
+          background: '#f5f5f5'
         }}
       >
         <canvas
@@ -1009,11 +943,7 @@ export default function GamePage() {
           className={`bg-white ${hitEffect ? 'opacity-70' : ''}`}
           style={{
             display: 'block',
-            filter: hitEffect ? 'drop-shadow(0 0 20px rgba(255, 0, 0, 0.8))' : 'none',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            width: 'auto',
-            height: 'auto'
+            filter: hitEffect ? 'drop-shadow(0 0 20px rgba(255, 0, 0, 0.8))' : 'none'
           }}
         />
         
@@ -1134,7 +1064,7 @@ export default function GamePage() {
       </div>
       
       {/* Countdown Display - Fixed Position Below Canvas */}
-      {gameState === 'countdown' && (
+        {gameState === 'countdown' && (
         <div 
           style={{
             position: 'fixed',
@@ -1150,11 +1080,11 @@ export default function GamePage() {
           }}
         >
           Starting in {countdown}...
-        </div>
-      )}
-
+          </div>
+        )}
+        
       {/* Game Over Display - Fixed Position Below Canvas */}
-      {gameState === 'gameover' && (
+        {gameState === 'gameover' && (
         <div 
           style={{
             position: 'fixed',
@@ -1188,8 +1118,8 @@ export default function GamePage() {
           >
             Final Score: <span style={{ color: '#B91C1C', fontWeight: 'bold' }}>{finalScore}</span>
           </p>
-          <button
-            onClick={restartGame}
+              <button
+                onClick={restartGame}
             style={{
               padding: '8px 20px',
               borderRadius: '6px',
@@ -1210,11 +1140,11 @@ export default function GamePage() {
               target.style.background = '#ffffff';
             }}
           >
-            PLAY AGAIN
-          </button>
-        </div>
-      )}
-
+                PLAY AGAIN
+              </button>
+          </div>
+        )}
+        
     </div>
   );
 } 
