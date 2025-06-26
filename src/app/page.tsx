@@ -42,25 +42,28 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [loading]);
 
-  // Smooth crosshair following effect - Extended to work on both home and shop
+  // Smooth crosshair following effect - Fixed to use only requestAnimationFrame
   useEffect(() => {
+    if (loading) return;
+
+    let animationFrameId: number;
+    
     const smoothFollow = () => {
       setCrosshairPos(prev => ({
         x: prev.x + (mousePos.x - prev.x) * 0.08, // Smooth lag factor
         y: prev.y + (mousePos.y - prev.y) * 0.08
       }));
+      animationFrameId = requestAnimationFrame(smoothFollow);
     };
 
-    if (!loading) {
-      const animationFrame = requestAnimationFrame(smoothFollow);
-      const interval = setInterval(smoothFollow, 16); // ~60fps
-      
-      return () => {
-        cancelAnimationFrame(animationFrame);
-        clearInterval(interval);
-      };
-    }
-  }, [mousePos, loading]);
+    animationFrameId = requestAnimationFrame(smoothFollow);
+    
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [loading]); // Removed mousePos dependency to prevent constant re-creation
 
   // Simple Shop Component
   const ShopView = () => (
