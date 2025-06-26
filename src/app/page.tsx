@@ -29,20 +29,20 @@ export default function Home() {
     return () => clearInterval(progressInterval);
   }, []);
 
-  // Mouse tracking effect
+  // Mouse tracking effect - Extended to work on both home and shop
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
 
-    if (currentView === 'home' && !loading) {
+    if (!loading) {
       window.addEventListener('mousemove', handleMouseMove);
     }
 
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [currentView, loading]);
+  }, [loading]);
 
-  // Smooth crosshair following effect
+  // Smooth crosshair following effect - Extended to work on both home and shop
   useEffect(() => {
     const smoothFollow = () => {
       setCrosshairPos(prev => ({
@@ -51,7 +51,7 @@ export default function Home() {
       }));
     };
 
-    if (currentView === 'home' && !loading) {
+    if (!loading) {
       const animationFrame = requestAnimationFrame(smoothFollow);
       const interval = setInterval(smoothFollow, 16); // ~60fps
       
@@ -60,7 +60,7 @@ export default function Home() {
         clearInterval(interval);
       };
     }
-  }, [mousePos, currentView, loading]);
+  }, [mousePos, loading]);
 
   // Simple Shop Component
   const ShopView = () => (
@@ -236,6 +236,50 @@ export default function Home() {
            </div>
          </div>
        </div>
+
+      {/* Crosshairs for Shop */}
+      {currentView === 'shop' && !loading && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            pointerEvents: 'none',
+            zIndex: 10
+          }}
+        >
+          {/* Horizontal line */}
+          <div 
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: `${crosshairPos.y}px`,
+              width: '100vw',
+              height: '1px',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)',
+              transform: 'translateY(-0.5px)',
+              transition: 'opacity 0.3s ease'
+            }}
+          />
+          {/* Vertical line */}
+          <div 
+            style={{
+              position: 'absolute',
+              left: `${crosshairPos.x}px`,
+              top: 0,
+              width: '1px',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)',
+              transform: 'translateX(-0.5px)',
+              transition: 'opacity 0.3s ease'
+            }}
+          />
+        </div>
+      )}
 
       {/* Shop Content */}
       <div style={{ paddingTop: '80px', padding: '80px 40px 40px' }}>
