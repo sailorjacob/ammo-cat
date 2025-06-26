@@ -3,6 +3,10 @@ import { supabase } from '@/lib/supabase'
 
 // GET /api/leaderboard - Fetch top 10 scores
 export async function GET() {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+  }
+
   try {
     const { data, error } = await supabase
       .from('leaderboard')
@@ -24,6 +28,10 @@ export async function GET() {
 
 // POST /api/leaderboard - Submit a new score
 export async function POST(request: NextRequest) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+  }
+
   try {
     const body = await request.json()
     const { player_name, score } = body

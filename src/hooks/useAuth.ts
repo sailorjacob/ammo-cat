@@ -7,9 +7,16 @@ export function useAuth() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     // Check current session
     const checkSession = async () => {
       try {
+        if (!supabase) return
+        
         const { data: { session } } = await supabase.auth.getSession()
         
         if (session?.user) {
@@ -33,11 +40,13 @@ export function useAuth() {
     checkSession()
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
+    if (supabase) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null)
+      })
 
-    return () => subscription.unsubscribe()
+      return () => subscription.unsubscribe()
+    }
   }, [])
 
   return { user, loading }
