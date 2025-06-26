@@ -12,6 +12,7 @@ export default function GamePage() {
   const [countdown, setCountdown] = useState(3);
   const [finalScore, setFinalScore] = useState(0);
   const [hitEffect, setHitEffect] = useState(false);
+  const [showMobileInstructions, setShowMobileInstructions] = useState(true);
   
   // Player state
   const playerRef = useRef({
@@ -645,6 +646,9 @@ export default function GamePage() {
   const startGame = () => {
     console.log("Starting game...");
     
+    // Hide mobile instructions when game starts
+    setShowMobileInstructions(false);
+    
     // Reset game state
     gameStateRef.current.zombies = [];
     gameStateRef.current.enemyFireballs = [];
@@ -1200,46 +1204,61 @@ export default function GamePage() {
         )}
         
       {/* Mobile Instructions - Below Canvas */}
-      <div 
-        className="mobile-game-instructions"
-        style={{
-          position: 'fixed',
-          bottom: '10px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 40,
-          background: '#f5f5f5',
-          borderRadius: '8px',
-          padding: '12px 16px',
-          border: '1px solid #e0e0e0',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center',
-          maxWidth: '90vw',
-          minWidth: '200px'
-        }}
-      >
-        <h3 
+      {showMobileInstructions && (
+        <div 
+          className="mobile-game-instructions"
           style={{
-            color: '#000000',
-            fontSize: '14px',
-            fontWeight: '600',
-            marginBottom: '4px',
-            letterSpacing: '0.5px'
+            position: 'fixed',
+            bottom: '10px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 40,
+            background: '#f5f5f5',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            textAlign: 'center',
+            maxWidth: '90vw',
+            minWidth: '200px',
+            cursor: 'pointer'
           }}
+          onClick={() => setShowMobileInstructions(false)}
         >
-          MOBILE
-        </h3>
-        <p 
-          style={{
-            color: '#666666',
-            fontSize: '12px',
-            lineHeight: '1.3',
-            margin: 0
-          }}
-        >
-          Drag to move • Tap to shoot
-        </p>
-      </div>
+          <h3 
+            style={{
+              color: '#000000',
+              fontSize: '14px',
+              fontWeight: '600',
+              marginBottom: '4px',
+              letterSpacing: '0.5px'
+            }}
+          >
+            MOBILE
+          </h3>
+          <p 
+            style={{
+              color: '#666666',
+              fontSize: '12px',
+              lineHeight: '1.3',
+              margin: 0
+            }}
+          >
+            Drag to move • Tap to shoot
+          </p>
+          <p 
+            style={{
+              color: '#999999',
+              fontSize: '10px',
+              lineHeight: '1.2',
+              margin: '4px 0 0 0',
+              fontStyle: 'italic'
+            }}
+          >
+            Tap to dismiss
+          </p>
+        </div>
+      )}
     </div>
   );
 } 
