@@ -247,7 +247,7 @@ export default function Home() {
             width: '100vw',
             height: '100vh',
             pointerEvents: 'none',
-            zIndex: 10
+            zIndex: 1
           }}
         >
           {/* Horizontal line */}
@@ -261,7 +261,8 @@ export default function Home() {
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
               boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)',
               transform: 'translateY(-0.5px)',
-              transition: 'opacity 0.3s ease'
+              transition: 'opacity 0.3s ease',
+              pointerEvents: 'none'
             }}
           />
           {/* Vertical line */}
@@ -275,7 +276,8 @@ export default function Home() {
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
               boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)',
               transform: 'translateX(-0.5px)',
-              transition: 'opacity 0.3s ease'
+              transition: 'opacity 0.3s ease',
+              pointerEvents: 'none'
             }}
           />
         </div>
