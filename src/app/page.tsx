@@ -298,7 +298,7 @@ export default function Home() {
               800 total prints
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#B91C1C' }}>$1500</span>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#9CA3AF' }}>$1500</span>
               <a 
                 href="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
                 target="_blank"
@@ -330,66 +330,105 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Product 2 - Art Print Series II (Coming Soon) */}
+          {/* Product 2 - Art Print Series II (Available) */}
           <div 
             style={{
               padding: '24px',
-              transition: 'all 0.3s ease',
-              opacity: 0.7
+              transition: 'all 0.3s ease'
             }}
             onMouseEnter={(e) => {
               const target = e.target as HTMLElement;
               target.style.transform = 'translateY(-4px)';
-              target.style.opacity = '0.9';
             }}
             onMouseLeave={(e) => {
               const target = e.target as HTMLElement;
               target.style.transform = 'translateY(0)';
-              target.style.opacity = '0.7';
             }}
           >
             <div 
+              onClick={() => setShowArtModal(true)}
               style={{
                 width: '100%',
                 height: '192px',
                 marginBottom: '16px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                background: '#f8f8f8',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'scale(1.02)';
+                target.style.background = '#f0f0f0';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'scale(1)';
+                target.style.background = '#f8f8f8';
               }}
             >
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                alt="Art Print Series II"
-                width={120}
-                height={120}
-                style={{ objectFit: 'contain', filter: 'grayscale(50%)' }}
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg"
+                alt="Limited Art Print Series II"
+                width={200}
+                height={200}
+                style={{ 
+                  objectFit: 'cover',
+                  borderRadius: '8px',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none',
+                  pointerEvents: 'none'
+                } as React.CSSProperties}
+                unoptimized={true}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
               />
             </div>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
               Art Print 2 - Series II
             </h3>
-            <p style={{ color: '#666666', marginBottom: '16px' }}>
-              Next exclusive art print collection featuring tactical designs
+            <p style={{ color: '#666666', marginBottom: '8px' }}>
+              Limited edition art print
+            </p>
+            <p style={{ color: '#666666', fontSize: '14px', fontWeight: '400', marginBottom: '16px' }}>
+              800 total prints
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#666666' }}>COMING SOON</span>
-              <button 
-                disabled
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#9CA3AF' }}>$1500</span>
+              <a 
+                href="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
-                  background: '#f5f5f5',
+                  background: '#ffffff',
                   border: '1px solid #e0e0e0',
-                  color: '#999999',
+                  color: '#000000',
                   padding: '8px 16px',
                   borderRadius: '8px',
                   fontSize: '14px',
                   fontWeight: '600',
-                  cursor: 'not-allowed',
-                  transition: 'all 0.3s ease'
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  textDecoration: 'none',
+                  display: 'inline-block'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#f8f8f8';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#ffffff';
                 }}
               >
-                NOTIFY ME
-              </button>
+                ADD TO CART
+              </a>
             </div>
           </div>
 
