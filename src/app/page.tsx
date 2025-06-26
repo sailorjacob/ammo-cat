@@ -1361,10 +1361,10 @@ export default function Home() {
           right: 0,
           width: '100%',
           zIndex: 50,
-          background: isGlassMode ? 'rgba(0, 0, 0, 0.1)' : '#f5f5f5',
+          background: isGlassMode ? 'rgba(0, 0, 0, 0.05)' : '#f5f5f5',
           backdropFilter: isGlassMode ? 'blur(20px)' : 'none',
-          borderBottom: isGlassMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e0e0e0',
-          boxShadow: isGlassMode ? '0 8px 32px rgba(0, 0, 0, 0.3)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
+          borderBottom: isGlassMode ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid #e0e0e0',
+          boxShadow: isGlassMode ? '0 8px 32px rgba(0, 0, 0, 0.1)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
           transition: 'all 0.3s ease'
         }}
       >
@@ -1408,11 +1408,11 @@ export default function Home() {
             </span>
           </div>
           
-          {/* Center - Clean Buttons */}
+          {/* Center - Enhanced Buttons */}
           <div 
             style={{
               display: 'flex',
-              gap: '16px',
+              gap: '20px',
               alignItems: 'center',
               justifyContent: 'center'
             }}
@@ -1421,18 +1421,43 @@ export default function Home() {
             <Link 
               href="/game"
               style={{
-                padding: '10px 20px',
-                background: isGlassMode ? 'rgba(255, 255, 255, 0.15)' : '#ffffff',
-                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid #e0e0e0',
-                borderRadius: '8px',
+                padding: '12px 24px',
+                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                borderRadius: isGlassMode ? '50px' : '8px',
                 color: isGlassMode ? '#ffffff' : '#000000',
-                fontSize: '14px',
-                fontWeight: '600',
+                fontSize: '16px',
+                fontWeight: isGlassMode ? '700' : '600',
                 letterSpacing: '1px',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
-                backdropFilter: isGlassMode ? 'blur(10px)' : 'none',
+                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
                 outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-2px) scale(1.02)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.35)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.4)';
+                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                } else {
+                  target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
+                  target.style.background = '#f8f8f8';
+                }
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0) scale(1)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.25)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                } else {
+                  target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                  target.style.background = '#ffffff';
+                }
               }}
             >
               PLAY
@@ -1442,18 +1467,43 @@ export default function Home() {
             <button 
               onClick={() => setCurrentView('shop')}
               style={{
-                padding: '10px 20px',
-                background: isGlassMode ? 'rgba(255, 255, 255, 0.15)' : '#ffffff',
-                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid #e0e0e0',
-                borderRadius: '8px',
+                padding: '12px 24px',
+                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                borderRadius: isGlassMode ? '50px' : '8px',
                 color: isGlassMode ? '#ffffff' : '#000000',
-                fontSize: '14px',
-                fontWeight: '600',
+                fontSize: '16px',
+                fontWeight: isGlassMode ? '700' : '600',
                 letterSpacing: '1px',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                backdropFilter: isGlassMode ? 'blur(10px)' : 'none',
+                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
                 outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-2px) scale(1.02)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.35)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.4)';
+                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                } else {
+                  target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
+                  target.style.background = '#f8f8f8';
+                }
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0) scale(1)';
+                if (isGlassMode) {
+                  target.style.background = 'rgba(255, 255, 255, 0.25)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                } else {
+                  target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                  target.style.background = '#ffffff';
+                }
               }}
             >
               SHOP

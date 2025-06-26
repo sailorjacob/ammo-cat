@@ -819,6 +819,7 @@ export default function GamePage() {
 
       {/* Left Sidebar - Clean Minimalistic Controls */}
       <div 
+        className="hidden md:block"
         style={{
           position: 'fixed',
           left: '20px',
@@ -886,6 +887,7 @@ export default function GamePage() {
 
       {/* Right Sidebar - Score */}
       <div 
+        className="hidden md:block"
         style={{
           position: 'fixed',
           right: '20px',
