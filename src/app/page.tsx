@@ -237,46 +237,57 @@ export default function Home() {
          </div>
        </div>
 
-      {/* Crosshairs for Shop */}
+      {/* Crosshairs for Shop - Smaller, non-interfering version */}
       {currentView === 'shop' && !loading && (
         <div 
           style={{
             position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
+            left: `${crosshairPos.x}px`,
+            top: `${crosshairPos.y}px`,
+            width: '40px',
+            height: '40px',
             pointerEvents: 'none',
-            zIndex: 1
+            zIndex: 1,
+            transform: 'translate(-50%, -50%)'
           }}
         >
-          {/* Horizontal line */}
+          {/* Horizontal line - shorter */}
           <div 
             style={{
               position: 'absolute',
-              left: 0,
-              top: `${crosshairPos.y}px`,
-              width: '100vw',
+              left: '10px',
+              top: '19px',
+              width: '20px',
               height: '1px',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)',
-              transform: 'translateY(-0.5px)',
-              transition: 'opacity 0.3s ease',
+              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              boxShadow: '0 0 2px rgba(0, 0, 0, 0.3)',
               pointerEvents: 'none'
             }}
           />
-          {/* Vertical line */}
+          {/* Vertical line - shorter */}
           <div 
             style={{
               position: 'absolute',
-              left: `${crosshairPos.x}px`,
-              top: 0,
+              left: '19px',
+              top: '10px',
               width: '1px',
-              height: '100vh',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)',
-              transform: 'translateX(-0.5px)',
-              transition: 'opacity 0.3s ease',
+              height: '20px',
+              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              boxShadow: '0 0 2px rgba(0, 0, 0, 0.3)',
+              pointerEvents: 'none'
+            }}
+          />
+          {/* Center dot */}
+          <div 
+            style={{
+              position: 'absolute',
+              left: '18px',
+              top: '18px',
+              width: '3px',
+              height: '3px',
+              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              borderRadius: '50%',
+              boxShadow: '0 0 2px rgba(0, 0, 0, 0.4)',
               pointerEvents: 'none'
             }}
           />
