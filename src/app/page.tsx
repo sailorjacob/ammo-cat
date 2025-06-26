@@ -11,7 +11,7 @@ export default function Home() {
   const [isGlassMode, setIsGlassMode] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
-  const [showArtModal, setShowArtModal] = useState(false);
+  const [showArtModal, setShowArtModal] = useState<number | null>(null);
 
   useEffect(() => {
     // Animate loading progress from 0 to 100
@@ -94,24 +94,87 @@ export default function Home() {
              display: 'grid',
              gridTemplateColumns: '1fr auto 1fr',
              alignItems: 'center',
-             padding: '16px 40px'
+             padding: '16px 20px',
+             maxWidth: '100vw',
+             boxSizing: 'border-box',
+             minHeight: '70px'
            }}
          >
-           {/* Left side - Clean Logo */}
-           <div style={{ display: 'flex', alignItems: 'center' }}>
-             <div 
+           {/* Left side - Back Arrow + Logo */}
+           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+             <button 
+               onClick={() => setCurrentView('home')}
                style={{
-                 position: 'relative',
-                 marginRight: '16px'
+                 background: 'transparent',
+                 border: 'none',
+                 cursor: 'pointer',
+                 padding: '8px',
+                 borderRadius: '50%',
+                 transition: 'all 0.3s ease',
+                 display: 'flex',
+                 alignItems: 'center',
+                 justifyContent: 'center',
+                 marginRight: '12px',
+                 opacity: 0.8,
+                 outline: 'none'
+               }}
+               onMouseEnter={(e) => {
+                 e.currentTarget.style.opacity = '1';
+                 e.currentTarget.style.transform = 'scale(1.1)';
+                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+               }}
+               onMouseLeave={(e) => {
+                 e.currentTarget.style.opacity = '0.8';
+                 e.currentTarget.style.transform = 'scale(1)';
+                 e.currentTarget.style.background = 'transparent';
+               }}
+             >
+               <svg 
+                 xmlns="http://www.w3.org/2000/svg" 
+                 width="20" 
+                 height="20" 
+                 viewBox="0 0 24 24" 
+                 fill="none" 
+                 stroke="#000000" 
+                 strokeWidth="2" 
+                 strokeLinecap="round" 
+                 strokeLinejoin="round"
+               >
+                 <path d="m15 18-6-6 6-6"/>
+               </svg>
+             </button>
+             
+             <button 
+               onClick={() => setCurrentView('home')}
+               style={{
+                 background: 'transparent',
+                 border: 'none',
+                 cursor: 'pointer',
+                 display: 'flex',
+                 alignItems: 'center',
+                 padding: '4px',
+                 borderRadius: '6px',
+                 transition: 'all 0.3s ease',
+                 outline: 'none'
+               }}
+               onMouseEnter={(e) => {
+                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+               }}
+               onMouseLeave={(e) => {
+                 e.currentTarget.style.background = 'transparent';
                }}
              >
                <Image 
                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
                  alt="AMMOCAT" 
-                 width={35} 
-                 height={35}
+                 width={32} 
+                 height={32}
                />
-             </div>
+             </button>
+           </div>
+
+           {/* Center - SHOP Title */}
+           <div className="text-center">
              <span 
                style={{
                  color: '#000000',
@@ -124,55 +187,15 @@ export default function Home() {
              </span>
            </div>
            
-           {/* Center - Clean Back Button */}
-           <div style={{ justifyContent: 'center', display: 'flex' }}>
-             <button 
-               onClick={() => setCurrentView('home')}
-               style={{
-                 position: 'relative',
-                 padding: '12px 24px',
-                 background: '#ffffff',
-                 border: '1px solid #e0e0e0',
-                 borderRadius: '8px',
-                 color: '#000000',
-                 fontSize: '16px',
-                 fontWeight: '600',
-                 letterSpacing: '1px',
-                 display: 'flex',
-                 alignItems: 'center',
-                 gap: '8px',
-                 transition: 'all 0.3s ease',
-                 cursor: 'pointer',
-                 fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-               }}
-               onMouseEnter={(e) => {
-                 const target = e.target as HTMLElement;
-                 target.style.background = '#f8f8f8';
-                 target.style.border = '1px solid #d0d0d0';
-                 target.style.transform = 'translateY(-1px)';
-               }}
-               onMouseLeave={(e) => {
-                 const target = e.target as HTMLElement;
-                 target.style.background = '#ffffff';
-                 target.style.border = '1px solid #e0e0e0';
-                 target.style.transform = 'translateY(0)';
-               }}
-             >
-               ←
-               BACK
-             </button>
-           </div>
-           
            {/* Right side - Home Icon */}
            <div 
              style={{ 
                display: 'flex', 
                justifyContent: 'flex-end', 
-               alignItems: 'center',
-               paddingRight: '80px'
+               alignItems: 'center'
              }}
            >
-             <button
+             <button 
                onClick={() => setCurrentView('home')}
                style={{
                  background: 'transparent',
@@ -184,7 +207,8 @@ export default function Home() {
                  display: 'flex',
                  alignItems: 'center',
                  justifyContent: 'center',
-                 opacity: 0.8
+                 opacity: 0.8,
+                 outline: 'none'
                }}
                onMouseEnter={(e) => {
                  e.currentTarget.style.opacity = '1';
@@ -244,7 +268,7 @@ export default function Home() {
             }}
           >
             <div 
-              onClick={() => setShowArtModal(true)}
+              onClick={() => setShowArtModal(1)}
               style={{
                 width: '100%',
                 height: '192px',
@@ -295,7 +319,7 @@ export default function Home() {
               Limited edition art print
             </p>
             <p style={{ color: '#666666', fontSize: '14px', fontWeight: '400', marginBottom: '16px' }}>
-              800 total prints
+              Limited to 800 total prints
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#9CA3AF' }}>$1500</span>
@@ -304,28 +328,33 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  background: '#ffffff',
-                  border: '1px solid #e0e0e0',
-                  color: '#000000',
-                  padding: '8px 16px',
+                  background: '#000000',
+                  border: 'none',
+                  color: '#ffffff',
+                  padding: '18px 36px',
                   borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: '600',
+                  fontSize: '16px',
+                  fontWeight: '700',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   textDecoration: 'none',
-                  display: 'inline-block'
+                  display: 'inline-block',
+                  letterSpacing: '0.5px'
                 }}
                 onMouseEnter={(e) => {
                   const target = e.target as HTMLElement;
-                  target.style.background = '#f8f8f8';
+                  target.style.background = '#333333';
+                  target.style.transform = 'translateY(-2px)';
+                  target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.3)';
                 }}
                 onMouseLeave={(e) => {
                   const target = e.target as HTMLElement;
-                  target.style.background = '#ffffff';
+                  target.style.background = '#000000';
+                  target.style.transform = 'translateY(0)';
+                  target.style.boxShadow = 'none';
                 }}
               >
-                ADD TO CART
+                BUY NOW
               </a>
             </div>
           </div>
@@ -346,7 +375,7 @@ export default function Home() {
             }}
           >
             <div 
-              onClick={() => setShowArtModal(true)}
+              onClick={() => setShowArtModal(2)}
               style={{
                 width: '100%',
                 height: '192px',
@@ -397,42 +426,217 @@ export default function Home() {
               Limited edition art print
             </p>
             <p style={{ color: '#666666', fontSize: '14px', fontWeight: '400', marginBottom: '16px' }}>
-              800 total prints
+              Limited to 800 total prints
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#9CA3AF' }}>$1500</span>
               <a 
-                href="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
+                href="https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  background: '#ffffff',
-                  border: '1px solid #e0e0e0',
-                  color: '#000000',
-                  padding: '8px 16px',
+                  background: '#000000',
+                  border: 'none',
+                  color: '#ffffff',
+                  padding: '18px 36px',
                   borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: '600',
+                  fontSize: '16px',
+                  fontWeight: '700',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   textDecoration: 'none',
-                  display: 'inline-block'
+                  display: 'inline-block',
+                  letterSpacing: '0.5px'
                 }}
                 onMouseEnter={(e) => {
                   const target = e.target as HTMLElement;
-                  target.style.background = '#f8f8f8';
+                  target.style.background = '#333333';
+                  target.style.transform = 'translateY(-2px)';
+                  target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.3)';
                 }}
                 onMouseLeave={(e) => {
                   const target = e.target as HTMLElement;
-                  target.style.background = '#ffffff';
+                  target.style.background = '#000000';
+                  target.style.transform = 'translateY(0)';
+                  target.style.boxShadow = 'none';
                 }}
               >
-                ADD TO CART
+                BUY NOW
               </a>
             </div>
           </div>
 
-          {/* Product 3 - Art Print Series III (Coming Soon) */}
+          {/* Product 3 - Art Print Series III (Available) */}
+          <div 
+            style={{
+              padding: '24px',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(-4px)';
+            }}
+            onMouseLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(0)';
+            }}
+          >
+            <div 
+              onClick={() => setShowArtModal(3)}
+              style={{
+                width: '100%',
+                height: '192px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#f8f8f8',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'scale(1.02)';
+                target.style.background = '#f0f0f0';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'scale(1)';
+                target.style.background = '#f8f8f8';
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//best-2.png"
+                alt="Limited Art Print Series III"
+                width={200}
+                height={200}
+                style={{ 
+                  objectFit: 'cover',
+                  borderRadius: '8px',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none',
+                  pointerEvents: 'none'
+                } as React.CSSProperties}
+                unoptimized={true}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
+              Art Print 3 - Series III
+            </h3>
+            <p style={{ color: '#666666', marginBottom: '8px' }}>
+              Limited edition art print
+            </p>
+            <p style={{ color: '#666666', fontSize: '14px', fontWeight: '400', marginBottom: '16px' }}>
+              Limited to 800 total prints
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#9CA3AF' }}>$1500</span>
+              <a 
+                href="https://buy.stripe.com/cNidRafC31vm6IL45t57W05"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#000000',
+                  border: 'none',
+                  color: '#ffffff',
+                  padding: '18px 36px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  letterSpacing: '0.5px'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#333333';
+                  target.style.transform = 'translateY(-2px)';
+                  target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#000000';
+                  target.style.transform = 'translateY(0)';
+                  target.style.boxShadow = 'none';
+                }}
+              >
+                BUY NOW
+              </a>
+            </div>
+          </div>
+
+          {/* Product 4 - Art Print Series IV (Coming Soon) - Hero Character */}
+          <div 
+            style={{
+              padding: '24px',
+              transition: 'all 0.3s ease',
+              opacity: 0.7
+            }}
+            onMouseEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(-4px)';
+              target.style.opacity = '0.9';
+            }}
+            onMouseLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(0)';
+              target.style.opacity = '0.7';
+            }}
+          >
+            <div 
+              style={{
+                width: '100%',
+                height: '192px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Art Print Series IV"
+                width={120}
+                height={120}
+                style={{ objectFit: 'contain', filter: 'grayscale(50%)' }}
+              />
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
+              Art Print 4 - Series IV
+            </h3>
+            <p style={{ color: '#666666', marginBottom: '16px' }}>
+              Limited edition hero collection
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#666666' }}>COMING SOON</span>
+              <button 
+                disabled
+                style={{
+                  background: '#f5f5f5',
+                  border: '1px solid #e0e0e0',
+                  color: '#999999',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'not-allowed',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                NOTIFY ME
+              </button>
+            </div>
+          </div>
+
+          {/* Product 5 - Art Print Series V (Coming Soon) - Zombie Character */}
           <div 
             style={{
               padding: '24px',
@@ -462,14 +666,14 @@ export default function Home() {
             >
               <Image 
                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                alt="Art Print Series III"
+                alt="Art Print Series V"
                 width={120}
                 height={120}
                 style={{ objectFit: 'contain', filter: 'grayscale(50%)' }}
               />
             </div>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
-              Art Print 3 - Series III
+              Art Print 5 - Series V
             </h3>
             <p style={{ color: '#666666', marginBottom: '16px' }}>
               Limited edition tactical warfare art collection
@@ -494,13 +698,76 @@ export default function Home() {
               </button>
             </div>
           </div>
+
+          {/* Product 6 - Art Print Series VI (Coming Soon) - Alt Zombie Character */}
+          <div 
+            style={{
+              padding: '24px',
+              transition: 'all 0.3s ease',
+              opacity: 0.7
+            }}
+            onMouseEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(-4px)';
+              target.style.opacity = '0.9';
+            }}
+            onMouseLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.transform = 'translateY(0)';
+              target.style.opacity = '0.7';
+            }}
+          >
+            <div 
+              style={{
+                width: '100%',
+                height: '192px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+                alt="Art Print Series VI"
+                width={120}
+                height={120}
+                style={{ objectFit: 'contain', filter: 'grayscale(50%)' }}
+              />
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#000000', marginBottom: '8px' }}>
+              Art Print 6 - Series VI
+            </h3>
+            <p style={{ color: '#666666', marginBottom: '16px' }}>
+              Limited edition character collection
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#666666' }}>COMING SOON</span>
+              <button 
+                disabled
+                style={{
+                  background: '#f5f5f5',
+                  border: '1px solid #e0e0e0',
+                  color: '#999999',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'not-allowed',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                NOTIFY ME
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Art Print Modal */}
-      {showArtModal && (
+      {/* Art Print Modals */}
+      {showArtModal === 1 && (
         <div 
-          onClick={() => setShowArtModal(false)}
+          onClick={() => setShowArtModal(null)}
           style={{
             position: 'fixed',
             top: 0,
@@ -531,7 +798,7 @@ export default function Home() {
           >
             {/* Close button */}
             <button
-              onClick={() => setShowArtModal(false)}
+              onClick={() => setShowArtModal(null)}
               style={{
                 position: 'absolute',
                 top: '20px',
@@ -623,9 +890,341 @@ export default function Home() {
 
                 <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: '28px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#B91C1C', letterSpacing: '-1px' }}>$1500</span>
+                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#9CA3AF', letterSpacing: '-1px' }}>$1500</span>
                     <a 
                       href="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        background: '#000000',
+                        border: 'none',
+                        color: '#ffffff',
+                        padding: '18px 36px',
+                        borderRadius: '8px',
+                        fontSize: '16px',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                        letterSpacing: '0.5px'
+                      }}
+                      onMouseEnter={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = '#333333';
+                        target.style.transform = 'translateY(-2px)';
+                        target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = '#000000';
+                        target.style.transform = 'translateY(0)';
+                        target.style.boxShadow = 'none';
+                      }}
+                    >
+                      BUY NOW
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showArtModal === 2 && (
+        <div 
+          onClick={() => setShowArtModal(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '40px',
+              maxWidth: '900px',
+              width: '90vw',
+              maxHeight: '70vh',
+              overflow: 'auto',
+              position: 'relative',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setShowArtModal(null)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'transparent',
+                border: 'none',
+                fontSize: '28px',
+                cursor: 'pointer',
+                color: '#999999',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '50%',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#f5f5f5';
+                target.style.color = '#000000';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = 'transparent';
+                target.style.color = '#999999';
+              }}
+            >
+              ×
+            </button>
+
+            {/* Modal content */}
+            <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+              {/* Image */}
+              <div style={{ flex: '0 0 400px' }}>
+                <Image 
+                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg"
+                  alt="Limited Art Print Series II"
+                  width={400}
+                  height={400}
+                  style={{ 
+                    objectFit: 'cover',
+                    borderRadius: '12px',
+                    width: '100%',
+                    height: 'auto',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+                  } as React.CSSProperties}
+                  unoptimized={true}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
+
+              {/* Details */}
+              <div style={{ flex: 1 }}>
+                <h2 style={{ fontSize: '32px', fontWeight: '900', color: '#000000', marginBottom: '20px', letterSpacing: '1px' }}>
+                  Art Print 2 - Series II
+                </h2>
+                
+                <div style={{ marginBottom: '32px' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                    Specifications
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', color: '#666666', lineHeight: '1.8' }}>
+                    <div>• Limited fine art print</div>
+                    <div>• 8" × 10" dimensions</div>
+                    <div>• Premium fine art paper</div>
+                    <div>• Museum-quality archival inks</div>
+                    <div>• Limited to 800 total prints</div>
+                    <div>• Numbered and authenticated</div>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '32px' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                    About This Print
+                  </h3>
+                  <p style={{ color: '#666666', lineHeight: '1.7', fontSize: '16px' }}>
+                    This exclusive limited edition fine art print is meticulously crafted on premium 
+                    fine art paper using museum-quality archival inks. Each print is individually 
+                    numbered and comes with a certificate of authenticity, making it a valuable 
+                    collector's item.
+                  </p>
+                </div>
+
+                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: '28px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#9CA3AF', letterSpacing: '-1px' }}>$1500</span>
+                    <a 
+                      href="https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        background: '#000000',
+                        border: 'none',
+                        color: '#ffffff',
+                        padding: '18px 36px',
+                        borderRadius: '8px',
+                        fontSize: '16px',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                        letterSpacing: '0.5px'
+                      }}
+                      onMouseEnter={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = '#333333';
+                        target.style.transform = 'translateY(-2px)';
+                        target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = '#000000';
+                        target.style.transform = 'translateY(0)';
+                        target.style.boxShadow = 'none';
+                      }}
+                    >
+                      BUY NOW
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showArtModal === 3 && (
+        <div 
+          onClick={() => setShowArtModal(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '40px',
+              maxWidth: '900px',
+              width: '90vw',
+              maxHeight: '70vh',
+              overflow: 'auto',
+              position: 'relative',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setShowArtModal(null)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'transparent',
+                border: 'none',
+                fontSize: '28px',
+                cursor: 'pointer',
+                color: '#999999',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '50%',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#f5f5f5';
+                target.style.color = '#000000';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = 'transparent';
+                target.style.color = '#999999';
+              }}
+            >
+              ×
+            </button>
+
+            {/* Modal content */}
+            <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+              {/* Image */}
+              <div style={{ flex: '0 0 400px' }}>
+                <Image 
+                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//best-2.png"
+                  alt="Limited Art Print Series III"
+                  width={400}
+                  height={400}
+                  style={{ 
+                    objectFit: 'cover',
+                    borderRadius: '12px',
+                    width: '100%',
+                    height: 'auto',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+                  } as React.CSSProperties}
+                  unoptimized={true}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
+
+              {/* Details */}
+              <div style={{ flex: 1 }}>
+                <h2 style={{ fontSize: '32px', fontWeight: '900', color: '#000000', marginBottom: '20px', letterSpacing: '1px' }}>
+                  Art Print 3 - Series III
+                </h2>
+                
+                <div style={{ marginBottom: '32px' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                    Specifications
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', color: '#666666', lineHeight: '1.8' }}>
+                    <div>• Limited fine art print</div>
+                    <div>• 8" × 10" dimensions</div>
+                    <div>• Premium fine art paper</div>
+                    <div>• Museum-quality archival inks</div>
+                    <div>• Limited to 800 total prints</div>
+                    <div>• Numbered and authenticated</div>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '32px' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                    About This Print
+                  </h3>
+                  <p style={{ color: '#666666', lineHeight: '1.7', fontSize: '16px' }}>
+                    This exclusive limited edition fine art print is meticulously crafted on premium 
+                    fine art paper using museum-quality archival inks. Each print is individually 
+                    numbered and comes with a certificate of authenticity, making it a valuable 
+                    collector's item.
+                  </p>
+                </div>
+
+                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: '28px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#9CA3AF', letterSpacing: '-1px' }}>$1500</span>
+                    <a 
+                      href="https://buy.stripe.com/cNidRafC31vm6IL45t57W05"
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
@@ -772,14 +1371,23 @@ export default function Home() {
         <div 
           style={{ 
             width: '100%',
-            display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
+            position: 'relative',
+            display: 'flex',
             alignItems: 'center',
-            padding: '16px 40px'
+            padding: '16px 20px',
+            maxWidth: '100vw',
+            boxSizing: 'border-box',
+            minHeight: '70px'
           }}
         >
           {/* Left side - Clean Logo */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ 
+            position: 'absolute',
+            left: '20px',
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'flex-start'
+          }}>
             <div 
               style={{
                 position: 'relative',
@@ -807,12 +1415,16 @@ export default function Home() {
             </span>
           </div>
           
-          {/* Center - Clean Buttons */}
+          {/* Center - Clean Buttons - ABSOLUTELY CENTERED */}
           <div 
             style={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
               display: 'flex',
               gap: '24px',
-              alignItems: 'center'
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
             {/* PLAY - Dynamic Button */}
@@ -828,22 +1440,24 @@ export default function Home() {
                 fontSize: '16px',
                 fontWeight: isGlassMode ? '700' : '600',
                 letterSpacing: '1px',
-                textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
                 transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                 backdropFilter: isGlassMode ? 'blur(20px)' : 'none',
-                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
-                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                outline: 'none'
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
                 target.style.transform = 'translateY(-2px) scale(1.02)';
                 if (isGlassMode) {
-                  target.style.background = 'rgba(255, 255, 255, 0.25)';
-                  target.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+                  target.style.background = 'rgba(255, 255, 255, 0.2)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.25)';
+                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
                 } else {
                   target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
                   target.style.background = '#f8f8f8';
@@ -853,8 +1467,8 @@ export default function Home() {
                 const target = e.target as HTMLElement;
                 target.style.transform = 'translateY(0) scale(1)';
                 if (isGlassMode) {
-                  target.style.background = 'rgba(255, 255, 255, 0.15)';
-                  target.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                  target.style.background = 'rgba(255, 255, 255, 0.1)';
+                  target.style.border = '1px solid rgba(255, 255, 255, 0.15)';
                   target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
                 } else {
                   target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
@@ -885,7 +1499,9 @@ export default function Home() {
                 backdropFilter: isGlassMode ? 'blur(20px)' : 'none',
                 boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
                 cursor: 'pointer',
-                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                outline: 'none',
+                outline: 'none'
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
@@ -919,50 +1535,58 @@ export default function Home() {
           {/* Right side - Crescent Moon Toggle */}
           <div 
             style={{ 
+              position: 'absolute',
+              right: '20px',
               display: 'flex', 
               justifyContent: 'flex-end', 
-              alignItems: 'center',
-              paddingRight: '80px'
+              alignItems: 'center'
             }}
           >
             <button
               onClick={() => setIsGlassMode(!isGlassMode)}
+              title="Toggle Glass Mode"
               style={{
                 background: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
-                padding: '8px',
+                padding: '12px',
                 borderRadius: '50%',
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                opacity: 1,
+                minWidth: '48px',
+                minHeight: '48px',
+                outline: 'none'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.15) rotate(15deg)';
-                e.currentTarget.style.background = isGlassMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+                e.currentTarget.style.opacity = '1';
+                e.currentTarget.style.transform = 'scale(1.1)';
+                e.currentTarget.style.background = isGlassMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                e.currentTarget.style.opacity = '1';
+                e.currentTarget.style.transform = 'scale(1)';
                 e.currentTarget.style.background = 'transparent';
               }}
             >
               <svg 
+                xmlns="http://www.w3.org/2000/svg" 
                 width="28" 
                 height="28" 
                 viewBox="0 0 24 24" 
-                fill="none"
-                style={{
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  filter: isGlassMode ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                fill="none" 
+                stroke={isGlassMode ? '#ffffff' : '#999999'} 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                style={{ 
+                  filter: isGlassMode ? 'none' : 'none',
+                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
               >
-                <path 
-                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" 
-                  fill={isGlassMode ? '#ffffff' : '#000000'}
-                  stroke={isGlassMode ? '#ffffff' : '#000000'}
-                  strokeWidth="1.5"
-                />
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
               </svg>
             </button>
           </div>

@@ -136,10 +136,12 @@
 
 /* CYBERPUNK FOCUS STYLES */
 button:focus,
-a:focus {
+button:focus-visible,
+a:focus,
+a:focus-visible,
+[role="button"]:focus,
+[role="button"]:focus-visible {
   outline: none !important;
-  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.5) !important;
-  border-radius: 50px;
 }
 
 /* BUTTON HIGHLIGHT OVERRIDE */

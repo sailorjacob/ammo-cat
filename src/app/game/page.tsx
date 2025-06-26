@@ -726,7 +726,9 @@ export default function GamePage() {
             display: 'grid',
             gridTemplateColumns: '1fr auto 1fr',
             alignItems: 'center',
-            padding: '16px 40px'
+            padding: '16px 20px',
+            maxWidth: '100vw',
+            boxSizing: 'border-box'
           }}
         >
           {/* Left side - Lives */}
@@ -767,8 +769,7 @@ export default function GamePage() {
             style={{ 
               display: 'flex', 
               justifyContent: 'flex-end', 
-              alignItems: 'center',
-              paddingRight: '80px'
+              alignItems: 'center'
             }}
           >
             <Link 
@@ -784,7 +785,8 @@ export default function GamePage() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 opacity: 0.8,
-                textDecoration: 'none'
+                textDecoration: 'none',
+                outline: 'none'
               }}
               onMouseEnter={(e) => {
                 const target = e.currentTarget as HTMLElement;
@@ -1020,7 +1022,8 @@ export default function GamePage() {
                 cursor: 'pointer',
                 marginBottom: '32px',
                 fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                zIndex: 10
+                zIndex: 10,
+                outline: 'none'
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
@@ -1129,7 +1132,8 @@ export default function GamePage() {
               border: '1px solid #e0e0e0',
               cursor: 'pointer',
               fontSize: '14px',
-              fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+              fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              outline: 'none'
             }}
             onMouseEnter={(e) => {
               const target = e.target as HTMLElement;
