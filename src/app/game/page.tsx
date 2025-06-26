@@ -1465,7 +1465,6 @@ export default function GamePage() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0, 0, 0, 0.8)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1489,6 +1488,16 @@ export default function GamePage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            <div
+              style={{
+                textAlign: 'center',
+                fontSize: '32px',
+                marginBottom: '12px'
+              }}
+            >
+              🏆
+            </div>
+            
             <h2 
               style={{
                 color: '#000000',
