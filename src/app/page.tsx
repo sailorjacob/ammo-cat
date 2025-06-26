@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 export default function Home() {
@@ -9,9 +9,9 @@ export default function Home() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentView, setCurrentView] = useState<'home' | 'shop'>('home');
   const [isGlassMode, setIsGlassMode] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [showArtModal, setShowArtModal] = useState<number | null>(null);
+  const mousePosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     // Animate loading progress from 0 to 100
@@ -29,10 +29,10 @@ export default function Home() {
     return () => clearInterval(progressInterval);
   }, []);
 
-  // Mouse tracking effect - Extended to work on both home and shop
+  // Mouse tracking effect - Only update ref to avoid re-renders
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      mousePosRef.current = { x: e.clientX, y: e.clientY };
     };
 
     if (!loading) {
@@ -42,28 +42,35 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [loading]);
 
-  // Smooth crosshair following effect - Fixed to use only requestAnimationFrame
+  // Smooth crosshair following effect - Using ref to avoid dependency issues
   useEffect(() => {
     if (loading) return;
 
     let animationFrameId: number;
+    let isRunning = true;
     
     const smoothFollow = () => {
+      if (!isRunning) return;
+      
       setCrosshairPos(prev => ({
-        x: prev.x + (mousePos.x - prev.x) * 0.08, // Smooth lag factor
-        y: prev.y + (mousePos.y - prev.y) * 0.08
+        x: prev.x + (mousePosRef.current.x - prev.x) * 0.08, // Smooth lag factor
+        y: prev.y + (mousePosRef.current.y - prev.y) * 0.08
       }));
-      animationFrameId = requestAnimationFrame(smoothFollow);
+      
+      if (isRunning) {
+        animationFrameId = requestAnimationFrame(smoothFollow);
+      }
     };
 
     animationFrameId = requestAnimationFrame(smoothFollow);
     
     return () => {
+      isRunning = false;
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [loading]); // Removed mousePos dependency to prevent constant re-creation
+  }, [loading]); // Only depend on loading, use ref for mouse position
 
   // Simple Shop Component
   const ShopView = () => (
