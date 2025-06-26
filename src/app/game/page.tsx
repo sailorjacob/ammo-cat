@@ -955,13 +955,13 @@ export default function GamePage() {
         
         {gameState === 'ready' && (
           <div 
-            className="absolute inset-0 flex flex-col items-center justify-center"
+            className="absolute inset-0"
             style={{
               background: '#f5f5f5',
               border: '1px solid #e0e0e0'
             }}
           >
-            {/* Floating Character Asset */}
+            {/* Floating Character Asset - Back to center background */}
             <div 
               className="floating-character"
               style={{
@@ -984,7 +984,7 @@ export default function GamePage() {
                 height={120}
                 style={{ 
                   objectFit: 'contain',
-                  opacity: 0.6,
+                  opacity: 0.8,
                   filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1))',
                   width: '120px',
                   height: '120px'
@@ -992,53 +992,62 @@ export default function GamePage() {
               />
             </div>
 
+            {/* Title - ABSOLUTELY positioned even lower */}
             <h1 
-              className="text-5xl font-bold mb-8"
               style={{
+                position: 'absolute',
+                top: '240px',
+                left: '50%',
+                transform: 'translateX(-50%)',
                 color: '#000000',
+                fontSize: '48px',
+                fontWeight: 'bold',
                 letterSpacing: '2px',
+                margin: 0,
                 zIndex: 10,
-                position: 'relative'
+                textAlign: 'center',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
               }}
             >
               AMMOCAT
             </h1>
+            
+            {/* Button - ABSOLUTELY positioned below title */}
             <button
               onClick={startGame}
               style={{
-                position: 'relative',
-                padding: '16px 48px',
+                position: 'absolute',
+                top: '320px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: '16px 32px',
                 background: '#ffffff',
                 border: '1px solid #e0e0e0',
                 borderRadius: '8px',
                 color: '#000000',
-                fontSize: '20px',
+                fontSize: '18px',
                 fontWeight: '600',
                 letterSpacing: '1px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
-                marginBottom: '32px',
                 fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                zIndex: 10,
-                outline: 'none'
+                outline: 'none',
+                zIndex: 10
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-1px)';
+                target.style.transform = 'translateX(-50%) translateY(-1px)';
                 target.style.background = '#f8f8f8';
                 target.style.border = '1px solid #d0d0d0';
               }}
               onMouseLeave={(e) => {
                 const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0)';
+                target.style.transform = 'translateX(-50%)';
                 target.style.background = '#ffffff';
                 target.style.border = '1px solid #e0e0e0';
               }}
             >
-              START GAME
+              START
             </button>
 
             {/* Floating Animation Keyframes */}
