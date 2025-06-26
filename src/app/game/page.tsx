@@ -3,6 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
+
+// Leaderboard entry type
+type LeaderboardEntry = {
+  name: string;
+  score: number;
+  date: string;
+};
 
 export default function GamePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -13,6 +21,16 @@ export default function GamePage() {
   const [finalScore, setFinalScore] = useState(0);
   const [hitEffect, setHitEffect] = useState(false);
   const [showMobileInstructions, setShowMobileInstructions] = useState(true);
+  
+  // Leaderboard states
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [playerName, setPlayerName] = useState('');
+  const [isHighScore, setIsHighScore] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  
+  // Anonymous auth
+  const { user, loading: authLoading } = useAuth();
   
   // Player state
   const playerRef = useRef({
@@ -48,6 +66,91 @@ export default function GamePage() {
     nextZombieId: 1,
     gameStartTime: 0
   });
+  
+  // Load leaderboard from backend
+  useEffect(() => {
+    const loadLeaderboard = async () => {
+      try {
+        const response = await fetch('/api/leaderboard');
+        if (response.ok) {
+          const data = await response.json();
+          // Transform backend data to match our frontend format
+          const transformedData = data.map((entry: any) => ({
+            name: entry.player_name,
+            score: entry.score,
+            date: entry.created_at
+          }));
+          setLeaderboard(transformedData);
+        }
+      } catch (error) {
+        console.error('Failed to load leaderboard:', error);
+        // Fallback to localStorage if API fails
+        const savedLeaderboard = localStorage.getItem('ammocat-leaderboard');
+        if (savedLeaderboard) {
+          setLeaderboard(JSON.parse(savedLeaderboard));
+        }
+      }
+    };
+    
+    loadLeaderboard();
+  }, []);
+  
+  // Save score to leaderboard
+  const saveToLeaderboard = async (name: string, score: number) => {
+    const playerName = name.trim() || 'Anonymous';
+    
+    try {
+      // Save to backend
+      const response = await fetch('/api/leaderboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          player_name: playerName,
+          score: score
+        })
+      });
+      
+      if (response.ok) {
+        // Reload leaderboard after successful save
+        const leaderboardResponse = await fetch('/api/leaderboard');
+        if (leaderboardResponse.ok) {
+          const data = await leaderboardResponse.json();
+          const transformedData = data.map((entry: any) => ({
+            name: entry.player_name,
+            score: entry.score,
+            date: entry.created_at
+          }));
+          setLeaderboard(transformedData);
+        }
+      } else {
+        throw new Error('Failed to save score');
+      }
+    } catch (error) {
+      console.error('Failed to save score to backend:', error);
+      
+      // Fallback to localStorage if API fails
+      const newEntry: LeaderboardEntry = {
+        name: playerName,
+        score: score,
+        date: new Date().toISOString()
+      };
+      
+      const updatedLeaderboard = [...leaderboard, newEntry]
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      
+      setLeaderboard(updatedLeaderboard);
+      localStorage.setItem('ammocat-leaderboard', JSON.stringify(updatedLeaderboard));
+    }
+  };
+  
+  // Check if score qualifies for leaderboard
+  const checkHighScore = (score: number) => {
+    if (leaderboard.length < 10) return true;
+    return score > leaderboard[leaderboard.length - 1].score;
+  };
   
   // Main game loop effect for 'playing' state
   useEffect(() => {
@@ -323,6 +426,11 @@ export default function GamePage() {
         const newLives = prevLives - 1;
         if (newLives <= 0) {
           setFinalScore(score);
+          // Check if it's a high score
+          if (checkHighScore(score)) {
+            setIsHighScore(true);
+            setShowNameInput(true);
+          }
           setTimeout(() => {
             setGameState('gameover');
           }, 500);
@@ -688,6 +796,11 @@ export default function GamePage() {
       playerRef.current.isShooting = false;
       playerRef.current.fireballs = [];
     }
+    
+    // Reset high score states
+    setIsHighScore(false);
+    setShowNameInput(false);
+    setPlayerName('');
     
     setScore(0);
     setLives(4);
@@ -1095,6 +1208,46 @@ export default function GamePage() {
               START
             </button>
 
+            {/* Leaderboard Button */}
+            <button
+              onClick={() => setShowLeaderboard(true)}
+              style={{
+                position: 'absolute',
+                top: '520px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: '12px 24px',
+                background: 'transparent',
+                border: '1px solid #d0d0d0',
+                borderRadius: '8px',
+                color: '#666666',
+                fontSize: '14px',
+                fontWeight: '600',
+                letterSpacing: '0.5px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                outline: 'none',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateX(-50%) translateY(-1px)';
+                target.style.background = '#f8f8f8';
+                target.style.border = '1px solid #c0c0c0';
+                target.style.color = '#000000';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateX(-50%)';
+                target.style.background = 'transparent';
+                target.style.border = '1px solid #d0d0d0';
+                target.style.color = '#666666';
+              }}
+            >
+              LEADERBOARD
+            </button>
+
             {/* Floating Animation Keyframes */}
             <style jsx>{`
               .floating-character {
@@ -1166,6 +1319,19 @@ export default function GamePage() {
           >
             GAME OVER
           </p>
+          {isHighScore && (
+            <p 
+              style={{
+                color: '#FFD700',
+                fontSize: '16px',
+                fontWeight: '900',
+                margin: '0 0 8px 0',
+                textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+              }}
+            >
+              ⭐ NEW HIGH SCORE! ⭐
+            </p>
+          )}
           <p 
             style={{
               color: '#666666',
@@ -1175,31 +1341,61 @@ export default function GamePage() {
           >
             Final Score: <span style={{ color: '#DC2626', fontWeight: '900', fontSize: '16px' }}>{finalScore}</span>
           </p>
-              <button
-                onClick={restartGame}
-            style={{
-              padding: '8px 20px',
-              borderRadius: '6px',
-              color: '#000000',
-              fontWeight: '600',
-              background: '#ffffff',
-              border: '1px solid #e0e0e0',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-              outline: 'none'
-            }}
-            onMouseEnter={(e) => {
-              const target = e.target as HTMLElement;
-              target.style.background = '#f8f8f8';
-            }}
-            onMouseLeave={(e) => {
-              const target = e.target as HTMLElement;
-              target.style.background = '#ffffff';
-            }}
-          >
-                PLAY AGAIN
-              </button>
+              <div style={{ display: 'flex', gap: '8px', flexDirection: 'column' }}>
+                <button
+                  onClick={restartGame}
+                  style={{
+                    padding: '8px 20px',
+                    borderRadius: '6px',
+                    color: '#000000',
+                    fontWeight: '600',
+                    background: '#ffffff',
+                    border: '1px solid #e0e0e0',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.background = '#f8f8f8';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.background = '#ffffff';
+                  }}
+                >
+                  PLAY AGAIN
+                </button>
+                
+                <button
+                  onClick={() => setShowLeaderboard(true)}
+                  style={{
+                    padding: '8px 20px',
+                    borderRadius: '6px',
+                    color: '#666666',
+                    fontWeight: '600',
+                    background: 'transparent',
+                    border: '1px solid #d0d0d0',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.background = '#f8f8f8';
+                    target.style.color = '#000000';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.background = 'transparent';
+                    target.style.color = '#666666';
+                  }}
+                >
+                  VIEW LEADERBOARD
+                </button>
+              </div>
           </div>
         )}
         
@@ -1257,6 +1453,266 @@ export default function GamePage() {
           >
             Tap to dismiss
           </p>
+        </div>
+      )}
+
+      {/* Leaderboard Modal */}
+      {showLeaderboard && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 200,
+            cursor: 'pointer'
+          }}
+          onClick={() => setShowLeaderboard(false)}
+        >
+          <div 
+            style={{
+              background: '#f5f5f5',
+              borderRadius: '12px',
+              padding: '32px',
+              minWidth: '400px',
+              maxWidth: '90vw',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              border: '1px solid #e0e0e0',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+              cursor: 'default'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 
+              style={{
+                color: '#000000',
+                fontSize: '24px',
+                fontWeight: '900',
+                letterSpacing: '1px',
+                marginBottom: '24px',
+                textAlign: 'center'
+              }}
+            >
+              LEADERBOARD
+            </h2>
+            
+            {leaderboard.length === 0 ? (
+              <p 
+                style={{
+                  color: '#666666',
+                  fontSize: '14px',
+                  textAlign: 'center',
+                  padding: '40px 0'
+                }}
+              >
+                No high scores yet. Be the first!
+              </p>
+            ) : (
+              <div style={{ marginBottom: '24px' }}>
+                {leaderboard.map((entry, index) => (
+                  <div 
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '12px 16px',
+                      marginBottom: '8px',
+                      background: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : '#ffffff',
+                      borderRadius: '8px',
+                      border: '1px solid #e0e0e0'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span 
+                        style={{
+                          color: index < 3 ? '#000000' : '#666666',
+                          fontSize: '18px',
+                          fontWeight: '900',
+                          marginRight: '16px',
+                          minWidth: '30px'
+                        }}
+                      >
+                        #{index + 1}
+                      </span>
+                      <span 
+                        style={{
+                          color: '#000000',
+                          fontSize: '16px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        {entry.name}
+                      </span>
+                    </div>
+                    <span 
+                      style={{
+                        color: '#DC2626',
+                        fontSize: '18px',
+                        fontWeight: '900'
+                      }}
+                    >
+                      {entry.score.toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <button
+              onClick={() => setShowLeaderboard(false)}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: '#ffffff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#f8f8f8';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#ffffff';
+              }}
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Name Input Modal for High Score */}
+      {showNameInput && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 200
+          }}
+        >
+          <div 
+            style={{
+              background: '#f5f5f5',
+              borderRadius: '8px',
+              padding: '24px',
+              minWidth: '300px',
+              maxWidth: '90vw',
+              border: '1px solid #e0e0e0',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+            }}
+          >
+            <div
+              style={{
+                textAlign: 'center',
+                fontSize: '32px',
+                marginBottom: '12px'
+              }}
+            >
+              🏆
+            </div>
+            
+            <h2 
+              style={{
+                color: '#000000',
+                fontSize: '18px',
+                fontWeight: '600',
+                marginBottom: '8px',
+                textAlign: 'center'
+              }}
+            >
+              NEW HIGH SCORE!
+            </h2>
+            
+            <p 
+              style={{
+                color: '#DC2626',
+                fontSize: '24px',
+                fontWeight: '900',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}
+            >
+              {finalScore.toLocaleString()}
+            </p>
+            
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              maxLength={20}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                fontSize: '16px',
+                borderRadius: '8px',
+                border: '1px solid #d0d0d0',
+                marginBottom: '16px',
+                outline: 'none',
+                background: '#ffffff',
+                color: '#000000',
+                boxSizing: 'border-box'
+              }}
+              onKeyPress={async (e) => {
+                if (e.key === 'Enter') {
+                  await saveToLeaderboard(playerName || 'Anonymous', finalScore);
+                  setShowNameInput(false);
+                  setPlayerName('');
+                }
+              }}
+              autoFocus
+            />
+            
+            <button
+              onClick={async () => {
+                await saveToLeaderboard(playerName || 'Anonymous', finalScore);
+                setShowNameInput(false);
+                setPlayerName('');
+              }}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: '#ffffff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#f8f8f8';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#ffffff';
+              }}
+            >
+              SUBMIT SCORE
+            </button>
+          </div>
         </div>
       )}
     </div>
