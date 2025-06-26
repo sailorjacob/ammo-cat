@@ -189,3 +189,29 @@ button:focus-visible {
 *::-webkit-focus-ring-color {
   outline-color: transparent !important;
 }
+
+/* Force hide game sidebars on mobile */
+@media (max-width: 767px) {
+  .game-sidebar-left,
+  .game-sidebar-right {
+    display: none !important;
+  }
+}
+
+/* Show mobile-only game elements */
+@media (min-width: 768px) {
+  .mobile-game-score,
+  .mobile-game-instructions {
+    display: none !important;
+  }
+}
+
+/* Ensure mobile elements are visible on mobile */
+@media (max-width: 767px) {
+  .mobile-game-score,
+  .mobile-game-instructions {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}

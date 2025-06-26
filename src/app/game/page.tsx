@@ -819,7 +819,7 @@ export default function GamePage() {
 
       {/* Left Sidebar - Clean Minimalistic Controls */}
       <div 
-        className="hidden md:block"
+        className="hidden md:block game-sidebar-left"
         style={{
           position: 'fixed',
           left: '20px',
@@ -887,7 +887,7 @@ export default function GamePage() {
 
       {/* Right Sidebar - Score */}
       <div 
-        className="hidden md:block"
+        className="hidden md:block game-sidebar-right"
         style={{
           position: 'fixed',
           right: '20px',
@@ -917,15 +917,54 @@ export default function GamePage() {
           </h3>
           <p 
             style={{
-              color: '#B91C1C',
+              color: '#DC2626',
               fontSize: '20px',
-              fontWeight: '700',
+              fontWeight: '900',
               margin: 0
             }}
           >
             {score}
           </p>
         </div>
+      </div>
+
+      {/* Mobile Score - Above Canvas */}
+      <div 
+        className="mobile-game-score"
+        style={{
+          position: 'fixed',
+          top: '90px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 30,
+          background: 'rgba(245, 245, 245, 0.95)',
+          borderRadius: '8px',
+          padding: '8px 16px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center'
+        }}
+      >
+        <span 
+          style={{
+            color: '#000000',
+            fontSize: '12px',
+            fontWeight: '600',
+            marginRight: '8px',
+            letterSpacing: '0.5px'
+          }}
+        >
+          SCORE
+        </span>
+        <span 
+          style={{
+            color: '#DC2626',
+            fontSize: '16px',
+            fontWeight: '900'
+          }}
+        >
+          {score}
+        </span>
       </div>
 
       {/* Game Canvas Container - CENTERED */}
@@ -1084,7 +1123,7 @@ export default function GamePage() {
             position: 'fixed',
             left: '50%',
             top: '50%',
-            transform: 'translate(-50%, calc(-50% + 320px))',
+            transform: 'translate(-50%, calc(-50% + 280px))',
             textAlign: 'center',
             color: '#666666',
             fontSize: '14px',
@@ -1104,7 +1143,7 @@ export default function GamePage() {
             position: 'fixed',
             left: '50%',
             top: '50%',
-            transform: 'translate(-50%, calc(-50% + 350px))',
+            transform: 'translate(-50%, calc(-50% + 250px))',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -1130,7 +1169,7 @@ export default function GamePage() {
               margin: '0 0 16px 0'
             }}
           >
-            Final Score: <span style={{ color: '#B91C1C', fontWeight: 'bold' }}>{finalScore}</span>
+            Final Score: <span style={{ color: '#DC2626', fontWeight: '900', fontSize: '16px' }}>{finalScore}</span>
           </p>
               <button
                 onClick={restartGame}
@@ -1160,6 +1199,47 @@ export default function GamePage() {
           </div>
         )}
         
+      {/* Mobile Instructions - Below Canvas */}
+      <div 
+        className="mobile-game-instructions"
+        style={{
+          position: 'fixed',
+          bottom: '10px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 40,
+          background: '#f5f5f5',
+          borderRadius: '8px',
+          padding: '12px 16px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center',
+          maxWidth: '90vw',
+          minWidth: '200px'
+        }}
+      >
+        <h3 
+          style={{
+            color: '#000000',
+            fontSize: '14px',
+            fontWeight: '600',
+            marginBottom: '4px',
+            letterSpacing: '0.5px'
+          }}
+        >
+          MOBILE
+        </h3>
+        <p 
+          style={{
+            color: '#666666',
+            fontSize: '12px',
+            lineHeight: '1.3',
+            margin: 0
+          }}
+        >
+          Drag to move • Tap to shoot
+        </p>
+      </div>
     </div>
   );
 } 

@@ -195,7 +195,7 @@ export default function Home() {
                alignItems: 'center'
              }}
            >
-             <button 
+             <button
                onClick={() => setCurrentView('home')}
                style={{
                  background: 'transparent',
@@ -504,7 +504,7 @@ export default function Home() {
               onMouseLeave={(e) => {
                 const target = e.target as HTMLElement;
                 target.style.transform = 'scale(1)';
-                target.style.background = '#f8f8f8';
+                  target.style.background = '#f8f8f8';
               }}
             >
               <Image 
@@ -1533,7 +1533,7 @@ export default function Home() {
                 width="24" 
                 height="24" 
                 viewBox="0 0 24 24" 
-                fill="none" 
+                fill="none"
                 stroke={isGlassMode ? '#ffffff' : '#666666'} 
                 strokeWidth="2" 
                 strokeLinecap="round" 
