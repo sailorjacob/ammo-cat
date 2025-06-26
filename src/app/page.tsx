@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Home() {
@@ -9,9 +9,9 @@ export default function Home() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentView, setCurrentView] = useState<'home' | 'shop'>('home');
   const [isGlassMode, setIsGlassMode] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [showArtModal, setShowArtModal] = useState<number | null>(null);
-  const mousePosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     // Animate loading progress from 0 to 100
@@ -29,48 +29,38 @@ export default function Home() {
     return () => clearInterval(progressInterval);
   }, []);
 
-  // Mouse tracking effect - Only update ref to avoid re-renders
+  // Mouse tracking effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      mousePosRef.current = { x: e.clientX, y: e.clientY };
+      setMousePos({ x: e.clientX, y: e.clientY });
     };
 
-    if (!loading) {
+    if (currentView === 'home' && !loading) {
       window.addEventListener('mousemove', handleMouseMove);
     }
 
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [loading]);
+  }, [currentView, loading]);
 
-  // Smooth crosshair following effect - Using ref to avoid dependency issues
+  // Smooth crosshair following effect
   useEffect(() => {
-    if (loading) return;
-
-    let animationFrameId: number;
-    let isRunning = true;
-    
     const smoothFollow = () => {
-      if (!isRunning) return;
-      
       setCrosshairPos(prev => ({
-        x: prev.x + (mousePosRef.current.x - prev.x) * 0.08, // Smooth lag factor
-        y: prev.y + (mousePosRef.current.y - prev.y) * 0.08
+        x: prev.x + (mousePos.x - prev.x) * 0.08, // Smooth lag factor
+        y: prev.y + (mousePos.y - prev.y) * 0.08
       }));
-      
-      if (isRunning) {
-        animationFrameId = requestAnimationFrame(smoothFollow);
-      }
     };
 
-    animationFrameId = requestAnimationFrame(smoothFollow);
-    
-    return () => {
-      isRunning = false;
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [loading]); // Only depend on loading, use ref for mouse position
+    if (currentView === 'home' && !loading) {
+      const animationFrame = requestAnimationFrame(smoothFollow);
+      const interval = setInterval(smoothFollow, 16); // ~60fps
+      
+      return () => {
+        cancelAnimationFrame(animationFrame);
+        clearInterval(interval);
+      };
+    }
+  }, [mousePos, currentView, loading]);
 
   // Simple Shop Component
   const ShopView = () => (
@@ -246,63 +236,6 @@ export default function Home() {
            </div>
          </div>
        </div>
-
-      {/* Crosshairs for Shop - Smaller, non-interfering version */}
-      {currentView === 'shop' && !loading && (
-        <div 
-          style={{
-            position: 'fixed',
-            left: `${crosshairPos.x}px`,
-            top: `${crosshairPos.y}px`,
-            width: '40px',
-            height: '40px',
-            pointerEvents: 'none',
-            zIndex: 1,
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          {/* Horizontal line - shorter */}
-          <div 
-            style={{
-              position: 'absolute',
-              left: '10px',
-              top: '19px',
-              width: '20px',
-              height: '1px',
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
-              boxShadow: '0 0 2px rgba(0, 0, 0, 0.3)',
-              pointerEvents: 'none'
-            }}
-          />
-          {/* Vertical line - shorter */}
-          <div 
-            style={{
-              position: 'absolute',
-              left: '19px',
-              top: '10px',
-              width: '1px',
-              height: '20px',
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
-              boxShadow: '0 0 2px rgba(0, 0, 0, 0.3)',
-              pointerEvents: 'none'
-            }}
-          />
-          {/* Center dot */}
-          <div 
-            style={{
-              position: 'absolute',
-              left: '18px',
-              top: '18px',
-              width: '3px',
-              height: '3px',
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              borderRadius: '50%',
-              boxShadow: '0 0 2px rgba(0, 0, 0, 0.4)',
-              pointerEvents: 'none'
-            }}
-          />
-        </div>
-      )}
 
       {/* Shop Content */}
       <div style={{ paddingTop: '80px', padding: '80px 40px 40px' }}>
