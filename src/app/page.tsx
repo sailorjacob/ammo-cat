@@ -779,18 +779,18 @@ export default function Home() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px'
+            padding: window.innerWidth <= 768 ? '10px' : '20px'
           }}
         >
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
               background: '#ffffff',
-              borderRadius: '16px',
-              padding: '40px',
-              maxWidth: '900px',
-              width: '90vw',
-              maxHeight: '70vh',
+              borderRadius: window.innerWidth <= 768 ? '12px' : '16px',
+              padding: window.innerWidth <= 768 ? '20px' : '40px',
+              maxWidth: window.innerWidth <= 768 ? '95vw' : '900px',
+              width: window.innerWidth <= 768 ? '95vw' : '90vw',
+              maxHeight: window.innerWidth <= 768 ? '95vh' : '70vh',
               overflow: 'auto',
               position: 'relative',
               boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
@@ -801,20 +801,21 @@ export default function Home() {
               onClick={() => setShowArtModal(null)}
               style={{
                 position: 'absolute',
-                top: '20px',
-                right: '20px',
+                top: window.innerWidth <= 768 ? '15px' : '20px',
+                right: window.innerWidth <= 768 ? '15px' : '20px',
                 background: 'transparent',
                 border: 'none',
-                fontSize: '28px',
+                fontSize: window.innerWidth <= 768 ? '24px' : '28px',
                 cursor: 'pointer',
                 color: '#999999',
-                width: '40px',
-                height: '40px',
+                width: window.innerWidth <= 768 ? '36px' : '40px',
+                height: window.innerWidth <= 768 ? '36px' : '40px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: '50%',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                zIndex: 10
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
@@ -831,9 +832,17 @@ export default function Home() {
             </button>
 
             {/* Modal content */}
-            <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+              gap: window.innerWidth <= 768 ? '20px' : '40px', 
+              alignItems: 'flex-start' 
+            }}>
               {/* Image */}
-              <div style={{ flex: '0 0 400px' }}>
+              <div style={{ 
+                flex: window.innerWidth <= 768 ? '1' : '0 0 400px',
+                width: window.innerWidth <= 768 ? '100%' : 'auto'
+              }}>
                 <Image 
                   src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg"
                   alt="Limited Art Print Series I"
@@ -848,25 +857,50 @@ export default function Home() {
                     WebkitUserSelect: 'none',
                     MozUserSelect: 'none',
                     msUserSelect: 'none',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+                    WebkitTouchCallout: 'none',
+                    WebkitUserDrag: 'none',
+                    KhtmlUserSelect: 'none',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+                    pointerEvents: 'none'
                   } as React.CSSProperties}
                   unoptimized={true}
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
+                  onTouchStart={(e) => e.preventDefault()}
+                  onTouchEnd={(e) => e.preventDefault()}
+                  onTouchMove={(e) => e.preventDefault()}
                 />
               </div>
 
               {/* Details */}
               <div style={{ flex: 1 }}>
-                <h2 style={{ fontSize: '32px', fontWeight: '900', color: '#000000', marginBottom: '20px', letterSpacing: '1px' }}>
+                <h2 style={{ 
+                  fontSize: window.innerWidth <= 768 ? '24px' : '32px', 
+                  fontWeight: '900', 
+                  color: '#000000', 
+                  marginBottom: window.innerWidth <= 768 ? '16px' : '20px', 
+                  letterSpacing: '1px' 
+                }}>
                   Art Print 1 - Series I
                 </h2>
                 
-                <div style={{ marginBottom: '32px' }}>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                <div style={{ marginBottom: window.innerWidth <= 768 ? '24px' : '32px' }}>
+                  <h3 style={{ 
+                    fontSize: window.innerWidth <= 768 ? '18px' : '20px', 
+                    fontWeight: '700', 
+                    color: '#000000', 
+                    marginBottom: '16px' 
+                  }}>
                     Specifications
                   </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', color: '#666666', lineHeight: '1.8' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: window.innerWidth <= 768 ? '1fr' : '1fr 1fr', 
+                    gap: '12px', 
+                    color: '#666666', 
+                    lineHeight: '1.8',
+                    fontSize: window.innerWidth <= 768 ? '14px' : '16px'
+                  }}>
                     <div>• Limited fine art print</div>
                     <div>• 8" × 10" dimensions</div>
                     <div>• Premium fine art paper</div>
@@ -876,11 +910,20 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div style={{ marginBottom: '32px' }}>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                <div style={{ marginBottom: window.innerWidth <= 768 ? '24px' : '32px' }}>
+                  <h3 style={{ 
+                    fontSize: window.innerWidth <= 768 ? '18px' : '20px', 
+                    fontWeight: '700', 
+                    color: '#000000', 
+                    marginBottom: '16px' 
+                  }}>
                     About This Print
                   </h3>
-                  <p style={{ color: '#666666', lineHeight: '1.7', fontSize: '16px' }}>
+                  <p style={{ 
+                    color: '#666666', 
+                    lineHeight: '1.7', 
+                    fontSize: window.innerWidth <= 768 ? '14px' : '16px' 
+                  }}>
                     This exclusive limited edition fine art print is meticulously crafted on premium 
                     fine art paper using museum-quality archival inks. Each print is individually 
                     numbered and comes with a certificate of authenticity, making it a valuable 
@@ -888,9 +931,20 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: '28px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#9CA3AF', letterSpacing: '-1px' }}>$1500</span>
+                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: window.innerWidth <= 768 ? '20px' : '28px' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between',
+                    flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+                    gap: window.innerWidth <= 768 ? '16px' : '0'
+                  }}>
+                    <span style={{ 
+                      fontSize: window.innerWidth <= 768 ? '28px' : '36px', 
+                      fontWeight: '900', 
+                      color: '#9CA3AF', 
+                      letterSpacing: '-1px' 
+                    }}>$1500</span>
                     <a 
                       href="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
                       target="_blank"
@@ -899,15 +953,17 @@ export default function Home() {
                         background: '#000000',
                         border: 'none',
                         color: '#ffffff',
-                        padding: '18px 36px',
+                        padding: window.innerWidth <= 768 ? '16px 32px' : '18px 36px',
                         borderRadius: '8px',
-                        fontSize: '16px',
+                        fontSize: window.innerWidth <= 768 ? '14px' : '16px',
                         fontWeight: '700',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
                         textDecoration: 'none',
                         display: 'inline-block',
-                        letterSpacing: '0.5px'
+                        letterSpacing: '0.5px',
+                        width: window.innerWidth <= 768 ? '100%' : 'auto',
+                        textAlign: 'center'
                       }}
                       onMouseEnter={(e) => {
                         const target = e.target as HTMLElement;
@@ -945,18 +1001,18 @@ export default function Home() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px'
+            padding: window.innerWidth <= 768 ? '10px' : '20px'
           }}
         >
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
               background: '#ffffff',
-              borderRadius: '16px',
-              padding: '40px',
-              maxWidth: '900px',
-              width: '90vw',
-              maxHeight: '70vh',
+              borderRadius: window.innerWidth <= 768 ? '12px' : '16px',
+              padding: window.innerWidth <= 768 ? '20px' : '40px',
+              maxWidth: window.innerWidth <= 768 ? '95vw' : '900px',
+              width: window.innerWidth <= 768 ? '95vw' : '90vw',
+              maxHeight: window.innerWidth <= 768 ? '95vh' : '70vh',
               overflow: 'auto',
               position: 'relative',
               boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
@@ -967,20 +1023,21 @@ export default function Home() {
               onClick={() => setShowArtModal(null)}
               style={{
                 position: 'absolute',
-                top: '20px',
-                right: '20px',
+                top: window.innerWidth <= 768 ? '15px' : '20px',
+                right: window.innerWidth <= 768 ? '15px' : '20px',
                 background: 'transparent',
                 border: 'none',
-                fontSize: '28px',
+                fontSize: window.innerWidth <= 768 ? '24px' : '28px',
                 cursor: 'pointer',
                 color: '#999999',
-                width: '40px',
-                height: '40px',
+                width: window.innerWidth <= 768 ? '36px' : '40px',
+                height: window.innerWidth <= 768 ? '36px' : '40px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: '50%',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                zIndex: 10
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
@@ -997,9 +1054,17 @@ export default function Home() {
             </button>
 
             {/* Modal content */}
-            <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+              gap: window.innerWidth <= 768 ? '20px' : '40px', 
+              alignItems: 'flex-start' 
+            }}>
               {/* Image */}
-              <div style={{ flex: '0 0 400px' }}>
+              <div style={{ 
+                flex: window.innerWidth <= 768 ? '1' : '0 0 400px',
+                width: window.innerWidth <= 768 ? '100%' : 'auto'
+              }}>
                 <Image 
                   src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg"
                   alt="Limited Art Print Series II"
@@ -1014,25 +1079,50 @@ export default function Home() {
                     WebkitUserSelect: 'none',
                     MozUserSelect: 'none',
                     msUserSelect: 'none',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+                    WebkitTouchCallout: 'none',
+                    WebkitUserDrag: 'none',
+                    KhtmlUserSelect: 'none',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+                    pointerEvents: 'none'
                   } as React.CSSProperties}
                   unoptimized={true}
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
+                  onTouchStart={(e) => e.preventDefault()}
+                  onTouchEnd={(e) => e.preventDefault()}
+                  onTouchMove={(e) => e.preventDefault()}
                 />
               </div>
 
               {/* Details */}
               <div style={{ flex: 1 }}>
-                <h2 style={{ fontSize: '32px', fontWeight: '900', color: '#000000', marginBottom: '20px', letterSpacing: '1px' }}>
+                <h2 style={{ 
+                  fontSize: window.innerWidth <= 768 ? '24px' : '32px', 
+                  fontWeight: '900', 
+                  color: '#000000', 
+                  marginBottom: window.innerWidth <= 768 ? '16px' : '20px', 
+                  letterSpacing: '1px' 
+                }}>
                   Art Print 2 - Series II
                 </h2>
                 
-                <div style={{ marginBottom: '32px' }}>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                <div style={{ marginBottom: window.innerWidth <= 768 ? '24px' : '32px' }}>
+                  <h3 style={{ 
+                    fontSize: window.innerWidth <= 768 ? '18px' : '20px', 
+                    fontWeight: '700', 
+                    color: '#000000', 
+                    marginBottom: '16px' 
+                  }}>
                     Specifications
                   </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', color: '#666666', lineHeight: '1.8' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: window.innerWidth <= 768 ? '1fr' : '1fr 1fr', 
+                    gap: '12px', 
+                    color: '#666666', 
+                    lineHeight: '1.8',
+                    fontSize: window.innerWidth <= 768 ? '14px' : '16px'
+                  }}>
                     <div>• Limited fine art print</div>
                     <div>• 8" × 10" dimensions</div>
                     <div>• Premium fine art paper</div>
@@ -1042,11 +1132,20 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div style={{ marginBottom: '32px' }}>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                <div style={{ marginBottom: window.innerWidth <= 768 ? '24px' : '32px' }}>
+                  <h3 style={{ 
+                    fontSize: window.innerWidth <= 768 ? '18px' : '20px', 
+                    fontWeight: '700', 
+                    color: '#000000', 
+                    marginBottom: '16px' 
+                  }}>
                     About This Print
                   </h3>
-                  <p style={{ color: '#666666', lineHeight: '1.7', fontSize: '16px' }}>
+                  <p style={{ 
+                    color: '#666666', 
+                    lineHeight: '1.7', 
+                    fontSize: window.innerWidth <= 768 ? '14px' : '16px' 
+                  }}>
                     This exclusive limited edition fine art print is meticulously crafted on premium 
                     fine art paper using museum-quality archival inks. Each print is individually 
                     numbered and comes with a certificate of authenticity, making it a valuable 
@@ -1054,9 +1153,20 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: '28px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#9CA3AF', letterSpacing: '-1px' }}>$1500</span>
+                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: window.innerWidth <= 768 ? '20px' : '28px' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between',
+                    flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+                    gap: window.innerWidth <= 768 ? '16px' : '0'
+                  }}>
+                    <span style={{ 
+                      fontSize: window.innerWidth <= 768 ? '28px' : '36px', 
+                      fontWeight: '900', 
+                      color: '#9CA3AF', 
+                      letterSpacing: '-1px' 
+                    }}>$1500</span>
                     <a 
                       href="https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04"
                       target="_blank"
@@ -1065,15 +1175,17 @@ export default function Home() {
                         background: '#000000',
                         border: 'none',
                         color: '#ffffff',
-                        padding: '18px 36px',
+                        padding: window.innerWidth <= 768 ? '16px 32px' : '18px 36px',
                         borderRadius: '8px',
-                        fontSize: '16px',
+                        fontSize: window.innerWidth <= 768 ? '14px' : '16px',
                         fontWeight: '700',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
                         textDecoration: 'none',
                         display: 'inline-block',
-                        letterSpacing: '0.5px'
+                        letterSpacing: '0.5px',
+                        width: window.innerWidth <= 768 ? '100%' : 'auto',
+                        textAlign: 'center'
                       }}
                       onMouseEnter={(e) => {
                         const target = e.target as HTMLElement;
@@ -1111,18 +1223,18 @@ export default function Home() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px'
+            padding: window.innerWidth <= 768 ? '10px' : '20px'
           }}
         >
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
               background: '#ffffff',
-              borderRadius: '16px',
-              padding: '40px',
-              maxWidth: '900px',
-              width: '90vw',
-              maxHeight: '70vh',
+              borderRadius: window.innerWidth <= 768 ? '12px' : '16px',
+              padding: window.innerWidth <= 768 ? '20px' : '40px',
+              maxWidth: window.innerWidth <= 768 ? '95vw' : '900px',
+              width: window.innerWidth <= 768 ? '95vw' : '90vw',
+              maxHeight: window.innerWidth <= 768 ? '95vh' : '70vh',
               overflow: 'auto',
               position: 'relative',
               boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
@@ -1133,20 +1245,21 @@ export default function Home() {
               onClick={() => setShowArtModal(null)}
               style={{
                 position: 'absolute',
-                top: '20px',
-                right: '20px',
+                top: window.innerWidth <= 768 ? '15px' : '20px',
+                right: window.innerWidth <= 768 ? '15px' : '20px',
                 background: 'transparent',
                 border: 'none',
-                fontSize: '28px',
+                fontSize: window.innerWidth <= 768 ? '24px' : '28px',
                 cursor: 'pointer',
                 color: '#999999',
-                width: '40px',
-                height: '40px',
+                width: window.innerWidth <= 768 ? '36px' : '40px',
+                height: window.innerWidth <= 768 ? '36px' : '40px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: '50%',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                zIndex: 10
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
@@ -1163,9 +1276,17 @@ export default function Home() {
             </button>
 
             {/* Modal content */}
-            <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+              gap: window.innerWidth <= 768 ? '20px' : '40px', 
+              alignItems: 'flex-start' 
+            }}>
               {/* Image */}
-              <div style={{ flex: '0 0 400px' }}>
+              <div style={{ 
+                flex: window.innerWidth <= 768 ? '1' : '0 0 400px',
+                width: window.innerWidth <= 768 ? '100%' : 'auto'
+              }}>
                 <Image 
                   src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//best-2.png"
                   alt="Limited Art Print Series III"
@@ -1180,25 +1301,50 @@ export default function Home() {
                     WebkitUserSelect: 'none',
                     MozUserSelect: 'none',
                     msUserSelect: 'none',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+                    WebkitTouchCallout: 'none',
+                    WebkitUserDrag: 'none',
+                    KhtmlUserSelect: 'none',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+                    pointerEvents: 'none'
                   } as React.CSSProperties}
                   unoptimized={true}
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
+                  onTouchStart={(e) => e.preventDefault()}
+                  onTouchEnd={(e) => e.preventDefault()}
+                  onTouchMove={(e) => e.preventDefault()}
                 />
               </div>
 
               {/* Details */}
               <div style={{ flex: 1 }}>
-                <h2 style={{ fontSize: '32px', fontWeight: '900', color: '#000000', marginBottom: '20px', letterSpacing: '1px' }}>
+                <h2 style={{ 
+                  fontSize: window.innerWidth <= 768 ? '24px' : '32px', 
+                  fontWeight: '900', 
+                  color: '#000000', 
+                  marginBottom: window.innerWidth <= 768 ? '16px' : '20px', 
+                  letterSpacing: '1px' 
+                }}>
                   Art Print 3 - Series III
                 </h2>
                 
-                <div style={{ marginBottom: '32px' }}>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                <div style={{ marginBottom: window.innerWidth <= 768 ? '24px' : '32px' }}>
+                  <h3 style={{ 
+                    fontSize: window.innerWidth <= 768 ? '18px' : '20px', 
+                    fontWeight: '700', 
+                    color: '#000000', 
+                    marginBottom: '16px' 
+                  }}>
                     Specifications
                   </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', color: '#666666', lineHeight: '1.8' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: window.innerWidth <= 768 ? '1fr' : '1fr 1fr', 
+                    gap: '12px', 
+                    color: '#666666', 
+                    lineHeight: '1.8',
+                    fontSize: window.innerWidth <= 768 ? '14px' : '16px'
+                  }}>
                     <div>• Limited fine art print</div>
                     <div>• 8" × 10" dimensions</div>
                     <div>• Premium fine art paper</div>
@@ -1208,11 +1354,20 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div style={{ marginBottom: '32px' }}>
-                  <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#000000', marginBottom: '16px' }}>
+                <div style={{ marginBottom: window.innerWidth <= 768 ? '24px' : '32px' }}>
+                  <h3 style={{ 
+                    fontSize: window.innerWidth <= 768 ? '18px' : '20px', 
+                    fontWeight: '700', 
+                    color: '#000000', 
+                    marginBottom: '16px' 
+                  }}>
                     About This Print
                   </h3>
-                  <p style={{ color: '#666666', lineHeight: '1.7', fontSize: '16px' }}>
+                  <p style={{ 
+                    color: '#666666', 
+                    lineHeight: '1.7', 
+                    fontSize: window.innerWidth <= 768 ? '14px' : '16px' 
+                  }}>
                     This exclusive limited edition fine art print is meticulously crafted on premium 
                     fine art paper using museum-quality archival inks. Each print is individually 
                     numbered and comes with a certificate of authenticity, making it a valuable 
@@ -1220,9 +1375,20 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: '28px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '36px', fontWeight: '900', color: '#9CA3AF', letterSpacing: '-1px' }}>$1500</span>
+                <div style={{ borderTop: '1px solid #e5e5e5', paddingTop: window.innerWidth <= 768 ? '20px' : '28px' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between',
+                    flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+                    gap: window.innerWidth <= 768 ? '16px' : '0'
+                  }}>
+                    <span style={{ 
+                      fontSize: window.innerWidth <= 768 ? '28px' : '36px', 
+                      fontWeight: '900', 
+                      color: '#9CA3AF', 
+                      letterSpacing: '-1px' 
+                    }}>$1500</span>
                     <a 
                       href="https://buy.stripe.com/cNidRafC31vm6IL45t57W05"
                       target="_blank"
@@ -1231,15 +1397,17 @@ export default function Home() {
                         background: '#000000',
                         border: 'none',
                         color: '#ffffff',
-                        padding: '18px 36px',
+                        padding: window.innerWidth <= 768 ? '16px 32px' : '18px 36px',
                         borderRadius: '8px',
-                        fontSize: '16px',
+                        fontSize: window.innerWidth <= 768 ? '14px' : '16px',
                         fontWeight: '700',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
                         textDecoration: 'none',
                         display: 'inline-block',
-                        letterSpacing: '0.5px'
+                        letterSpacing: '0.5px',
+                        width: window.innerWidth <= 768 ? '100%' : 'auto',
+                        textAlign: 'center'
                       }}
                       onMouseEnter={(e) => {
                         const target = e.target as HTMLElement;
