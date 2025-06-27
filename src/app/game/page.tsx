@@ -32,6 +32,37 @@ export default function GamePage() {
   // Anonymous auth
   const { user, loading: authLoading } = useAuth();
   
+  // Random positions for hidden zombies (generated once on component mount)
+  const [hiddenZombiePositions] = useState(() => {
+    const positions = [];
+    const minBottom = 160;
+    const maxBottom = 240;
+    const sizes = [28, 30, 32, 34, 36];
+    const images = [
+      "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png",
+      "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+    ];
+    
+    for (let i = 0; i < 6; i++) {
+      const size = sizes[Math.floor(Math.random() * sizes.length)];
+      
+      // Use percentage positioning within the canvas container
+      // This ensures zombies stay within the 800x600 canvas bounds
+      const minLeftPercent = 20; // 20% from left edge
+      const maxLeftPercent = 80; // 80% from left edge
+      const leftPercent = Math.floor(Math.random() * (maxLeftPercent - minLeftPercent + 1)) + minLeftPercent;
+      
+      positions.push({
+        bottom: Math.floor(Math.random() * (maxBottom - minBottom + 1)) + minBottom,
+        left: leftPercent,
+        size: size,
+        image: images[Math.floor(Math.random() * images.length)]
+      });
+    }
+    
+    return positions;
+  });
+  
   // Player state
   const playerRef = useRef({
     x: 200,
@@ -1150,41 +1181,63 @@ export default function GamePage() {
               />
             </div>
 
-            {/* Smaller zombie characters at bottom */}
-            <div 
-              style={{
-                position: 'absolute',
-                bottom: '120px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                display: 'flex',
-                gap: '20px',
-                zIndex: 1
-              }}
-            >
-              <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                alt="Zombie 1"
-                width={48}
-                height={48}
-                style={{ 
-                  objectFit: 'contain',
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))'
+
+
+            {/* Hidden scattered zombie characters - randomly positioned on each page load */}
+            {hiddenZombiePositions.map((zombie, index) => (
+              <div 
+                key={index}
+                className="hidden-zombie"
+                style={{
+                  position: 'absolute',
+                  bottom: `${zombie.bottom}px`,
+                  left: `${zombie.left}%`,
+                  opacity: 0,
+                  transition: 'opacity 0.2s ease',
+                  zIndex: 0,
+                  width: `${zombie.size + 20}px`,
+                  height: `${zombie.size + 20}px`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transform: 'translateX(-50%)'
                 }}
-              />
-              <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                alt="Zombie 2"
-                width={48}
-                height={48}
-                style={{ 
-                  objectFit: 'contain',
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))'
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transition = 'opacity 0.2s ease';
+                  target.style.opacity = '0.95';
+                  
+                  // Clear any existing timeout
+                  if (target.dataset.timeoutId) {
+                    clearTimeout(parseInt(target.dataset.timeoutId));
+                  }
+                  
+                  // Set new timeout for fade out
+                  const timeoutId = setTimeout(() => {
+                    target.style.transition = 'opacity 2s ease';
+                    target.style.opacity = '0.1';
+                  }, 1500);
+                  
+                  target.dataset.timeoutId = timeoutId.toString();
                 }}
-              />
-            </div>
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  // Don't immediately hide, let the timeout handle it
+                }}
+              >
+                <Image 
+                  src={zombie.image}
+                  alt={`Hidden Zombie ${index + 1}`}
+                  width={zombie.size}
+                  height={zombie.size}
+                  style={{ 
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))',
+                    pointerEvents: 'none'
+                  }}
+                />
+              </div>
+            ))}
 
             {/* START Button - moved to where leaderboard was */}
             <button
