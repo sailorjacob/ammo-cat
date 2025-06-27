@@ -1215,7 +1215,7 @@ export default function GamePage() {
                   // Set new timeout for fade out
                   const timeoutId = setTimeout(() => {
                     target.style.transition = 'opacity 2s ease';
-                    target.style.opacity = '0.1';
+                    target.style.opacity = '0';
                   }, 1500);
                   
                   target.dataset.timeoutId = timeoutId.toString();
