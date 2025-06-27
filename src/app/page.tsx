@@ -1470,8 +1470,7 @@ export default function Home() {
           <h1 
             className="text-5xl font-bold mb-6"
             style={{
-              color: '#000000',
-              textShadow: '0 0 30px rgba(0, 0, 0, 0.5)'
+              color: '#000000'
             }}
           >
             AMMOCAT
@@ -1484,16 +1483,14 @@ export default function Home() {
               className="h-full rounded-full transition-all duration-300 ease-out"
               style={{ 
                 width: `${Math.min(loadingProgress, 100)}%`,
-                background: 'linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%)',
-                boxShadow: '0 0 20px rgba(0, 212, 255, 0.6)'
+                background: 'linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%)'
               }}
             ></div>
           </div>
           <p 
-            className="text-lg font-mono"
+            className="text-lg"
             style={{
-              color: '#000000',
-              textShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
+              color: '#000000'
             }}
           >
             {Math.floor(loadingProgress)}%
@@ -1569,7 +1566,8 @@ export default function Home() {
                 fontSize: '22px',
                 fontWeight: '900',
                 letterSpacing: '2px',
-                transition: 'color 0.3s ease'
+                transition: 'color 0.3s ease',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
               }}
             >
               AMMOCAT
@@ -1595,37 +1593,21 @@ export default function Home() {
                 borderRadius: isGlassMode ? '50px' : '8px',
                 color: isGlassMode ? '#ffffff' : '#000000',
                 fontSize: '16px',
-                fontWeight: isGlassMode ? '700' : '600',
+                fontWeight: '600',
                 letterSpacing: '1px',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
                 backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
-                outline: 'none'
+                outline: 'none',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-2px) scale(1.02)';
-                if (isGlassMode) {
-                  target.style.background = 'rgba(255, 255, 255, 0.35)';
-                  target.style.border = '1px solid rgba(255, 255, 255, 0.4)';
-                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
-                } else {
-                  target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
-                  target.style.background = '#f8f8f8';
-                }
+                target.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
                 const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0) scale(1)';
-                if (isGlassMode) {
-                  target.style.background = 'rgba(255, 255, 255, 0.25)';
-                  target.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-                } else {
-                  target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-                  target.style.background = '#ffffff';
-                }
+                target.style.transform = 'translateY(0)';
               }}
             >
               PLAY
@@ -1641,37 +1623,21 @@ export default function Home() {
                 borderRadius: isGlassMode ? '50px' : '8px',
                 color: isGlassMode ? '#ffffff' : '#000000',
                 fontSize: '16px',
-                fontWeight: isGlassMode ? '700' : '600',
+                fontWeight: '600',
                 letterSpacing: '1px',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                boxShadow: isGlassMode ? '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.1)',
-                outline: 'none'
+                outline: 'none',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-2px) scale(1.02)';
-                if (isGlassMode) {
-                  target.style.background = 'rgba(255, 255, 255, 0.35)';
-                  target.style.border = '1px solid rgba(255, 255, 255, 0.4)';
-                  target.style.boxShadow = '0 12px 40px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
-                } else {
-                  target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
-                  target.style.background = '#f8f8f8';
-                }
+                target.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
                 const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0) scale(1)';
-                if (isGlassMode) {
-                  target.style.background = 'rgba(255, 255, 255, 0.25)';
-                  target.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-                  target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-                } else {
-                  target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-                  target.style.background = '#ffffff';
-                }
+                target.style.transform = 'translateY(0)';
               }}
             >
               SHOP

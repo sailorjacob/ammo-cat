@@ -1124,7 +1124,7 @@ export default function GamePage() {
               className="floating-character"
               style={{
                 position: 'absolute',
-                top: '50%',
+                top: '42%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 zIndex: 1,
@@ -1142,7 +1142,7 @@ export default function GamePage() {
                 height={120}
                 style={{ 
                   objectFit: 'contain',
-                  opacity: 0.8,
+                  opacity: 1,
                   filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1))',
                   width: '120px',
                   height: '120px'
@@ -1150,32 +1150,48 @@ export default function GamePage() {
               />
             </div>
 
-            {/* Title - ABSOLUTELY positioned even lower */}
-            <h1 
+            {/* Smaller zombie characters at bottom */}
+            <div 
               style={{
                 position: 'absolute',
-                top: '240px',
+                bottom: '120px',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                color: '#000000',
-                fontSize: '48px',
-                fontWeight: 'bold',
-                letterSpacing: '2px',
-                margin: 0,
-                zIndex: 10,
-                textAlign: 'center',
-                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                display: 'flex',
+                gap: '20px',
+                zIndex: 1
               }}
             >
-              AMMOCAT
-            </h1>
-            
-            {/* Button - ABSOLUTELY positioned below title */}
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
+                alt="Zombie 1"
+                width={48}
+                height={48}
+                style={{ 
+                  objectFit: 'contain',
+                  opacity: 0.9,
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))'
+                }}
+              />
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+                alt="Zombie 2"
+                width={48}
+                height={48}
+                style={{ 
+                  objectFit: 'contain',
+                  opacity: 0.9,
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))'
+                }}
+              />
+            </div>
+
+            {/* START Button - moved to where leaderboard was */}
             <button
               onClick={startGame}
               style={{
                 position: 'absolute',
-                top: '320px',
+                top: '480px',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 padding: '16px 32px',
@@ -1208,12 +1224,12 @@ export default function GamePage() {
               START
             </button>
 
-            {/* Leaderboard Button */}
+            {/* Leaderboard Button - moved lower */}
             <button
               onClick={() => setShowLeaderboard(true)}
               style={{
                 position: 'absolute',
-                top: '520px',
+                top: '540px',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 padding: '12px 24px',
