@@ -298,6 +298,7 @@ export default function Home() {
                 alt="Limited Art Print Series I"
                 width={200}
                 height={200}
+                priority={true}
                 style={{ 
                   objectFit: 'cover',
                   borderRadius: '8px',
@@ -307,7 +308,6 @@ export default function Home() {
                   msUserSelect: 'none',
                   pointerEvents: 'none'
                 } as React.CSSProperties}
-                unoptimized={true}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -405,6 +405,7 @@ export default function Home() {
                 alt="Limited Art Print Series II"
                 width={200}
                 height={200}
+                loading="lazy"
                 style={{ 
                   objectFit: 'cover',
                   borderRadius: '8px',
@@ -414,7 +415,6 @@ export default function Home() {
                   msUserSelect: 'none',
                   pointerEvents: 'none'
                 } as React.CSSProperties}
-                unoptimized={true}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -512,6 +512,7 @@ export default function Home() {
                 alt="Limited Art Print Series III"
                 width={200}
                 height={200}
+                loading="lazy"
                 style={{ 
                   objectFit: 'cover',
                   borderRadius: '8px',
@@ -521,7 +522,6 @@ export default function Home() {
                   msUserSelect: 'none',
                   pointerEvents: 'none'
                 } as React.CSSProperties}
-                unoptimized={true}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -848,6 +848,7 @@ export default function Home() {
                   alt="Limited Art Print Series I"
                   width={400}
                   height={400}
+                  loading="lazy"
                   style={{ 
                     objectFit: 'cover',
                     borderRadius: '12px',
@@ -863,7 +864,6 @@ export default function Home() {
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
                     pointerEvents: 'none'
                   } as React.CSSProperties}
-                  unoptimized={true}
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
                   onTouchStart={(e) => e.preventDefault()}
@@ -1070,6 +1070,7 @@ export default function Home() {
                   alt="Limited Art Print Series II"
                   width={400}
                   height={400}
+                  loading="lazy"
                   style={{ 
                     objectFit: 'cover',
                     borderRadius: '12px',
@@ -1085,7 +1086,6 @@ export default function Home() {
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
                     pointerEvents: 'none'
                   } as React.CSSProperties}
-                  unoptimized={true}
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
                   onTouchStart={(e) => e.preventDefault()}
@@ -1292,6 +1292,7 @@ export default function Home() {
                   alt="Limited Art Print Series III"
                   width={400}
                   height={400}
+                  loading="lazy"
                   style={{ 
                     objectFit: 'cover',
                     borderRadius: '12px',
@@ -1307,7 +1308,6 @@ export default function Home() {
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
                     pointerEvents: 'none'
                   } as React.CSSProperties}
-                  unoptimized={true}
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
                   onTouchStart={(e) => e.preventDefault()}

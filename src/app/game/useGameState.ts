@@ -46,7 +46,7 @@ export const useGameState = () => {
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(4);
   const [gameState, setGameState] = useState<'ready' | 'playing' | 'countdown' | 'gameover'>('ready');
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(2);
   const [finalScore, setFinalScore] = useState(0);
   const [hitEffect, setHitEffect] = useState(false);
   const [gameStartTime, setGameStartTime] = useState(0);
@@ -145,7 +145,7 @@ export const useGameState = () => {
         setGameState('gameover');
       } else {
         setGameState('countdown');
-        setCountdown(3);
+        setCountdown(2);
       }
       return newLives;
     });

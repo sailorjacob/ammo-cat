@@ -17,7 +17,7 @@ export default function GamePage() {
   const [gameState, setGameState] = useState<'ready' | 'playing' | 'countdown' | 'gameover'>('ready');
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(4);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(2);
   const [finalScore, setFinalScore] = useState(0);
   const [hitEffect, setHitEffect] = useState(false);
   const [showMobileInstructions, setShowMobileInstructions] = useState(true);
@@ -467,7 +467,7 @@ export default function GamePage() {
           }, 500);
         } else {
           setGameState('countdown');
-          setCountdown(3);
+          setCountdown(2);
         }
         return newLives;
       });
@@ -592,12 +592,28 @@ export default function GamePage() {
           });
         }
         
-        // Check for collision with player
+        // Check for collision with player - using smaller, centered hitboxes
+        // Player hitbox: 40% of sprite size, centered
+        const playerHitboxSize = 0.4;
+        const playerHitboxOffset = (1 - playerHitboxSize) / 2;
+        const playerHitX = player.x + player.width * playerHitboxOffset;
+        const playerHitY = player.y + player.height * playerHitboxOffset;
+        const playerHitWidth = player.width * playerHitboxSize;
+        const playerHitHeight = player.height * playerHitboxSize;
+        
+        // Zombie hitbox: 50% of sprite size, centered
+        const zombieHitboxSize = 0.5;
+        const zombieHitboxOffset = (1 - zombieHitboxSize) / 2;
+        const zombieHitX = zombie.x + zombie.width * zombieHitboxOffset;
+        const zombieHitY = zombie.y + zombie.height * zombieHitboxOffset;
+        const zombieHitWidth = zombie.width * zombieHitboxSize;
+        const zombieHitHeight = zombie.height * zombieHitboxSize;
+        
         if (
-          player.x < zombie.x + zombie.width * 0.7 &&
-          player.x + player.width * 0.7 > zombie.x &&
-          player.y < zombie.y + zombie.height * 0.7 &&
-          player.y + player.height * 0.7 > zombie.y
+          playerHitX < zombieHitX + zombieHitWidth &&
+          playerHitX + playerHitWidth > zombieHitX &&
+          playerHitY < zombieHitY + zombieHitHeight &&
+          playerHitY + playerHitHeight > zombieHitY
         ) {
           // Mark zombie for removal
           zombiesToRemove.push(i);
@@ -669,12 +685,20 @@ export default function GamePage() {
           continue;
         }
 
-        // Check for collision with player
+        // Check for collision with player - using smaller, centered hitbox
+        // Player hitbox: 40% of sprite size, centered (same as zombie collision)
+        const playerHitboxSize = 0.4;
+        const playerHitboxOffset = (1 - playerHitboxSize) / 2;
+        const playerHitX = player.x + player.width * playerHitboxOffset;
+        const playerHitY = player.y + player.height * playerHitboxOffset;
+        const playerHitWidth = player.width * playerHitboxSize;
+        const playerHitHeight = player.height * playerHitboxSize;
+        
         if (
-          fireball.x + FIREBALL_SIZE / 2 > player.x &&
-          fireball.x - FIREBALL_SIZE / 2 < player.x + player.width &&
-          fireball.y + FIREBALL_SIZE / 2 > player.y &&
-          fireball.y - FIREBALL_SIZE / 2 < player.y + player.height
+          fireball.x + FIREBALL_SIZE / 2 > playerHitX &&
+          fireball.x - FIREBALL_SIZE / 2 < playerHitX + playerHitWidth &&
+          fireball.y + FIREBALL_SIZE / 2 > playerHitY &&
+          fireball.y - FIREBALL_SIZE / 2 < playerHitY + playerHitHeight
         ) {
           // Player hit by enemy fireball
           enemyFireballs.splice(i, 1);
@@ -754,7 +778,7 @@ export default function GamePage() {
         if (prev <= 1) {
           clearInterval(countdownInterval);
           setGameState('playing');
-          return 3;
+          return 2;
         }
         return prev - 1;
       });
