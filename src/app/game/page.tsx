@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
@@ -178,10 +178,10 @@ export default function GamePage() {
   };
   
   // Check if score qualifies for leaderboard
-  const checkHighScore = (score: number) => {
+  const checkHighScore = useCallback((score: number) => {
     if (leaderboard.length < 10) return true;
     return score > leaderboard[leaderboard.length - 1].score;
-  };
+  }, [leaderboard]);
   
   // Main game loop effect for 'playing' state
   useEffect(() => {
@@ -748,7 +748,7 @@ export default function GamePage() {
       canvas.removeEventListener('touchmove', handleTouchMove as EventListener);
       canvas.removeEventListener('touchend', handleTouchEnd as EventListener);
     };
-  }, [gameState, score]);
+  }, [gameState, score, checkHighScore]);
   
   // Separate effect for countdown
   useEffect(() => {
