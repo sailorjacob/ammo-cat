@@ -37,6 +37,7 @@ export default function PvpPage() {
   const pickupSound = useRef<HTMLAudioElement | null>(null);
   const winSound = useRef<HTMLAudioElement | null>(null);
   const loseSound = useRef<HTMLAudioElement | null>(null);
+  const [pvpLeaderboardError, setPvpLeaderboardError] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -94,9 +95,17 @@ export default function PvpPage() {
   // Fetch PVP leaderboard
   useEffect(() => {
     fetch('/api/pvp/leaderboard')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch leaderboard');
+        }
+        return res.json();
+      })
       .then(setPvpLeaderboard)
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setPvpLeaderboardError('Failed to load leaderboard');
+      });
   }, []);
 
   // Fetch opponent name when matched
@@ -622,7 +631,9 @@ export default function PvpPage() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={() => setShowPvpLeaderboard(false)}>
           <div className="bg-white p-6 rounded-lg text-black max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-2xl mb-4">PVP Leaderboard</h2>
-            {pvpLeaderboard.length === 0 ? (
+            {pvpLeaderboardError ? (
+              <p className="text-red-500">{pvpLeaderboardError}</p>
+            ) : pvpLeaderboard.length === 0 ? (
               <p>No entries yet.</p>
             ) : (
               <ul>
