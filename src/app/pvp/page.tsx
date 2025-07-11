@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useRef, useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
@@ -19,7 +19,7 @@ export default function PvpPage() {
   const readyCountRef = useRef(0);
   const channelRef = useRef<any>(null);
   const game = usePvpGameState(isPlayer1, channelRef.current);
-  const [showMobileOverlay, setShowMobileOverlay] = useState(window.innerWidth < 768);
+  const [showMobileOverlay, setShowMobileOverlay] = useState(false);
   const mousePosRef = useRef({ x: 0, y: 0 });
   const [pvpLeaderboard, setPvpLeaderboard] = useState<{ name: string; wins: number; games: number }[]>([]);
   const [showPvpLeaderboard, setShowPvpLeaderboard] = useState(false);
@@ -32,19 +32,26 @@ export default function PvpPage() {
   const opponentLastAngleRef = useRef(0);
   const [opponentName, setOpponentName] = useState('Opponent');
   const [localName, setLocalName] = useState(user?.email?.split('@')[0] || 'You');
-  const shootSound = useRef(new Audio('/sounds/shoot.mp3'));
-  const hitSound = useRef(new Audio('/sounds/hit.mp3'));
-  const pickupSound = useRef(new Audio('/sounds/pickup.mp3'));
-  const winSound = useRef(new Audio('/sounds/win.mp3'));
-  const loseSound = useRef(new Audio('/sounds/lose.mp3'));
+  const shootSound = useRef<HTMLAudioElement | null>(null);
+  const hitSound = useRef<HTMLAudioElement | null>(null);
+  const pickupSound = useRef<HTMLAudioElement | null>(null);
+  const winSound = useRef<HTMLAudioElement | null>(null);
+  const loseSound = useRef<HTMLAudioElement | null>(null);
 
-  // Preload sounds
   useEffect(() => {
-    shootSound.current.load();
-    hitSound.current.load();
-    pickupSound.current.load();
-    winSound.current.load();
-    loseSound.current.load();
+    if (typeof window === 'undefined') return;
+    shootSound.current = new Audio('/sounds/shoot.mp3');
+    hitSound.current = new Audio('/sounds/hit.mp3');
+    pickupSound.current = new Audio('/sounds/pickup.mp3');
+    winSound.current = new Audio('/sounds/win.mp3');
+    loseSound.current = new Audio('/sounds/lose.mp3');
+
+    // Preload
+    shootSound.current?.load();
+    hitSound.current?.load();
+    pickupSound.current?.load();
+    winSound.current?.load();
+    loseSound.current?.load();
   }, []);
 
   // Polling for match status
@@ -120,7 +127,7 @@ export default function PvpPage() {
         console.log('Received shoot:', payload);
         if (payload.userId !== user!.id) {
           game.fireballsRef.current.push({ ...payload.fireball, owner: 'opponent' });
-          shootSound.current.play().catch(() => {});
+          shootSound.current?.play().catch(() => {});
         }
       })
       .on('broadcast', { event: 'ready' }, ({ payload }) => {
@@ -138,7 +145,7 @@ export default function PvpPage() {
       .on('broadcast', { event: 'powerup_pickup' }, ({ payload }) => {
         console.log('Received powerup_pickup:', payload);
         game.powerUpsRef.current = game.powerUpsRef.current.filter(pu => pu.id !== payload.powerUpId);
-        pickupSound.current.play().catch(() => {});
+        pickupSound.current?.play().catch(() => {});
       })
       .on('presence', { event: 'leave' }, () => {
         console.log('Opponent left');
@@ -239,7 +246,7 @@ export default function PvpPage() {
           payload: { userId: user!.id, fireball: game.fireballsRef.current[game.fireballsRef.current.length - 1] }
         });
       }
-      shootSound.current.play().catch(() => {});
+      shootSound.current?.play().catch(() => {});
     };
 
     const handleMouseUp = () => {
@@ -336,11 +343,16 @@ export default function PvpPage() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    if (typeof window === 'undefined') return;
+
     // Load images
     const playerImage = new window.Image();
     playerImage.src = 'https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png';
 
-    // For powerups, use simple colors or add images
+    const healthImage = new window.Image();
+    healthImage.src = 'https://example.com/heart.png'; // Replace with actual URL
+    const speedImage = new window.Image();
+    speedImage.src = 'https://example.com/bolt.png'; // Replace with actual URL
 
     const update = () => {
       // Clear
@@ -348,18 +360,22 @@ export default function PvpPage() {
       ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
       // Draw local player with dynamic flip
-      ctx.save();
-      ctx.translate(game.localPlayerRef.current.x + 32, game.localPlayerRef.current.y + 32);
-      if (Math.cos(lastLocalAngle) < 0) ctx.scale(-1, 1);
-      ctx.drawImage(playerImage, -32, -32, PLAYER_SIZE, PLAYER_SIZE);
-      ctx.restore();
+      if (playerImage.complete) {
+        ctx.save();
+        ctx.translate(game.localPlayerRef.current.x + 32, game.localPlayerRef.current.y + 32);
+        if (Math.cos(lastLocalAngle) < 0) ctx.scale(-1, 1);
+        ctx.drawImage(playerImage, -32, -32, PLAYER_SIZE, PLAYER_SIZE);
+        ctx.restore();
+      }
 
       // Draw opponent with dynamic flip
-      ctx.save();
-      ctx.translate(game.opponentPlayerRef.current.x + 32, game.opponentPlayerRef.current.y + 32);
-      if (Math.cos(opponentLastAngleRef.current) < 0) ctx.scale(-1, 1);
-      ctx.drawImage(playerImage, -32, -32, PLAYER_SIZE, PLAYER_SIZE);
-      ctx.restore();
+      if (playerImage.complete) {
+        ctx.save();
+        ctx.translate(game.opponentPlayerRef.current.x + 32, game.opponentPlayerRef.current.y + 32);
+        if (Math.cos(opponentLastAngleRef.current) < 0) ctx.scale(-1, 1);
+        ctx.drawImage(playerImage, -32, -32, PLAYER_SIZE, PLAYER_SIZE);
+        ctx.restore();
+      }
 
       // Draw fireballs
       game.fireballsRef.current.forEach(fb => {
@@ -370,14 +386,15 @@ export default function PvpPage() {
       });
 
       // Draw powerups with images
-      const healthImage = new window.Image();
-      healthImage.src = 'https://example.com/heart.png'; // Replace with actual URL
-      const speedImage = new window.Image();
-      speedImage.src = 'https://example.com/bolt.png'; // Replace with actual URL
-
       game.powerUpsRef.current.forEach(pu => {
         const img = pu.type === 'health' ? healthImage : speedImage;
-        ctx.drawImage(img, pu.x, pu.y, POWERUP_SIZE, POWERUP_SIZE);
+        if (img.complete) {
+          ctx.drawImage(img, pu.x, pu.y, POWERUP_SIZE, POWERUP_SIZE);
+        } else {
+          // Fallback drawing if image not loaded
+          ctx.fillStyle = pu.type === 'health' ? '#00FF00' : '#FFFF00';
+          ctx.fillRect(pu.x, pu.y, POWERUP_SIZE, POWERUP_SIZE);
+        }
       });
 
       // Draw health bars
@@ -407,7 +424,7 @@ export default function PvpPage() {
 
         if (fb.owner === 'opponent' && Math.hypot(fb.x - (local.x + 32), fb.y - (local.y + 32)) < 40) {
           game.updateHealth('local', -20);
-          hitSound.current.play().catch(() => {});
+          hitSound.current?.play().catch(() => {});
           return false;
         }
 
@@ -420,7 +437,7 @@ export default function PvpPage() {
           if (pu.type === 'health') game.updateHealth('local', 20);
           if (pu.type === 'speed') local.speed += 2;
           if (channelRef.current) channelRef.current.send({ type: 'broadcast', event: 'powerup_pickup', payload: { powerUpId: pu.id } });
-          pickupSound.current.play().catch(() => {});
+          pickupSound.current?.play().catch(() => {});
           return false;
         }
         return true;
@@ -429,8 +446,10 @@ export default function PvpPage() {
       requestAnimationFrame(update);
     };
 
+    playerImage.onload = () => requestAnimationFrame(update);
+    // Or start update immediately and check complete inside
     update();
-  }, [game.gameStatus, channelRef]);
+  }, [game.gameStatus, channelRef, lastLocalAngle, opponentLastAngleRef, game]);
 
   // Update match on end
   useEffect(() => {
@@ -446,8 +465,8 @@ export default function PvpPage() {
   // Play win/lose sound
   useEffect(() => {
     if (game.gameStatus === 'ended') {
-      if (game.winner === 'local') winSound.current.play().catch(() => {});
-      else loseSound.current.play().catch(() => {});
+      if (game.winner === 'local') winSound.current?.play().catch(() => {});
+      else loseSound.current?.play().catch(() => {});
     }
   }, [game.gameStatus, game.winner]);
 
@@ -488,6 +507,12 @@ export default function PvpPage() {
       setError(err instanceof Error ? err.message : 'Error leaving queue');
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setShowMobileOverlay(window.innerWidth < 768);
+    }
+  }, []);
 
   if (loading) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
