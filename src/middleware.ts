@@ -1,9 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { createServerSupabaseClient } from './lib/supabase-server';
 
 export async function middleware(request: NextRequest) {
-  const supabase = await createServerSupabaseClient();
-  await supabase.auth.getUser();
+  // Simple pass-through middleware - no auth checks needed
   return NextResponse.next();
 }
 
