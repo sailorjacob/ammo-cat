@@ -23,6 +23,8 @@ export async function POST(request: Request) {
 
     if (deletedEntries && deletedEntries.length > 0) {
       console.log('Cleaned up old queue entries for user:', user.id, 'deleted:', deletedEntries.length);
+    } else {
+      console.log('No old queue entries to clean up for user:', user.id);
     }
 
     // Add to queue
@@ -38,6 +40,19 @@ export async function POST(request: Request) {
     }
 
     console.log('Added user to queue:', queueEntry.id, 'for user:', user.id);
+
+    // Immediately verify the queue entry was created
+    const { data: verifyEntry, error: verifyError } = await supabase
+      .from('pvp_queue')
+      .select('*')
+      .eq('id', queueEntry.id)
+      .single();
+
+    if (verifyError) {
+      console.error('Error verifying queue entry:', verifyError);
+    } else {
+      console.log('Verified queue entry exists:', verifyEntry.id, 'for user:', verifyEntry.user_id);
+    }
 
     // Try to find a match multiple times with small delays
     console.log('Starting match finding with retry mechanism...');
@@ -291,6 +306,40 @@ export async function PUT(request: Request) {
     });
   } catch (error) {
     console.error('Unexpected error in PUT:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+// Simple endpoint to list ALL queue entries (for debugging)
+export async function OPTIONS(request: Request) {
+  try {
+    const supabase = await createServerSupabaseClient();
+
+    // Get ALL queue entries (not just queued ones)
+    const { data: allEntries, error } = await supabase
+      .from('pvp_queue')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('OPTIONS Debug queue check error:', error);
+      return NextResponse.json({ error: 'Error checking queue' }, { status: 500 });
+    }
+
+    console.log('OPTIONS DEBUG: ALL queue entries:', allEntries.length, allEntries.map(u => ({ id: u.id, user_id: u.user_id, status: u.status, created_at: u.created_at })));
+    
+    return NextResponse.json({ 
+      message: 'All queue entries', 
+      totalEntries: allEntries.length,
+      entries: allEntries.map(u => ({ 
+        id: u.id, 
+        user_id: u.user_id, 
+        status: u.status, 
+        created_at: u.created_at 
+      }))
+    });
+  } catch (error) {
+    console.error('Unexpected error in OPTIONS:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 
