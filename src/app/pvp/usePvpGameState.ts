@@ -113,7 +113,7 @@ export const usePvpGameState = (isPlayer1: boolean, channel: any) => {
     if (gameStatus !== 'playing') return;
     const interval = setInterval(spawnPowerUp, Math.random() * 10000 + 10000);
     return () => clearInterval(interval);
-  }, [gameStatus]);
+  }, [gameStatus, channel]);
 
   useEffect(() => {
     if (gameStatus !== 'playing') return;

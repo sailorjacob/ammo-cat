@@ -143,6 +143,7 @@ export default function PvpPage() {
 
     const supabase = createClient();
     const channel = supabase.channel(`pvp:${matchId}`);
+    let readySent = false;
 
     channel
       .on('broadcast', { event: 'player_update' }, ({ payload }) => {
@@ -161,10 +162,12 @@ export default function PvpPage() {
       })
       .on('broadcast', { event: 'ready' }, ({ payload }) => {
         console.log('Received ready:', payload);
-        readyCountRef.current++;
-        if (readyCountRef.current >= 2) {
-          setBothReady(true);
-          game.startGame();
+        if (payload.userId !== user!.id) {
+          readyCountRef.current++;
+          if (readyCountRef.current >= 2) {
+            setBothReady(true);
+            game.startGame();
+          }
         }
       })
       .on('broadcast', { event: 'powerup_spawn' }, ({ payload }) => {
@@ -180,7 +183,7 @@ export default function PvpPage() {
         console.log('Opponent left');
         if (game.gameStatus === 'playing') {
           game.endGame('local'); // Award win to local
-          if (matchId && user) {
+          if (matchId && user && matchId !== 'test-match-id') {
             fetch(`/api/pvp/match/${matchId}/update`, {
               method: 'POST',
               body: JSON.stringify({ winner_id: user!.id }),
@@ -192,7 +195,10 @@ export default function PvpPage() {
         if (status === 'SUBSCRIBED') {
           await channel.track({ online: true });
           channelRef.current = channel;
-          channel.send({ type: 'broadcast', event: 'ready', payload: { userId: user!.id } });
+          if (!readySent) {
+            channel.send({ type: 'broadcast', event: 'ready', payload: { userId: user!.id } });
+            readySent = true;
+          }
         }
       });
 
@@ -212,7 +218,7 @@ export default function PvpPage() {
       clearInterval(interval);
       channelRef.current = null;
     };
-  }, [queueStatus, matchId, user, game]);
+  }, [queueStatus, matchId, user]);
 
   // Input handlers
   useEffect(() => {
@@ -484,7 +490,7 @@ export default function PvpPage() {
     playerImage.onload = () => requestAnimationFrame(update);
     // Or start update immediately and check complete inside
     update();
-  }, [game.gameStatus, channelRef, lastLocalAngle, opponentLastAngleRef, game]);
+  }, [game.gameStatus, lastLocalAngle, opponentLastAngleRef]);
 
   // Update match on end
   useEffect(() => {
