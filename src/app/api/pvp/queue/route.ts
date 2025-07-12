@@ -15,10 +15,15 @@ export async function POST(request: Request) {
     console.log('User authenticated:', user.id);
 
     // Clean up any existing queue entries for this user (old or stuck entries)
-    await supabase
+    const { data: deletedEntries } = await supabase
       .from('pvp_queue')
       .delete()
-      .eq('user_id', user.id);
+      .eq('user_id', user.id)
+      .select();
+
+    if (deletedEntries && deletedEntries.length > 0) {
+      console.log('Cleaned up old queue entries for user:', user.id, 'deleted:', deletedEntries.length);
+    }
 
     // Add to queue
     const { data: queueEntry, error: insertError } = await supabase
@@ -32,7 +37,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Error joining queue' }, { status: 500 });
     }
 
-    console.log('Added user to queue:', queueEntry.id);
+    console.log('Added user to queue:', queueEntry.id, 'for user:', user.id);
 
     // Find match - get ALL queued users, not just limit 2
     const { data: queuedUsers, error: findError } = await supabase
@@ -208,6 +213,34 @@ export async function PATCH(request: Request) {
     });
   } catch (error) {
     console.error('Unexpected error in PATCH:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+// Simple debug endpoint for HEAD requests
+export async function HEAD(request: Request) {
+  try {
+    const supabase = await createServerSupabaseClient();
+
+    // Get all queued users for debugging
+    const { data: queuedUsers, error } = await supabase
+      .from('pvp_queue')
+      .select('*')
+      .eq('status', 'queued')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('HEAD Debug queue check error:', error);
+      return NextResponse.json({ error: 'Error checking queue' }, { status: 500 });
+    }
+
+    console.log('HEAD DEBUG: Current queued users:', queuedUsers.length, queuedUsers.map(u => u.user_id));
+    return NextResponse.json({
+      queuedUsers: queuedUsers.length,
+      userIds: queuedUsers.map(u => u.user_id)
+    });
+  } catch (error) {
+    console.error('Unexpected error in HEAD:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 
