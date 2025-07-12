@@ -40,10 +40,18 @@ CREATE TABLE IF NOT EXISTS leaderboard (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Add foreign key constraint for match_id in pvp_queue
-ALTER TABLE pvp_queue 
-ADD CONSTRAINT fk_pvp_queue_match 
-FOREIGN KEY (match_id) REFERENCES pvp_matches(id) ON DELETE SET NULL;
+-- Add foreign key constraint for match_id in pvp_queue (if not exists)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints 
+    WHERE constraint_name = 'fk_pvp_queue_match'
+  ) THEN
+    ALTER TABLE pvp_queue 
+    ADD CONSTRAINT fk_pvp_queue_match 
+    FOREIGN KEY (match_id) REFERENCES pvp_matches(id) ON DELETE SET NULL;
+  END IF;
+END $$;
 
 -- Enable Row Level Security
 ALTER TABLE pvp_queue ENABLE ROW LEVEL SECURITY;
@@ -51,47 +59,83 @@ ALTER TABLE pvp_matches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pvp_stats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE leaderboard ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for pvp_queue
-CREATE POLICY "Users can view their own queue entries" ON pvp_queue
-  FOR SELECT USING (auth.uid() = user_id);
+-- RLS Policies for pvp_queue (only create if they don't exist)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_queue' AND policyname = 'Users can view their own queue entries') THEN
+    CREATE POLICY "Users can view their own queue entries" ON pvp_queue
+      FOR SELECT USING (auth.uid() = user_id);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_queue' AND policyname = 'Users can insert their own queue entries') THEN
+    CREATE POLICY "Users can insert their own queue entries" ON pvp_queue
+      FOR INSERT WITH CHECK (auth.uid() = user_id);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_queue' AND policyname = 'Users can update their own queue entries') THEN
+    CREATE POLICY "Users can update their own queue entries" ON pvp_queue
+      FOR UPDATE USING (auth.uid() = user_id);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_queue' AND policyname = 'Users can delete their own queue entries') THEN
+    CREATE POLICY "Users can delete their own queue entries" ON pvp_queue
+      FOR DELETE USING (auth.uid() = user_id);
+  END IF;
+END $$;
 
-CREATE POLICY "Users can insert their own queue entries" ON pvp_queue
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- RLS Policies for pvp_matches (only create if they don't exist)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_matches' AND policyname = 'Users can view matches they participate in') THEN
+    CREATE POLICY "Users can view matches they participate in" ON pvp_matches
+      FOR SELECT USING (auth.uid() IN (player1_id, player2_id));
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_matches' AND policyname = 'Users can insert matches') THEN
+    CREATE POLICY "Users can insert matches" ON pvp_matches
+      FOR INSERT WITH CHECK (auth.uid() IN (player1_id, player2_id));
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_matches' AND policyname = 'Users can update matches they participate in') THEN
+    CREATE POLICY "Users can update matches they participate in" ON pvp_matches
+      FOR UPDATE USING (auth.uid() IN (player1_id, player2_id));
+  END IF;
+END $$;
 
-CREATE POLICY "Users can update their own queue entries" ON pvp_queue
-  FOR UPDATE USING (auth.uid() = user_id);
+-- RLS Policies for pvp_stats (only create if they don't exist)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_stats' AND policyname = 'Users can view all stats') THEN
+    CREATE POLICY "Users can view all stats" ON pvp_stats
+      FOR SELECT USING (true);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_stats' AND policyname = 'Users can insert their own stats') THEN
+    CREATE POLICY "Users can insert their own stats" ON pvp_stats
+      FOR INSERT WITH CHECK (auth.uid() = user_id);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'pvp_stats' AND policyname = 'Users can update their own stats') THEN
+    CREATE POLICY "Users can update their own stats" ON pvp_stats
+      FOR UPDATE USING (auth.uid() = user_id);
+  END IF;
+END $$;
 
-CREATE POLICY "Users can delete their own queue entries" ON pvp_queue
-  FOR DELETE USING (auth.uid() = user_id);
+-- RLS Policies for leaderboard (only create if they don't exist)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'leaderboard' AND policyname = 'Anyone can view leaderboard') THEN
+    CREATE POLICY "Anyone can view leaderboard" ON leaderboard
+      FOR SELECT USING (true);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'leaderboard' AND policyname = 'Users can insert scores') THEN
+    CREATE POLICY "Users can insert scores" ON leaderboard
+      FOR INSERT WITH CHECK (true);
+  END IF;
+END $$;
 
--- RLS Policies for pvp_matches
-CREATE POLICY "Users can view matches they participate in" ON pvp_matches
-  FOR SELECT USING (auth.uid() IN (player1_id, player2_id));
-
-CREATE POLICY "Users can insert matches" ON pvp_matches
-  FOR INSERT WITH CHECK (auth.uid() IN (player1_id, player2_id));
-
-CREATE POLICY "Users can update matches they participate in" ON pvp_matches
-  FOR UPDATE USING (auth.uid() IN (player1_id, player2_id));
-
--- RLS Policies for pvp_stats
-CREATE POLICY "Users can view all stats" ON pvp_stats
-  FOR SELECT USING (true);
-
-CREATE POLICY "Users can insert their own stats" ON pvp_stats
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update their own stats" ON pvp_stats
-  FOR UPDATE USING (auth.uid() = user_id);
-
--- RLS Policies for leaderboard
-CREATE POLICY "Anyone can view leaderboard" ON leaderboard
-  FOR SELECT USING (true);
-
-CREATE POLICY "Users can insert scores" ON leaderboard
-  FOR INSERT WITH CHECK (true);
-
--- Create indexes for better performance
+-- Create indexes for better performance (only if they don't exist)
 CREATE INDEX IF NOT EXISTS idx_pvp_queue_user_status ON pvp_queue(user_id, status);
 CREATE INDEX IF NOT EXISTS idx_pvp_queue_status ON pvp_queue(status);
 CREATE INDEX IF NOT EXISTS idx_pvp_matches_players ON pvp_matches(player1_id, player2_id);
