@@ -40,9 +40,13 @@ export async function POST(request: Request) {
     console.log('Added user to queue:', queueEntry.id, 'for user:', user.id);
 
     // Try to find a match multiple times with small delays
+    console.log('Starting match finding with retry mechanism...');
     for (let attempt = 0; attempt < 3; attempt++) {
+      console.log(`Starting attempt ${attempt + 1} of 3`);
+      
       // Small delay to ensure database consistency
       if (attempt > 0) {
+        console.log(`Waiting 200ms before attempt ${attempt + 1}...`);
         await new Promise(resolve => setTimeout(resolve, 200));
       }
 
@@ -252,6 +256,41 @@ export async function HEAD(request: Request) {
     });
   } catch (error) {
     console.error('Unexpected error in HEAD:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+// Simple test endpoint to check queue status
+export async function PUT(request: Request) {
+  try {
+    const supabase = await createServerSupabaseClient();
+
+    // Get all queued users for debugging
+    const { data: queuedUsers, error } = await supabase
+      .from('pvp_queue')
+      .select('*')
+      .eq('status', 'queued')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('PUT Debug queue check error:', error);
+      return NextResponse.json({ error: 'Error checking queue' }, { status: 500 });
+    }
+
+    console.log('PUT DEBUG: Current queued users:', queuedUsers.length, queuedUsers.map(u => ({ id: u.id, user_id: u.user_id, status: u.status, created_at: u.created_at })));
+    
+    return NextResponse.json({ 
+      message: 'Queue status check', 
+      totalUsers: queuedUsers.length,
+      users: queuedUsers.map(u => ({ 
+        id: u.id, 
+        user_id: u.user_id, 
+        status: u.status, 
+        created_at: u.created_at 
+      }))
+    });
+  } catch (error) {
+    console.error('Unexpected error in PUT:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 
