@@ -14,22 +14,11 @@ export async function POST(request: Request) {
 
     console.log('User authenticated:', user.id);
 
-    // Check if user is already in queue
-    const { data: existingQueue, error: queueError } = await supabase
+    // Clean up any existing queue entries for this user (old or stuck entries)
+    await supabase
       .from('pvp_queue')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'queued')
-      .single();
-
-    if (queueError && queueError.code !== 'PGRST116') {
-      console.error('Queue check error:', queueError);
-      return NextResponse.json({ error: 'Error checking queue' }, { status: 500 });
-    }
-
-    if (existingQueue) {
-      return NextResponse.json({ message: 'Already in queue', queueId: existingQueue.id });
-    }
+      .delete()
+      .eq('user_id', user.id);
 
     // Add to queue
     const { data: queueEntry, error: insertError } = await supabase
