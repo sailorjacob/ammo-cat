@@ -177,4 +177,37 @@ export async function DELETE(request: Request) {
     console.error('Unexpected error in DELETE:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
+}
+
+// Debug endpoint to check queue status
+export async function PATCH(request: Request) {
+  try {
+    const supabase = await createServerSupabaseClient();
+
+    // Get all queued users for debugging
+    const { data: queuedUsers, error } = await supabase
+      .from('pvp_queue')
+      .select('*')
+      .eq('status', 'queued')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Debug queue check error:', error);
+      return NextResponse.json({ error: 'Error checking queue' }, { status: 500 });
+    }
+
+    console.log('DEBUG: Current queued users:', queuedUsers);
+    return NextResponse.json({
+      message: 'Queue debug info',
+      queuedUsers: queuedUsers.map(u => ({
+        id: u.id,
+        user_id: u.user_id,
+        status: u.status,
+        created_at: u.created_at
+      }))
+    });
+  } catch (error) {
+    console.error('Unexpected error in PATCH:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 } 
