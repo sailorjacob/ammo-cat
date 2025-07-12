@@ -38,6 +38,7 @@ export default function PvpPage() {
   const winSound = useRef<HTMLAudioElement | null>(null);
   const loseSound = useRef<HTMLAudioElement | null>(null);
   const [pvpLeaderboardError, setPvpLeaderboardError] = useState<string | null>(null);
+  const lastLocalAngleRef = useRef(0);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -208,7 +209,7 @@ export default function PvpPage() {
         channel.send({
           type: 'broadcast',
           event: 'player_update',
-          payload: { userId: user!.id, state: { ...game.localPlayerRef.current, lastAngle: lastLocalAngle } },
+          payload: { userId: user!.id, state: { ...game.localPlayerRef.current, lastAngle: lastLocalAngleRef.current } },
         });
       }
     }, 50);
@@ -273,6 +274,7 @@ export default function PvpPage() {
       const dx = mousePosRef.current.x - (local.x + 32);
       const dy = mousePosRef.current.y - (local.y + 32);
       const angle = Math.atan2(dy, dx);
+      lastLocalAngleRef.current = angle;
       setLastLocalAngle(angle);
       game.shootFireball(angle);
       if (channelRef.current) {
@@ -308,6 +310,7 @@ export default function PvpPage() {
         const dx = touchX - (local.x + 32);
         const dy = touchY - (local.y + 32);
         const angle = Math.atan2(dy, dx);
+        lastLocalAngleRef.current = angle;
         setLastLocalAngle(angle);
         game.shootFireball(angle);
         if (channelRef.current) {
@@ -363,15 +366,17 @@ export default function PvpPage() {
       canvasRef.current?.removeEventListener('touchmove', handleTouchMove);
       canvasRef.current?.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [game, channelRef, matchId, user]);
+  }, [game.gameStatus, matchId, user]);
 
-  // For speed boost timeout
+  // For speed boost timeout - removed problematic dependency
   useEffect(() => {
-    if (game.localPlayerRef.current.speed > 5) {
-      const timeout = setTimeout(() => { game.localPlayerRef.current.speed = 5; }, 5000);
-      return () => clearTimeout(timeout);
-    }
-  }, [game.localPlayerRef.current.speed]);
+    const checkSpeed = () => {
+      if (game.localPlayerRef.current.speed > 5) {
+        setTimeout(() => { game.localPlayerRef.current.speed = 5; }, 5000);
+      }
+    };
+    checkSpeed();
+  }, []);
 
   // Game loop
   useEffect(() => {
