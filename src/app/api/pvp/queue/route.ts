@@ -39,61 +39,72 @@ export async function POST(request: Request) {
 
     console.log('Added user to queue:', queueEntry.id, 'for user:', user.id);
 
-    // Find match - get ALL queued users, not just limit 2
-    const { data: queuedUsers, error: findError } = await supabase
-      .from('pvp_queue')
-      .select('*')
-      .eq('status', 'queued')
-      .order('created_at', { ascending: true });
+    // Try to find a match multiple times with small delays
+    for (let attempt = 0; attempt < 3; attempt++) {
+      // Small delay to ensure database consistency
+      if (attempt > 0) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
 
-    if (findError) {
-      console.error('Find match error:', findError);
-      return NextResponse.json({ error: 'Error finding match' }, { status: 500 });
+      // Find match - get ALL queued users, not just limit 2
+      const { data: queuedUsers, error: findError } = await supabase
+        .from('pvp_queue')
+        .select('*')
+        .eq('status', 'queued')
+        .order('created_at', { ascending: true });
+
+      if (findError) {
+        console.error('Find match error:', findError);
+        continue;
+      }
+
+      console.log(`Attempt ${attempt + 1}: Total queued users:`, queuedUsers.length);
+      console.log('Queued users:', queuedUsers.map(u => ({ id: u.id, user_id: u.user_id, created_at: u.created_at })));
+
+      if (queuedUsers.length < 2) {
+        console.log('Not enough users for match, returning queued status');
+        return NextResponse.json({ message: 'Queued', queueId: queueEntry.id });
+      }
+
+      // Take the first 2 users for the match
+      const [player1, player2] = queuedUsers.slice(0, 2);
+      console.log('Creating match between:', player1.user_id, 'and', player2.user_id);
+
+      // Create match
+      const { data: match, error: matchError } = await supabase
+        .from('pvp_matches')
+        .insert({
+          player1_id: player1.user_id,
+          player2_id: player2.user_id
+        })
+        .select()
+        .single();
+
+      if (matchError) {
+        console.error('Match creation error:', matchError);
+        continue;
+      }
+
+      console.log('Match created:', match.id);
+
+      // Update queues
+      const { error: updateError } = await supabase
+        .from('pvp_queue')
+        .update({ status: 'matched', match_id: match.id })
+        .in('id', [player1.id, player2.id]);
+
+      if (updateError) {
+        console.error('Queue update error:', updateError);
+        continue;
+      }
+
+      console.log('Queues updated to matched status');
+      return NextResponse.json({ message: 'Matched', match });
     }
 
-    console.log('Total queued users:', queuedUsers.length);
-    console.log('Queued users:', queuedUsers.map(u => ({ id: u.id, user_id: u.user_id, created_at: u.created_at })));
-
-    if (queuedUsers.length < 2) {
-      console.log('Not enough users for match, returning queued status');
-      return NextResponse.json({ message: 'Queued', queueId: queueEntry.id });
-    }
-
-    // Take the first 2 users for the match
-    const [player1, player2] = queuedUsers.slice(0, 2);
-    console.log('Creating match between:', player1.user_id, 'and', player2.user_id);
-
-    // Create match
-    const { data: match, error: matchError } = await supabase
-      .from('pvp_matches')
-      .insert({
-        player1_id: player1.user_id,
-        player2_id: player2.user_id
-      })
-      .select()
-      .single();
-
-    if (matchError) {
-      console.error('Match creation error:', matchError);
-      return NextResponse.json({ error: 'Error creating match' }, { status: 500 });
-    }
-
-    console.log('Match created:', match.id);
-
-    // Update queues
-    const { error: updateError } = await supabase
-      .from('pvp_queue')
-      .update({ status: 'matched', match_id: match.id })
-      .in('id', [player1.id, player2.id]);
-
-    if (updateError) {
-      console.error('Queue update error:', updateError);
-      return NextResponse.json({ error: 'Error updating queue' }, { status: 500 });
-    }
-
-    console.log('Queues updated to matched status');
-
-    return NextResponse.json({ message: 'Matched', match });
+    // If we get here, no match was found after all attempts
+    console.log('No match found after all attempts, returning queued status');
+    return NextResponse.json({ message: 'Queued', queueId: queueEntry.id });
   } catch (error) {
     console.error('Unexpected error in POST:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
