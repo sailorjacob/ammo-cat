@@ -41,18 +41,20 @@ export default function PvpPage() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    shootSound.current = new Audio('/sounds/shoot.mp3');
-    hitSound.current = new Audio('/sounds/hit.mp3');
-    pickupSound.current = new Audio('/sounds/pickup.mp3');
-    winSound.current = new Audio('/sounds/win.mp3');
-    loseSound.current = new Audio('/sounds/lose.mp3');
+    
+    // Only create audio objects if files exist (they don't currently)
+    // shootSound.current = new Audio('/sounds/shoot.mp3');
+    // hitSound.current = new Audio('/sounds/hit.mp3');
+    // pickupSound.current = new Audio('/sounds/pickup.mp3');
+    // winSound.current = new Audio('/sounds/win.mp3');
+    // loseSound.current = new Audio('/sounds/lose.mp3');
 
-    // Preload
-    shootSound.current?.load();
-    hitSound.current?.load();
-    pickupSound.current?.load();
-    winSound.current?.load();
-    loseSound.current?.load();
+    // Preload sounds (commented out until files exist)
+    // shootSound.current?.load();
+    // hitSound.current?.load();
+    // pickupSound.current?.load();
+    // winSound.current?.load();
+    // loseSound.current?.load();
   }, []);
 
   // Polling for match status
@@ -138,7 +140,7 @@ export default function PvpPage() {
         console.log('Received shoot:', payload);
         if (payload.userId !== user!.id) {
           game.fireballsRef.current.push({ ...payload.fireball, owner: 'opponent' });
-          shootSound.current?.play().catch(() => {});
+          // shootSound.current?.play().catch(() => {}); // Removed sound
         }
       })
       .on('broadcast', { event: 'ready' }, ({ payload }) => {
@@ -156,7 +158,7 @@ export default function PvpPage() {
       .on('broadcast', { event: 'powerup_pickup' }, ({ payload }) => {
         console.log('Received powerup_pickup:', payload);
         game.powerUpsRef.current = game.powerUpsRef.current.filter(pu => pu.id !== payload.powerUpId);
-        pickupSound.current?.play().catch(() => {});
+        // pickupSound.current?.play().catch(() => {}); // Removed sound
       })
       .on('presence', { event: 'leave' }, () => {
         console.log('Opponent left');
@@ -259,7 +261,7 @@ export default function PvpPage() {
           payload: { userId: user!.id, fireball: game.fireballsRef.current[game.fireballsRef.current.length - 1] }
         });
       }
-      shootSound.current?.play().catch(() => {});
+      // shootSound.current?.play().catch(() => {}); // Removed sound
     };
 
     const handleMouseUp = () => {
@@ -438,7 +440,7 @@ export default function PvpPage() {
 
         if (fb.owner === 'opponent' && Math.hypot(fb.x - (local.x + 32), fb.y - (local.y + 32)) < 40) {
           game.updateHealth('local', -20);
-          hitSound.current?.play().catch(() => {});
+          // hitSound.current?.play().catch(() => {}); // Removed sound
           return false;
         }
 
@@ -454,7 +456,7 @@ export default function PvpPage() {
             const supabase = createClient();
             supabase.channel(`pvp:${matchId}`).send({ type: 'broadcast', event: 'powerup_pickup', payload: { powerUpId: pu.id } });
           }
-          pickupSound.current?.play().catch(() => {});
+          // pickupSound.current?.play().catch(() => {}); // Removed sound
           return false;
         }
         return true;
@@ -482,8 +484,8 @@ export default function PvpPage() {
   // Play win/lose sound
   useEffect(() => {
     if (game.gameStatus === 'ended') {
-      if (game.winner === 'local') winSound.current?.play().catch(() => {});
-      else loseSound.current?.play().catch(() => {});
+      // if (game.winner === 'local') winSound.current?.play().catch(() => {});
+      // else loseSound.current?.play().catch(() => {});
     }
   }, [game.gameStatus, game.winner]);
 
