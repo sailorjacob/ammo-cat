@@ -120,14 +120,6 @@ export default function PvpPage() {
     if (matchData) {
       const oppId = isPlayer1 ? matchData.player2_id : matchData.player1_id;
       
-      // Check if this is a valid UUID (not a test ID)
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-      if (!uuidRegex.test(oppId)) {
-        // This is a test opponent, set a default name
-        setOpponentName('Test Opponent');
-        return;
-      }
-      
       const supabase = createClient();
       supabase.auth.admin.getUserById(oppId).then(({ data }) => {
         if (data.user) setOpponentName(data.user.email?.split('@')[0] || 'Guest');
@@ -184,7 +176,7 @@ export default function PvpPage() {
         console.log('Opponent left');
         if (game.gameStatus === 'playing') {
           game.endGame('local'); // Award win to local
-          if (matchId && user && matchId !== 'test-match-id') {
+          if (matchId && user) {
             fetch(`/api/pvp/match/${matchId}/update`, {
               method: 'POST',
               body: JSON.stringify({ winner_id: user!.id }),
@@ -630,22 +622,6 @@ export default function PvpPage() {
             className="ml-4 px-6 py-3 bg-green-500 hover:bg-green-600 rounded-lg text-xl"
           >
             Leaderboard
-          </button>
-          <button
-            onClick={() => {
-              console.log('Test mode: simulating match');
-              setQueueStatus('matched');
-              setMatchId('test-match-id');
-              setMatchData({
-                id: 'test-match-id',
-                player1_id: user!.id,
-                player2_id: 'test-opponent-id',
-                status: 'active'
-              });
-            }}
-            className="ml-4 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 rounded-lg text-xl"
-          >
-            Test Match
           </button>
         </div>
       )}
