@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../lib/supabase';
+import { createClient } from '../../lib/supabase';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -11,7 +11,9 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleAuth = async () => {
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const supabase = createClient();
     setError(null);
     if (!supabase) {
       setError('Supabase not configured');
@@ -34,26 +36,30 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
       <h1 className="text-4xl mb-8">{isSignUp ? 'Sign Up' : 'Login'}</h1>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        className="mb-4 p-2 text-black rounded"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        className="mb-4 p-2 text-black rounded"
-      />
-      <button
-        onClick={handleAuth}
-        className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-xl mb-4"
-      >
-        {isSignUp ? 'Sign Up' : 'Login'}
-      </button>
+      <form onSubmit={handleAuth} className="flex flex-col items-center">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="mb-4 p-2 text-black rounded"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="mb-4 p-2 text-black rounded"
+          required
+        />
+        <button
+          type="submit"
+          className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-xl mb-4"
+        >
+          {isSignUp ? 'Sign Up' : 'Login'}
+        </button>
+      </form>
       <button
         onClick={() => setIsSignUp(!isSignUp)}
         className="text-sm underline"

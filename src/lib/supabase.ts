@@ -7,6 +7,9 @@ export function createClient() {
   );
 }
 
+// For backward compatibility with existing imports
+export const supabase = createClient();
+
 export type LeaderboardEntry = {
   id: string;
   name: string;

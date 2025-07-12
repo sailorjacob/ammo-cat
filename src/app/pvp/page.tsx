@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '../../lib/supabase';
+import { createClient } from '../../lib/supabase';
 import { usePvpGameState } from './usePvpGameState';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -110,18 +110,20 @@ export default function PvpPage() {
 
   // Fetch opponent name when matched
   useEffect(() => {
-    if (matchData && supabase) {
+    if (matchData) {
+      const supabase = createClient();
       const oppId = isPlayer1 ? matchData.player2_id : matchData.player1_id;
       supabase.auth.admin.getUserById(oppId).then(({ data }) => {
         if (data.user) setOpponentName(data.user.email?.split('@')[0] || 'Guest');
       });
     }
-  }, [matchData, supabase, isPlayer1]);
+  }, [matchData, isPlayer1]);
 
   // Realtime setup
   useEffect(() => {
-    if (queueStatus !== 'matched' || !matchId || !user || !supabase) return;
+    if (queueStatus !== 'matched' || !matchId || !user) return;
 
+    const supabase = createClient();
     const channel = supabase.channel(`pvp:${matchId}`);
 
     channel
@@ -192,7 +194,7 @@ export default function PvpPage() {
       clearInterval(interval);
       channelRef.current = null;
     };
-  }, [queueStatus, matchId, user, game, supabase]);
+  }, [queueStatus, matchId, user, game]);
 
   // Input handlers
   useEffect(() => {
@@ -211,7 +213,8 @@ export default function PvpPage() {
           const angle = Math.atan2(opp.y - local.y, opp.x - local.x);
           game.shootFireball(angle);
           if (channelRef.current) {
-            channelRef.current.send({
+            const supabase = createClient();
+            supabase.channel(`pvp:${matchId}`).send({
               type: 'broadcast',
               event: 'shoot',
               payload: {
@@ -249,7 +252,8 @@ export default function PvpPage() {
       setLastLocalAngle(angle);
       game.shootFireball(angle);
       if (channelRef.current) {
-        channelRef.current.send({
+        const supabase = createClient();
+        supabase.channel(`pvp:${matchId}`).send({
           type: 'broadcast',
           event: 'shoot',
           payload: { userId: user!.id, fireball: game.fireballsRef.current[game.fireballsRef.current.length - 1] }
@@ -283,7 +287,8 @@ export default function PvpPage() {
         setLastLocalAngle(angle);
         game.shootFireball(angle);
         if (channelRef.current) {
-          channelRef.current.send({
+          const supabase = createClient();
+          supabase.channel(`pvp:${matchId}`).send({
             type: 'broadcast',
             event: 'shoot',
             payload: { userId: user!.id, fireball: game.fireballsRef.current[game.fireballsRef.current.length - 1] }
@@ -334,7 +339,7 @@ export default function PvpPage() {
       canvasRef.current?.removeEventListener('touchmove', handleTouchMove);
       canvasRef.current?.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [game, channelRef]);
+  }, [game, channelRef, matchId, user]);
 
   // For speed boost timeout
   useEffect(() => {
@@ -445,7 +450,10 @@ export default function PvpPage() {
         if (Math.hypot(pu.x - (local.x + 32), pu.y - (local.y + 32)) < 40) {
           if (pu.type === 'health') game.updateHealth('local', 20);
           if (pu.type === 'speed') local.speed += 2;
-          if (channelRef.current) channelRef.current.send({ type: 'broadcast', event: 'powerup_pickup', payload: { powerUpId: pu.id } });
+          if (channelRef.current) {
+            const supabase = createClient();
+            supabase.channel(`pvp:${matchId}`).send({ type: 'broadcast', event: 'powerup_pickup', payload: { powerUpId: pu.id } });
+          }
           pickupSound.current?.play().catch(() => {});
           return false;
         }
