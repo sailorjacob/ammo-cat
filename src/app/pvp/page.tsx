@@ -117,10 +117,22 @@ export default function PvpPage() {
   // Fetch opponent name when matched
   useEffect(() => {
     if (matchData) {
-      const supabase = createClient();
       const oppId = isPlayer1 ? matchData.player2_id : matchData.player1_id;
+      
+      // Check if this is a valid UUID (not a test ID)
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(oppId)) {
+        // This is a test opponent, set a default name
+        setOpponentName('Test Opponent');
+        return;
+      }
+      
+      const supabase = createClient();
       supabase.auth.admin.getUserById(oppId).then(({ data }) => {
         if (data.user) setOpponentName(data.user.email?.split('@')[0] || 'Guest');
+      }).catch((error) => {
+        console.error('Error fetching opponent name:', error);
+        setOpponentName('Guest');
       });
     }
   }, [matchData, isPlayer1]);
