@@ -31,6 +31,10 @@ export interface Player {
 export const usePvpGameState = (isPlayer1: boolean, channel: any) => {
   const [gameStatus, setGameStatus] = useState<'waiting' | 'playing' | 'ended'>('waiting');
   const [winner, setWinner] = useState<'local' | 'opponent' | null>(null);
+  
+  // Use a ref to track the channel to avoid re-renders
+  const channelRef = useRef(channel);
+  channelRef.current = channel;
 
   const localPlayerRef = useRef<Player>({
     x: isPlayer1 ? 100 : 700, // Player1 left, Player2 right
@@ -103,17 +107,17 @@ export const usePvpGameState = (isPlayer1: boolean, channel: any) => {
       type: Math.random() < 0.5 ? 'health' : 'speed',
     };
     powerUpsRef.current.push(newPu);
-    if (isPlayer1 && channel) {
-      channel.send({ type: 'broadcast', event: 'powerup_spawn', payload: { powerUp: newPu } });
+    if (isPlayer1 && channelRef.current) {
+      channelRef.current.send({ type: 'broadcast', event: 'powerup_spawn', payload: { powerUp: newPu } });
     }
   };
 
-  // Spawn power-ups every 10-20s
+  // Spawn power-ups every 10-20s - removed channel from dependencies
   useEffect(() => {
     if (gameStatus !== 'playing') return;
     const interval = setInterval(spawnPowerUp, Math.random() * 10000 + 10000);
     return () => clearInterval(interval);
-  }, [gameStatus, channel]);
+  }, [gameStatus]);
 
   useEffect(() => {
     if (gameStatus !== 'playing') return;

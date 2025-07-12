@@ -490,7 +490,7 @@ export default function PvpPage() {
     playerImage.onload = () => requestAnimationFrame(update);
     // Or start update immediately and check complete inside
     update();
-  }, [game.gameStatus, lastLocalAngle, opponentLastAngleRef]);
+  }, [game.gameStatus]);
 
   // Update match on end
   useEffect(() => {
