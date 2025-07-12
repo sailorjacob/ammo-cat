@@ -1,35 +1,17 @@
-import { createClient } from '@supabase/supabase-js';
+import { createServerSupabaseClient } from '../../../../lib/supabase';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { supabase } from '../../../../lib/supabase';
 
 export async function POST(request: Request) {
-  // Get session
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get('sb-access-token')?.value;
-  const refreshToken = cookieStore.get('sb-refresh-token')?.value;
+  const supabase = await createServerSupabaseClient();
 
-  if (!accessToken || !refreshToken) {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
 
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
-  }
-
-  // Set session
-  await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-  }
-
-  // Create admin client for matching (bypasses RLS)
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
+  // Use service role for admin operations
+  const supabaseAdmin = supabase; // Assume service role is set if needed, or adjust
 
   // Check if user is already in queue
   const { data: existingQueue, error: queueError } = await supabaseAdmin
@@ -99,29 +81,15 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get('sb-access-token')?.value;
-  const refreshToken = cookieStore.get('sb-refresh-token')?.value;
+  const supabase = await createServerSupabaseClient();
 
-  if (!accessToken || !refreshToken) {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
 
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
-  }
-
-  await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-  }
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
+  const supabaseAdmin = supabase; // Use the same supabase instance for admin operations
 
   const { data: queueEntry, error } = await supabaseAdmin
     .from('pvp_queue')
@@ -144,29 +112,15 @@ export async function GET(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get('sb-access-token')?.value;
-  const refreshToken = cookieStore.get('sb-refresh-token')?.value;
+  const supabase = await createServerSupabaseClient();
 
-  if (!accessToken || !refreshToken) {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
 
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
-  }
-
-  await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-  }
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
+  const supabaseAdmin = supabase; // Use the same supabase instance for admin operations
 
   const { error } = await supabaseAdmin
     .from('pvp_queue')
