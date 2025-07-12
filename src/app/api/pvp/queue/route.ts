@@ -100,17 +100,18 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const { data: queueEntry, error } = await supabase
+    // First check if user is in queue
+    const { data: queueEntry, error: queueError } = await supabase
       .from('pvp_queue')
-      .select('*, pvp_matches(*)')
+      .select('*')
       .eq('user_id', user.id)
       .eq('status', 'matched')
       .order('created_at', { ascending: false })
       .limit(1)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      console.error('Queue status check error:', error);
+    if (queueError && queueError.code !== 'PGRST116') {
+      console.error('Queue status check error:', queueError);
       return NextResponse.json({ error: 'Error checking queue status' }, { status: 500 });
     }
 
@@ -118,7 +119,19 @@ export async function GET(request: Request) {
       return NextResponse.json({ status: 'queued' });
     }
 
-    return NextResponse.json({ status: 'matched', match: queueEntry.pvp_matches });
+    // If user is matched, get the match details separately
+    const { data: match, error: matchError } = await supabase
+      .from('pvp_matches')
+      .select('*')
+      .eq('id', queueEntry.match_id)
+      .single();
+
+    if (matchError) {
+      console.error('Match fetch error:', matchError);
+      return NextResponse.json({ error: 'Error fetching match' }, { status: 500 });
+    }
+
+    return NextResponse.json({ status: 'matched', match });
   } catch (error) {
     console.error('Unexpected error in GET:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
