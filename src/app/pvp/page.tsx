@@ -61,19 +61,23 @@ export default function PvpPage() {
   useEffect(() => {
     if (queueStatus !== 'queued') return;
 
+    console.log('Starting polling for match...');
     const interval = setInterval(async () => {
       try {
+        console.log('Polling for match status...');
         const response = await fetch('/api/pvp/queue');
         const data = await response.json();
+        console.log('Polling response:', data);
 
         if (!response.ok) {
           throw new Error(data.error || 'Failed to check queue');
         }
 
         if (data.status === 'matched') {
+          console.log('Match found via polling!');
           setQueueStatus('matched');
           setMatchId(data.match.id);
-          setMatchData(data.match); // Set match data
+          setMatchData(data.match);
           clearInterval(interval);
         }
       } catch (err: unknown) {
@@ -494,24 +498,29 @@ export default function PvpPage() {
     setError(null);
 
     try {
+      console.log('Joining queue...');
       const response = await fetch('/api/pvp/queue', {
         method: 'POST',
       });
 
       const data = await response.json();
+      console.log('Queue response:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to join queue');
       }
 
       if (data.message === 'Matched') {
+        console.log('Immediately matched!');
         setQueueStatus('matched');
         setMatchId(data.match.id);
-        setMatchData(data.match); // Set match data
+        setMatchData(data.match);
       } else {
+        console.log('Queued, waiting for opponent...');
         setQueueStatus('queued');
       }
     } catch (err: unknown) {
+      console.error('Join queue error:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setQueueStatus('idle');
     }
@@ -598,6 +607,22 @@ export default function PvpPage() {
             className="ml-4 px-6 py-3 bg-green-500 hover:bg-green-600 rounded-lg text-xl"
           >
             Leaderboard
+          </button>
+          <button
+            onClick={() => {
+              console.log('Test mode: simulating match');
+              setQueueStatus('matched');
+              setMatchId('test-match-id');
+              setMatchData({
+                id: 'test-match-id',
+                player1_id: user!.id,
+                player2_id: 'test-opponent-id',
+                status: 'active'
+              });
+            }}
+            className="ml-4 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 rounded-lg text-xl"
+          >
+            Test Match
           </button>
         </div>
       )}
