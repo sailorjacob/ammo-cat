@@ -28,13 +28,12 @@ export interface Player {
   isShooting: boolean;
 }
 
-export const usePvpGameState = (isPlayer1: boolean, channel: any) => {
+export const usePvpGameState = (isPlayer1: boolean) => {
   const [gameStatus, setGameStatus] = useState<'waiting' | 'playing' | 'ended'>('waiting');
   const [winner, setWinner] = useState<'local' | 'opponent' | null>(null);
   
-  // Use a ref to track the channel to avoid re-renders
-  const channelRef = useRef(channel);
-  channelRef.current = channel;
+  // Remove channel tracking since it was causing React hooks issues
+  // The main component will handle channel communication directly
 
   const localPlayerRef = useRef<Player>({
     x: isPlayer1 ? 100 : 700, // Player1 left, Player2 right
@@ -107,9 +106,7 @@ export const usePvpGameState = (isPlayer1: boolean, channel: any) => {
       type: Math.random() < 0.5 ? 'health' : 'speed',
     };
     powerUpsRef.current.push(newPu);
-    if (isPlayer1 && channelRef.current) {
-      channelRef.current.send({ type: 'broadcast', event: 'powerup_spawn', payload: { powerUp: newPu } });
-    }
+    // Removed channel communication as per edit hint
   };
 
   // Spawn power-ups every 10-20s - removed channel from dependencies

@@ -18,7 +18,7 @@ export default function PvpPage() {
   const [bothReady, setBothReady] = useState(false);
   const readyCountRef = useRef(0);
   const channelRef = useRef<any>(null);
-  const game = usePvpGameState(isPlayer1, channelRef.current);
+  const game = usePvpGameState(isPlayer1); // Remove channelRef.current parameter
   const [showMobileOverlay, setShowMobileOverlay] = useState(false);
   const mousePosRef = useRef({ x: 0, y: 0 });
   const [pvpLeaderboard, setPvpLeaderboard] = useState<{ name: string; wins: number; games: number }[]>([]);
