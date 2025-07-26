@@ -521,35 +521,6 @@ export default function Home() {
               PLAY
             </Link>
 
-            {/* PVP Button */}
-            <Link 
-              href="/pvp"
-              className="font-sora font-bold"
-              style={{
-                padding: '12px 24px',
-                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                borderRadius: isGlassMode ? '50px' : '8px',
-                color: isGlassMode ? '#ffffff' : '#000000',
-                fontSize: '16px',
-                letterSpacing: '1px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                outline: 'none'
-              }}
-              onMouseEnter={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0)';
-              }}
-            >
-              PVP
-            </Link>
-
             {/* SHOP Button */}
             <button 
               onClick={() => setCurrentView('shop')}
@@ -578,6 +549,35 @@ export default function Home() {
             >
               SHOP
             </button>
+
+            {/* PVP Button */}
+            <Link 
+              href="/pvp"
+              className="font-sora font-bold"
+              style={{
+                padding: '12px 24px',
+                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                borderRadius: isGlassMode ? '50px' : '8px',
+                color: isGlassMode ? '#ffffff' : '#000000',
+                fontSize: '16px',
+                letterSpacing: '1px',
+                textDecoration: 'none',
+                transition: 'all 0.3s ease',
+                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0)';
+              }}
+            >
+              PVP
+            </Link>
           </div>
           
           {/* Right side - Clean Moon Toggle */}
