@@ -132,7 +132,17 @@ export default function SimplePvpPage() {
 
   // Start the actual game
   const startGame = () => {
+    // Prevent multiple game starts
+    if ((window as any).gameStarted) {
+      console.log('Game already started, skipping...');
+      return;
+    }
+    (window as any).gameStarted = true;
+    
     console.log('Game starting!');
+    
+    // Set up controls FIRST
+    setupControls();
     
     // Simple game loop - always render if we have a canvas
     const gameLoop = () => {
@@ -143,9 +153,6 @@ export default function SimplePvpPage() {
         requestAnimationFrame(gameLoop);
       }
     };
-
-    // Set up controls
-    setupControls();
     
     // Start broadcasting player position
     const broadcastInterval = setInterval(() => {
@@ -220,7 +227,16 @@ export default function SimplePvpPage() {
 
   // Simple controls
   const setupControls = () => {
+    // Remove existing handlers first
+    if ((window as any).keyHandlers) {
+      window.removeEventListener('keydown', (window as any).keyHandlers.handleKeyDown);
+      window.removeEventListener('keyup', (window as any).keyHandlers.handleKeyUp);
+    }
+
+    console.log('Setting up controls...');
+    
     const handleKeyDown = (e: KeyboardEvent) => {
+      console.log('Key down:', e.key);
       const keys = gameDataRef.current.keys;
       switch (e.key.toLowerCase()) {
         case 'w': keys.w = true; break;
@@ -245,11 +261,14 @@ export default function SimplePvpPage() {
 
     // Store for cleanup
     (window as any).keyHandlers = { handleKeyDown, handleKeyUp };
+    console.log('Controls set up successfully!');
   };
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      console.log('Cleaning up game...');
+      (window as any).gameStarted = false; // Reset game started flag
       if ((window as any).pollInterval) clearInterval((window as any).pollInterval);
       if ((window as any).broadcastInterval) clearInterval((window as any).broadcastInterval);
       if ((window as any).keyHandlers) {
