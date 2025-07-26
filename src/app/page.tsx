@@ -320,6 +320,163 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Minimalistic Footer - Bottom Left */}
+      <div 
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '20px',
+          zIndex: 30,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: 'rgba(245, 245, 245, 0.95)',
+          backdropFilter: 'blur(10px)',
+          padding: '8px 16px',
+          borderRadius: '20px',
+          border: '1px solid rgba(224, 224, 224, 0.5)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          fontSize: '12px',
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          color: '#666666',
+          letterSpacing: '0.5px'
+        }}
+      >
+        {/* AMMOCAT Link */}
+        <button
+          onClick={() => setCurrentView('home')}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            padding: '2px 4px',
+            borderRadius: '4px',
+            color: '#000000',
+            fontSize: '12px',
+            fontWeight: '600',
+            transition: 'all 0.2s ease',
+            outline: 'none'
+          }}
+          onMouseEnter={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'rgba(0, 0, 0, 0.05)';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'transparent';
+          }}
+        >
+          🔫 AMMOCAT
+        </button>
+
+        <span style={{ color: '#cccccc', fontSize: '10px' }}>→</span>
+
+        {/* PLAY Link */}
+        <a
+          href="/game"
+          style={{
+            textDecoration: 'none',
+            color: '#666666',
+            padding: '2px 4px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            fontWeight: '500',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'rgba(0, 0, 0, 0.05)';
+            target.style.color = '#000000';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'transparent';
+            target.style.color = '#666666';
+          }}
+        >
+          PLAY
+        </a>
+
+        {/* SHOP - Current page indicator */}
+        <span
+          style={{
+            color: '#000000',
+            padding: '2px 4px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            fontWeight: '600',
+            background: 'rgba(0, 0, 0, 0.05)',
+            border: '1px solid rgba(0, 0, 0, 0.1)'
+          }}
+        >
+          SHOP
+        </span>
+
+        {/* PVP Link */}
+        <a
+          href="/pvp"
+          style={{
+            textDecoration: 'none',
+            color: '#666666',
+            padding: '2px 4px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            fontWeight: '500',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'rgba(0, 0, 0, 0.05)';
+            target.style.color = '#000000';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'transparent';
+            target.style.color = '#666666';
+          }}
+        >
+          PVP
+        </a>
+
+        <span style={{ color: '#cccccc', fontSize: '8px', margin: '0 4px' }}>
+          ──────────
+        </span>
+
+        {/* Moon Link to ammocat3000.com */}
+        <a
+          href="https://ammocat3000.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            textDecoration: 'none',
+            padding: '2px 4px',
+            borderRadius: '4px',
+            fontSize: '14px',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+          onMouseEnter={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'rgba(0, 0, 0, 0.05)';
+            target.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.background = 'transparent';
+            target.style.transform = 'scale(1)';
+          }}
+        >
+          🌙
+        </a>
+      </div>
+
       {/* Art Print Modals */}
       {showArtModal !== null && (
         <ArtModal 
