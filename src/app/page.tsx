@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 import ArtModal from "@/components/ArtModal";
@@ -20,6 +20,8 @@ export default function Home() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [nextVideoLoaded, setNextVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Video sequence array - all 4 videos in proper sequence
   const videos = [
@@ -58,19 +60,28 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [currentView, loading]);
 
-  // Enhanced video transition handler with smooth blending
+  // Enhanced video transition handler with proper cleanup
   const handleVideoEnd = () => {
+    if (isTransitioning) return; // Prevent multiple calls
+    
     setIsTransitioning(true);
     
+    // Clear any existing timeouts
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+    }
+    
     // Smooth transition timing that blends videos together
-    setTimeout(() => {
+    transitionTimeoutRef.current = setTimeout(() => {
       setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
       setVideoLoaded(false);
       
       // Allow overlap for seamless blending
-      setTimeout(() => {
+      const blendTimeout = setTimeout(() => {
         setIsTransitioning(false);
       }, 800); // Adjusted for better swag timing
+      
+      return () => clearTimeout(blendTimeout);
     }, 400); // Faster transition start for blending effect
   };
 
@@ -79,6 +90,15 @@ export default function Home() {
     setVideoLoaded(false);
     setNextVideoLoaded(false);
   }, [currentVideoIndex]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Smooth crosshair following effect
   useEffect(() => {
@@ -846,7 +866,7 @@ export default function Home() {
         }}
       >
         <video 
-          key={currentVideoIndex}
+          ref={videoRef}
           autoPlay 
           muted 
           playsInline
@@ -866,9 +886,7 @@ export default function Home() {
             filter: isTransitioning ? 'blur(1px) brightness(1.05)' : 'none'
           }}
           src={videos[currentVideoIndex]}
-        >
-          <source src={videos[currentVideoIndex]} type="video/mp4" />
-        </video>
+        />
         
         <div 
           className="absolute bg-black/30"
