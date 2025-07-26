@@ -629,7 +629,7 @@ export default function Home() {
               />
             </div>
             <span 
-              className="font-sora font-bold"
+              className="font-montserrat font-bold"
               style={{
                 color: isGlassMode ? '#ffffff' : '#000000',
                 fontSize: '22px',
@@ -653,7 +653,7 @@ export default function Home() {
               {/* PLAY Button */}
               <Link 
                 href="/game"
-                className="font-sora font-bold"
+                className="font-montserrat font-bold"
                 style={{
                   padding: '12px 24px',
                   background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
@@ -682,7 +682,7 @@ export default function Home() {
               {/* SHOP Button */}
               <button 
                 onClick={() => setCurrentView('shop')}
-                className="font-sora font-bold"
+                className="font-montserrat font-bold"
                 style={{
                   padding: '12px 24px',
                   background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
@@ -711,7 +711,7 @@ export default function Home() {
               {/* PVP Button */}
               <Link 
                 href="/pvp"
-                className="font-sora font-bold"
+                className="font-montserrat font-bold"
                 style={{
                   padding: '12px 24px',
                   background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
