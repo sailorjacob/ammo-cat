@@ -1817,6 +1817,100 @@ export default function GamePage() {
           </div>
         </div>
       )}
+
+      {/* Plaintext Footer - Bottom Left */}
+      <div 
+        style={{
+          position: 'fixed',
+          bottom: '16px',
+          left: '16px',
+          zIndex: 30,
+          fontFamily: 'monospace',
+          fontSize: '11px',
+          color: '#666666',
+          letterSpacing: '0.5px',
+          lineHeight: '1.2',
+          userSelect: 'none',
+          pointerEvents: 'auto'
+        }}
+      >
+        <span style={{ color: '#000000', fontWeight: '600' }}>🔫 AMMOCAT</span>
+        <span style={{ color: '#999999', margin: '0 4px' }}>→</span>
+        <span style={{ color: '#000000', fontWeight: '600', background: 'rgba(0, 0, 0, 0.05)', padding: '1px 4px', borderRadius: '2px' }}>PLAY</span>
+        <span style={{ color: '#999999', margin: '0 4px' }}>|</span>
+        <a 
+          href="/" 
+          onClick={(e) => { e.preventDefault(); window.location.href = '/?view=shop'; }}
+          style={{ 
+            color: '#666666', 
+            textDecoration: 'none', 
+            cursor: 'pointer',
+            padding: '1px 2px',
+            borderRadius: '2px',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.color = '#000000';
+            target.style.background = 'rgba(0, 0, 0, 0.05)';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.color = '#666666';
+            target.style.background = 'transparent';
+          }}
+        >
+          SHOP
+        </a>
+        <span style={{ color: '#999999', margin: '0 4px' }}>|</span>
+        <a 
+          href="/pvp" 
+          style={{ 
+            color: '#666666', 
+            textDecoration: 'none', 
+            cursor: 'pointer',
+            padding: '1px 2px',
+            borderRadius: '2px',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.color = '#000000';
+            target.style.background = 'rgba(0, 0, 0, 0.05)';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.color = '#666666';
+            target.style.background = 'transparent';
+          }}
+        >
+          PVP
+        </a>
+        <span style={{ color: '#cccccc', margin: '0 8px', fontSize: '10px' }}>
+          ──────────────
+        </span>
+        <a 
+          href="https://ammocat3000.com" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ 
+            textDecoration: 'none', 
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'inline-block'
+          }}
+          onMouseEnter={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.target as HTMLElement;
+            target.style.transform = 'scale(1)';
+          }}
+        >
+          🌙
+        </a>
+      </div>
     </div>
   );
 } 
