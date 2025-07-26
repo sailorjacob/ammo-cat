@@ -146,11 +146,16 @@ export default function SimplePvpPage() {
     
     // Simple game loop - always render if we have a canvas
     const gameLoop = () => {
+      // Debug: log game loop execution
+      console.log('Game loop running, gameState:', gameState);
+      
       updateGame();
       renderGame();
       // Keep running as long as we're in playing state OR matched state
       if (gameState === 'playing' || gameState === 'matched') {
         requestAnimationFrame(gameLoop);
+      } else {
+        console.log('Game loop stopped, gameState:', gameState);
       }
     };
     
@@ -181,11 +186,22 @@ export default function SimplePvpPage() {
     const keys = gameDataRef.current.keys;
     const speed = 5;
 
+    // Debug: log player position and key states
+    const anyKeyPressed = keys.w || keys.s || keys.a || keys.d;
+    if (anyKeyPressed) {
+      console.log('Keys:', keys, 'Player pos before:', player.x, player.y);
+    }
+
     // Move player based on keys
     if (keys.w) player.y = Math.max(0, player.y - speed);
     if (keys.s) player.y = Math.min(550, player.y + speed);
     if (keys.a) player.x = Math.max(0, player.x - speed);
     if (keys.d) player.x = Math.min(750, player.x + speed);
+
+    // Debug: log player position after movement
+    if (anyKeyPressed) {
+      console.log('Player pos after:', player.x, player.y);
+    }
 
     // Simple win condition
     if (gameDataRef.current.localPlayer.health <= 0) {
