@@ -41,6 +41,9 @@ export default function PvpPage() {
   const [localLives, setLocalLives] = useState(4);
   const [opponentLives, setOpponentLives] = useState(4);
   
+  // User wins state for UI updates
+  const [userWins, setUserWins] = useState(0);
+  
   // Game data as refs to avoid re-renders
   const gameDataRef = useRef({
     isPlayer1: false,
@@ -102,9 +105,25 @@ export default function PvpPage() {
     loadPvpLeaderboard();
   }, []);
 
+  // Initialize user wins from localStorage
+  useEffect(() => {
+    if (user && typeof localStorage !== 'undefined') {
+      const wins = parseInt(localStorage.getItem(`pvp_wins_${user.id}`) || '0');
+      setUserWins(wins);
+    }
+  }, [user]);
+
   // Save win to PVP leaderboard
   const saveWinToLeaderboard = async (name: string) => {
     const playerName = name.trim() || 'Anonymous';
+    
+    // Increment individual user wins counter
+    if (user && typeof localStorage !== 'undefined') {
+      const currentWins = parseInt(localStorage.getItem(`pvp_wins_${user.id}`) || '0');
+      const newWins = currentWins + 1;
+      localStorage.setItem(`pvp_wins_${user.id}`, newWins.toString());
+      setUserWins(newWins);
+    }
     
     try {
       // Save to backend
@@ -2154,7 +2173,7 @@ export default function PvpPage() {
               margin: 0
             }}
           >
-            {user ? (typeof localStorage !== 'undefined' ? parseInt(localStorage.getItem(`pvp_wins_${user.id}`) || '0') : 0) : 0}
+            {userWins}
           </p>
         </div>
       </div>
@@ -2194,7 +2213,7 @@ export default function PvpPage() {
             fontWeight: '900'
           }}
         >
-          {user ? (typeof localStorage !== 'undefined' ? parseInt(localStorage.getItem(`pvp_wins_${user.id}`) || '0') : 0) : 0}
+          {userWins}
         </span>
       </div>
 
