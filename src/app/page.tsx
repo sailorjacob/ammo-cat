@@ -14,6 +14,8 @@ export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [showArtModal, setShowArtModal] = useState<number | null>(null);
+  const [videoEnded, setVideoEnded] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
     // Animate loading progress from 0 to 100
@@ -791,8 +793,11 @@ export default function Home() {
         <video 
           autoPlay 
           muted 
-          loop 
           playsInline
+          onEnded={() => {
+            setVideoEnded(true);
+            setTimeout(() => setShowSpinner(true), 500);
+          }}
           style={{
             position: 'absolute',
             top: 0,
@@ -812,7 +817,59 @@ export default function Home() {
             height: '100%'
           }}
         ></div>
+        
+        {/* White fade overlay after video ends */}
+        {videoEnded && (
+          <div 
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: '#ffffff',
+              opacity: showSpinner ? 1 : 0,
+              transition: 'opacity 0.5s ease',
+              zIndex: 5
+            }}
+          />
+        )}
+        
+        {/* Spinning Diamond */}
+        {showSpinner && (
+          <div 
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 10,
+              animation: 'spin 0.8s linear infinite'
+            }}
+          >
+            <svg 
+              width="40" 
+              height="40" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="#000000" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M6 3h12l4 6-10 13L2 9z"/>
+            </svg>
+          </div>
+        )}
       </div>
+
+      {/* Spinning Animation CSS */}
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: translate(-50%, -50%) rotate(0deg); }
+          100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+      `}</style>
 
       {/* Crosshairs - Hidden for now */}
       {false && currentView === 'home' && !loading && (
