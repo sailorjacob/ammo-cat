@@ -908,7 +908,7 @@ export default function PvpPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
-      <h1 className="text-4xl mb-8">🔥 Ammo Cat PVP 🔥</h1>
+              <h1 className="text-4xl mb-8">Ammo Cat PVP</h1>
       
       <canvas
         ref={canvasRef}
@@ -982,7 +982,7 @@ export default function PvpPage() {
 
       {gameState === 'playing' && (
         <div className="text-center">
-          <p className="text-xl text-green-500">⚔️ Epic PVP Battle in Progress!</p>
+          <p className="text-lg text-green-400">Game in Progress</p>
           <p className="text-sm mt-2">WASD to move • SPACEBAR or MOUSE to shoot fireballs</p>
         </div>
       )}
