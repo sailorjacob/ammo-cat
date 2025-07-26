@@ -259,11 +259,17 @@ export default function PvpPage() {
     for (let i = gameDataRef.current.fireballs.length - 1; i >= 0; i--) {
       const fireball = gameDataRef.current.fireballs[i];
       
-      // Move fireball with curve
-      if (fireball.playerId === user!.id) {
-        fireball.x += fireball.speed; // Player shoots right
+      // Determine shooting direction based on player position
+      // Player1 is on left side and shoots right (+)
+      // Player2 is on right side and shoots left (-)
+      const isPlayer1Fireball = (fireball.playerId === user!.id && gameDataRef.current.isPlayer1) ||
+                                (fireball.playerId !== user!.id && !gameDataRef.current.isPlayer1);
+      
+      // Move fireball in correct direction
+      if (isPlayer1Fireball) {
+        fireball.x += fireball.speed; // Player1 shoots right
       } else {
-        fireball.x -= fireball.speed; // Opponent shoots left
+        fireball.x -= fireball.speed; // Player2 shoots left
       }
       
       // Apply curve effect
@@ -328,8 +334,12 @@ export default function PvpPage() {
     const player = gameDataRef.current.localPlayer;
     const curve = (Math.random() - 0.5) * 2; // Random curve like original game
     
+    // Determine fireball start position based on which player is shooting
+    const isPlayer1 = gameDataRef.current.isPlayer1;
+    const startX = isPlayer1 ? player.x + 50 : player.x; // Player1 shoots from right edge, Player2 from left edge
+    
     const fireball = {
-      x: player.x + 50, // Start from right edge of player
+      x: startX,
       y: player.y + 25, // Center vertically
       playerId: user!.id,
       speed: 7,
@@ -366,13 +376,29 @@ export default function PvpPage() {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, 800, 600);
 
-    // Draw local player with sprite or fallback
+    // Determine directions - Player1 faces right, Player2 faces left
+    const localPlayerFacesRight = gameDataRef.current.isPlayer1;
+    const opponentPlayerFacesRight = !gameDataRef.current.isPlayer1;
+
+    // Draw local player with correct orientation
     if (imagesRef.current.loaded && imagesRef.current.player) {
       try {
-        ctx.drawImage(imagesRef.current.player, 
-          gameDataRef.current.localPlayer.x, 
-          gameDataRef.current.localPlayer.y, 
-          50, 50);
+        ctx.save();
+        if (!localPlayerFacesRight) {
+          // Flip sprite horizontally for player2 (faces left)
+          ctx.scale(-1, 1);
+          ctx.drawImage(imagesRef.current.player,
+            -(gameDataRef.current.localPlayer.x + 50),
+            gameDataRef.current.localPlayer.y,
+            50, 50);
+        } else {
+          // Normal orientation for player1 (faces right)
+          ctx.drawImage(imagesRef.current.player, 
+            gameDataRef.current.localPlayer.x, 
+            gameDataRef.current.localPlayer.y, 
+            50, 50);
+        }
+        ctx.restore();
       } catch (e) {
         // Fallback to colored rectangle
         ctx.fillStyle = 'blue';
@@ -384,16 +410,24 @@ export default function PvpPage() {
       ctx.fillRect(gameDataRef.current.localPlayer.x, gameDataRef.current.localPlayer.y, 50, 50);
     }
 
-    // Draw opponent with sprite or fallback
+    // Draw opponent with correct orientation
     if (imagesRef.current.loaded && imagesRef.current.player) {
       try {
-        // Flip opponent sprite horizontally
         ctx.save();
-        ctx.scale(-1, 1);
-        ctx.drawImage(imagesRef.current.player,
-          -(gameDataRef.current.opponentPlayer.x + 50),
-          gameDataRef.current.opponentPlayer.y,
-          50, 50);
+        if (!opponentPlayerFacesRight) {
+          // Flip sprite horizontally for player2 (faces left)
+          ctx.scale(-1, 1);
+          ctx.drawImage(imagesRef.current.player,
+            -(gameDataRef.current.opponentPlayer.x + 50),
+            gameDataRef.current.opponentPlayer.y,
+            50, 50);
+        } else {
+          // Normal orientation for player1 (faces right)
+          ctx.drawImage(imagesRef.current.player,
+            gameDataRef.current.opponentPlayer.x,
+            gameDataRef.current.opponentPlayer.y,
+            50, 50);
+        }
         ctx.restore();
       } catch (e) {
         // Fallback to colored rectangle
