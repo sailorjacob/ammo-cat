@@ -74,15 +74,6 @@ export default function Home() {
     }, 400); // Faster transition start for blending effect
   };
 
-  // Preload next video for smoother transitions
-  useEffect(() => {
-    const nextIndex = (currentVideoIndex + 1) % videos.length;
-    const nextVideo = document.createElement('video');
-    nextVideo.src = videos[nextIndex];
-    nextVideo.preload = 'auto';
-    nextVideo.onloadeddata = () => setNextVideoLoaded(true);
-  }, [currentVideoIndex, videos]);
-
   // Reset video loaded state when video index changes
   useEffect(() => {
     setVideoLoaded(false);
@@ -109,15 +100,15 @@ export default function Home() {
     }
   }, [mousePos, currentView, loading]);
 
-  // Mobile video autoplay optimization
+  // Mobile video autoplay optimization - single video element
   useEffect(() => {
     if (!loading && currentView === 'home') {
-      // Force play on mobile devices with user interaction simulation
+      // Force play on mobile devices for the current video only
       const playVideo = async () => {
-        const videoElements = document.querySelectorAll('video');
-        for (const video of videoElements) {
+        const videoElement = document.querySelector('video[src]') as HTMLVideoElement;
+        if (videoElement) {
           try {
-            await video.play();
+            await videoElement.play();
           } catch (error) {
             console.log('Video autoplay prevented:', error);
           }
@@ -125,7 +116,7 @@ export default function Home() {
       };
 
       // Delay to ensure video is loaded
-      const timer = setTimeout(playVideo, 500);
+      const timer = setTimeout(playVideo, 300);
       return () => clearTimeout(timer);
     }
   }, [loading, currentView, currentVideoIndex]);
@@ -860,7 +851,6 @@ export default function Home() {
           muted 
           playsInline
           webkit-playsinline="true"
-          preload="auto"
           onEnded={handleVideoEnd}
           onLoadedData={() => setVideoLoaded(true)}
           onCanPlayThrough={() => setVideoLoaded(true)}
@@ -871,36 +861,14 @@ export default function Home() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: videoLoaded && !isTransitioning ? 1 : 0,
+            opacity: videoLoaded && !isTransitioning ? 1 : 0.3,
             transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            filter: isTransitioning ? 'blur(2px) brightness(1.1)' : 'none'
+            filter: isTransitioning ? 'blur(1px) brightness(1.05)' : 'none'
           }}
           src={videos[currentVideoIndex]}
         >
           <source src={videos[currentVideoIndex]} type="video/mp4" />
         </video>
-        
-        {/* Previous video for smooth crossfade effect */}
-        {isTransitioning && currentVideoIndex > 0 && (
-          <video 
-            autoPlay={false}
-            muted 
-            playsInline
-            webkit-playsinline="true"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              opacity: isTransitioning ? 0.3 : 0,
-              transition: 'opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-              zIndex: 1
-            }}
-            src={videos[(currentVideoIndex - 1 + videos.length) % videos.length]}
-          />
-        )}
         
         <div 
           className="absolute bg-black/30"
