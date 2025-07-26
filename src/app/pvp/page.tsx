@@ -598,6 +598,9 @@ export default function PvpPage() {
     setWinner(null);
     setRematchRequested(false);
     setRematchReceived(false);
+    setRematchAccepted(false);
+    setLocalPlayerReady(false);
+    setOpponentPlayerReady(false);
     setShowNameInput(false);
     setPlayerName('');
     
@@ -1808,6 +1811,9 @@ export default function PvpPage() {
                   // Reset rematch states
                   setRematchRequested(false);
                   setRematchReceived(false);
+                  setRematchAccepted(false);
+                  setLocalPlayerReady(false);
+                  setOpponentPlayerReady(false);
                   // Reset leaderboard states
                   setShowNameInput(false);
                   setPlayerName('');
