@@ -859,13 +859,34 @@ export default function PvpPage() {
     console.log('Controls with mouse support set up successfully!');
   };
 
-  // Effect to handle canvas rendering for different states
+  // Effect to handle canvas rendering for intro/lobby states
   useEffect(() => {
     if (gameState === 'idle' || gameState === 'ended') {
-      // Render intro/lobby content
-      renderGame();
+      console.log('Rendering intro screen for state:', gameState);
+      // Small delay to ensure canvas is ready
+      setTimeout(() => {
+        renderGame();
+      }, 100);
     }
   }, [gameState, imagesRef.current.loaded]);
+
+  // Effect to render intro screen on component mount and when images load
+  useEffect(() => {
+    console.log('Component mounted or images loaded, rendering initial intro screen');
+    setTimeout(() => {
+      renderGame();
+    }, 100);
+  }, [imagesRef.current.loaded]);
+
+  // Force render on initial mount
+  useEffect(() => {
+    console.log('Initial mount - force rendering intro');
+    // Force render immediately and after a short delay
+    renderGame();
+    setTimeout(() => {
+      renderGame();
+    }, 50);
+  }, []);
 
   // Setup controls when game starts
   useEffect(() => {
@@ -934,55 +955,40 @@ export default function PvpPage() {
             onClick={joinQueue}
             className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-xl mb-4"
           >
-            🎯 Join PVP Match
+            Join PVP Match
           </button>
           <button
             onClick={() => setShowLeaderboard(true)}
             className="px-6 py-3 bg-gray-600 hover:bg-gray-700 rounded-lg text-lg mb-4"
           >
-            🏆 PVP Leaderboard
+            PVP Leaderboard
           </button>
-          <p className="text-sm text-gray-300">Real-time multiplayer with sprites, explosions & visual effects!</p>
+
         </div>
       )}
 
       {gameState === 'queued' && (
         <div className="text-center">
-          <p className="text-xl mb-2 text-white">🔍 Searching for opponent...</p>
-          <p className="text-sm text-gray-400 mb-6">Preparing battle arena...</p>
+          <p className="text-xl mb-6 text-white">Searching for opponent...</p>
           
           <button
             onClick={() => setGameState('idle')}
             className="px-6 py-3 bg-red-500 hover:bg-red-600 rounded-lg"
           >
-            ❌ Leave Queue
+            Leave Queue
           </button>
         </div>
       )}
 
       {gameState === 'matched' && (
         <div className="text-center">
-          <div className="mb-6">
-            <div className="text-6xl mb-4 animate-bounce">🎉</div>
-            <p className="text-xl text-green-500 mb-2">Match Found!</p>
-            <p className="text-lg text-gray-300">Connecting to battle arena...</p>
-          </div>
-          
-          <div className="flex justify-center items-center gap-4">
-            <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl">
-              🐱
-            </div>
-            <div className="text-2xl text-green-500">⚔️</div>
-            <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-xl">
-              🐱
-            </div>
-          </div>
+          <p className="text-xl text-green-500 mb-2">Match Found!</p>
+          <p className="text-lg text-gray-300">Connecting to battle arena...</p>
         </div>
       )}
 
       {gameState === 'playing' && (
         <div className="text-center">
-          <p className="text-lg text-green-400">Game in Progress</p>
           <p className="text-sm mt-2">WASD to move • SPACEBAR or MOUSE to shoot fireballs</p>
         </div>
       )}
