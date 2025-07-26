@@ -2048,6 +2048,156 @@ export default function PvpPage() {
         )}
       </div>
 
+      {/* Left Sidebar - Clean Minimalistic Controls */}
+      <div 
+        className="hidden md:block pvp-sidebar-left"
+        style={{
+          position: 'fixed',
+          left: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 40,
+          background: '#f5f5f5',
+          borderRadius: '8px',
+          padding: '20px 16px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          minWidth: '200px'
+        }}
+      >
+        <div style={{ marginBottom: '24px' }}>
+          <h3 
+            style={{
+              color: '#000000',
+              fontSize: '14px',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.5px'
+            }}
+          >
+            MOBILE
+          </h3>
+          <p 
+            style={{
+              color: '#666666',
+              fontSize: '12px',
+              lineHeight: '1.4',
+              margin: 0
+            }}
+          >
+            Drag to move<br/>
+            Tap to shoot
+          </p>
+        </div>
+        
+        <div>
+          <h3 
+            style={{
+              color: '#000000',
+              fontSize: '14px',
+              fontWeight: '600',
+              marginBottom: '12px',
+              letterSpacing: '0.5px'
+            }}
+          >
+            DESKTOP
+          </h3>
+          <p 
+            style={{
+              color: '#666666',
+              fontSize: '12px',
+              lineHeight: '1.4',
+              margin: 0
+            }}
+          >
+            WASD to move<br/>
+            Spacebar or Mouse to shoot
+          </p>
+        </div>
+      </div>
+
+      {/* Right Sidebar - Wins */}
+      <div 
+        className="hidden md:block pvp-sidebar-right"
+        style={{
+          position: 'fixed',
+          right: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 40,
+          background: '#f5f5f5',
+          borderRadius: '8px',
+          padding: '16px 12px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          minWidth: '120px',
+          textAlign: 'center'
+        }}
+      >
+        <div>
+          <h3 
+            style={{
+              color: '#000000',
+              fontSize: '12px',
+              fontWeight: '600',
+              marginBottom: '8px',
+              letterSpacing: '0.5px'
+            }}
+          >
+            WINS
+          </h3>
+          <p 
+            style={{
+              color: '#DC2626',
+              fontSize: '20px',
+              fontWeight: '900',
+              margin: 0
+            }}
+          >
+            {user ? (typeof localStorage !== 'undefined' ? parseInt(localStorage.getItem(`pvp_wins_${user.id}`) || '0') : 0) : 0}
+          </p>
+        </div>
+      </div>
+
+      {/* Mobile Wins - Above Canvas */}
+      <div 
+        className="mobile-pvp-wins"
+        style={{
+          position: 'fixed',
+          top: '90px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 30,
+          background: 'rgba(245, 245, 245, 0.95)',
+          borderRadius: '8px',
+          padding: '8px 16px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center'
+        }}
+      >
+        <span 
+          style={{
+            color: '#000000',
+            fontSize: '12px',
+            fontWeight: '600',
+            marginRight: '8px',
+            letterSpacing: '0.5px'
+          }}
+        >
+          WINS
+        </span>
+        <span 
+          style={{
+            color: '#DC2626',
+            fontSize: '16px',
+            fontWeight: '900'
+          }}
+        >
+          {user ? (typeof localStorage !== 'undefined' ? parseInt(localStorage.getItem(`pvp_wins_${user.id}`) || '0') : 0) : 0}
+        </span>
+      </div>
+
       {/* Loading Spinner Animation */}
       <style jsx>{`
         @keyframes spin {
