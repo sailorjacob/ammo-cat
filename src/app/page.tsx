@@ -71,18 +71,18 @@ export default function Home() {
       clearTimeout(transitionTimeoutRef.current);
     }
     
-    // Smooth transition timing that blends videos together with circle effect
+    // Smooth transition timing that blends videos together
     transitionTimeoutRef.current = setTimeout(() => {
       setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
       setVideoLoaded(false);
       
-      // Allow overlap for seamless blending with smoother timing
+      // Allow overlap for seamless blending
       const blendTimeout = setTimeout(() => {
         setIsTransitioning(false);
-      }, 1200); // Extended for smoother circle transition
+      }, 800); // Adjusted for better swag timing
       
       return () => clearTimeout(blendTimeout);
-    }, 600); // Slightly longer start for the circle effect to develop
+    }, 400); // Faster transition start for blending effect
   };
 
   // Reset video loaded state when video index changes
@@ -365,19 +365,9 @@ export default function Home() {
             onClick={() => setShowArtModal(3)}
           />
           <ProductCard 
-            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
                 alt="Art Print Series IV"
             title="Art Print 4 - Series IV"
-            description="Limited edition hero collection"
-            limit=""
-            price="COMING SOON"
-            isAvailable={false}
-            isHero={true}
-          />
-          <ProductCard 
-            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                alt="Art Print Series V"
-            title="Art Print 5 - Series V"
             description="Limited edition tactical warfare art collection"
             limit=""
             price="COMING SOON"
@@ -386,8 +376,8 @@ export default function Home() {
           />
           <ProductCard 
             imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                alt="Art Print Series VI"
-            title="Art Print 6 - Series VI"
+                alt="Art Print Series V"
+            title="Art Print 5 - Series V"
             description="Limited edition character collection"
             limit=""
             price="COMING SOON"
@@ -881,10 +871,9 @@ export default function Home() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: videoLoaded && !isTransitioning ? 1 : 0.2,
-            transition: 'all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            filter: isTransitioning ? 'blur(2px) brightness(1.1) saturate(1.1)' : 'none',
-            transform: isTransitioning ? 'scale(1.02)' : 'scale(1)'
+            opacity: videoLoaded && !isTransitioning ? 1 : 0.3,
+            transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            filter: isTransitioning ? 'blur(1px) brightness(1.05)' : 'none'
           }}
           src={videos[currentVideoIndex]}
         />
@@ -900,7 +889,7 @@ export default function Home() {
           }}
         ></div>
         
-        {/* Smooth circular/diamond transition effect */}
+        {/* Enhanced gradient overlay for diamond-like transition effect */}
         <div 
           style={{
             position: 'absolute',
@@ -909,30 +898,11 @@ export default function Home() {
             width: '100%',
             height: '100%',
             background: isTransitioning 
-              ? 'radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.25) 30%, rgba(255,255,255,0.6) 60%, rgba(0,0,0,0.9) 100%)'
+              ? 'radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.8) 100%)'
               : 'transparent',
             opacity: isTransitioning ? 1 : 0,
-            transition: 'all 2.5s cubic-bezier(0.165, 0.84, 0.44, 1)',
-            transform: isTransitioning ? 'scale(1.1)' : 'scale(1)',
+            transition: 'all 1.8s cubic-bezier(0.23, 1, 0.32, 1)',
             zIndex: 3,
-            pointerEvents: 'none'
-          }}
-        />
-        
-        {/* Additional smooth overlay for extra smoothness */}
-        <div 
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: isTransitioning 
-              ? 'radial-gradient(ellipse 150% 100% at center, transparent 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.3) 70%, rgba(0,0,0,0.6) 100%)'
-              : 'transparent',
-            opacity: isTransitioning ? 0.8 : 0,
-            transition: 'all 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            zIndex: 2,
             pointerEvents: 'none'
           }}
         />
