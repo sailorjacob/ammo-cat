@@ -33,6 +33,9 @@ export default function PvpPage() {
   // Rematch states
   const [rematchRequested, setRematchRequested] = useState(false);
   const [rematchReceived, setRematchReceived] = useState(false);
+  const [rematchAccepted, setRematchAccepted] = useState(false);
+  const [localPlayerReady, setLocalPlayerReady] = useState(false);
+  const [opponentPlayerReady, setOpponentPlayerReady] = useState(false);
   
   // Lives state for UI updates
   const [localLives, setLocalLives] = useState(4);
@@ -328,12 +331,19 @@ export default function PvpPage() {
       })
       .on('broadcast', { event: 'rematch_accepted' }, ({ payload }) => {
         if (payload.userId !== user!.id) {
-          // Reset rematch states
+          // Reset rematch states and enter ready phase
           setRematchReceived(false);
           setRematchRequested(false);
-          
-          // Start new game
-          startNewGame();
+          setRematchAccepted(true);
+          setLocalPlayerReady(false);
+          setOpponentPlayerReady(false);
+        }
+      })
+      .on('broadcast', { event: 'player_ready' }, ({ payload }) => {
+        if (payload.userId !== user!.id) {
+          setOpponentPlayerReady(true);
+        } else {
+          setLocalPlayerReady(true);
         }
       })
       .on('broadcast', { event: 'lives_update' }, ({ payload }) => {
@@ -632,6 +642,9 @@ export default function PvpPage() {
       // Reset local rematch states
       setRematchReceived(false);
       setRematchRequested(false);
+      setRematchAccepted(true);
+      setLocalPlayerReady(false);
+      setOpponentPlayerReady(false);
       
       // Send acceptance to opponent
       channelRef.current.send({
@@ -639,9 +652,6 @@ export default function PvpPage() {
         event: 'rematch_accepted',
         payload: { userId: user!.id }
       });
-      
-      // Start the game immediately (opponent will start when they receive this event)
-      startNewGame();
     }
   };
 
@@ -1020,6 +1030,30 @@ export default function PvpPage() {
       }
     };
   }, []);
+
+  // Player ready up for rematch
+  const playerReady = () => {
+    if (channelRef.current) {
+      setLocalPlayerReady(true);
+      
+      // Broadcast ready state to opponent
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'player_ready',
+        payload: { userId: user!.id }
+      });
+    }
+  };
+
+  // Check if both players are ready and start game
+  useEffect(() => {
+    if (rematchAccepted && localPlayerReady && opponentPlayerReady) {
+      console.log('Both players ready, starting rematch!');
+      setTimeout(() => {
+        startNewGame();
+      }, 1000); // Small delay for better UX
+    }
+  }, [rematchAccepted, localPlayerReady, opponentPlayerReady]);
 
   if (loading) return <div className="flex items-center justify-center h-screen">Loading...</div>;
   if (!user) return <div className="flex items-center justify-center h-screen">Logging in...</div>;
@@ -1862,6 +1896,240 @@ export default function PvpPage() {
                 🏆 VIEW LEADERBOARD
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Rematch Ready Phase */}
+        {rematchAccepted && !localPlayerReady && (
+          <div style={{ textAlign: 'center', maxWidth: '400px' }}>
+            <div 
+              style={{
+                marginBottom: '32px'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Character"
+                width={80}
+                height={80}
+                style={{ 
+                  objectFit: 'contain',
+                  opacity: 1,
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))',
+                  margin: '0 auto',
+                  display: 'block'
+                }}
+              />
+            </div>
+            
+            <h2 
+              className="font-sora font-bold"
+              style={{
+                color: '#000000',
+                fontSize: '20px',
+                letterSpacing: '1px',
+                marginBottom: '16px'
+              }}
+            >
+              Rematch Accepted!
+            </h2>
+            
+            <p 
+              style={{
+                color: '#666666',
+                fontSize: '14px',
+                marginBottom: '24px'
+              }}
+            >
+              Click ready when you're prepared to battle
+            </p>
+            
+            <button
+              onClick={playerReady}
+              className="font-sora font-bold"
+              style={{
+                padding: '16px 32px',
+                background: '#ffffff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                color: '#000000',
+                fontSize: '18px',
+                letterSpacing: '1px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                outline: 'none',
+                marginBottom: '16px',
+                width: '100%',
+                maxWidth: '300px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-1px)';
+                target.style.background = '#f8f8f8';
+                target.style.border = '1px solid #d0d0d0';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0)';
+                target.style.background = '#ffffff';
+                target.style.border = '1px solid #e0e0e0';
+              }}
+            >
+              <svg 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                style={{ marginRight: '8px' }}
+              >
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              Ready for Battle
+            </button>
+          </div>
+        )}
+
+        {/* Waiting for Opponent to Ready */}
+        {rematchAccepted && localPlayerReady && !opponentPlayerReady && (
+          <div style={{ textAlign: 'center', maxWidth: '400px' }}>
+            <div 
+              style={{
+                marginBottom: '32px'
+              }}
+            >
+              <div 
+                style={{
+                  width: '60px',
+                  height: '60px',
+                  border: '4px solid #f3f3f3',
+                  borderTop: '4px solid #3498db',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                  margin: '0 auto'
+                }}
+              />
+            </div>
+            
+            <h2 
+              className="font-sora font-bold"
+              style={{
+                color: '#000000',
+                fontSize: '20px',
+                letterSpacing: '1px',
+                marginBottom: '8px'
+              }}
+            >
+              You're Ready!
+            </h2>
+            
+            <p 
+              style={{
+                color: '#666666',
+                fontSize: '14px'
+              }}
+            >
+              Waiting for opponent to ready up...
+            </p>
+          </div>
+        )}
+
+        {gameState === 'idle' && !rematchAccepted && (
+          <div style={{ textAlign: 'center', maxWidth: '400px' }}>
+            <div 
+              style={{
+                marginBottom: '32px'
+              }}
+            >
+              <Image 
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Character"
+                width={80}
+                height={80}
+                style={{ 
+                  objectFit: 'contain',
+                  opacity: 1,
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))',
+                  margin: '0 auto',
+                  display: 'block'
+                }}
+              />
+            </div>
+            
+            <button
+              onClick={joinQueue}
+              className="font-sora font-bold"
+              style={{
+                padding: '16px 32px',
+                background: '#ffffff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                color: '#000000',
+                fontSize: '18px',
+                letterSpacing: '1px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                outline: 'none',
+                marginBottom: '16px',
+                width: '100%',
+                maxWidth: '300px'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-1px)';
+                target.style.background = '#f8f8f8';
+                target.style.border = '1px solid #d0d0d0';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0)';
+                target.style.background = '#ffffff';
+                target.style.border = '1px solid #e0e0e0';
+              }}
+            >
+              JOIN PVP MATCH
+            </button>
+            
+            <button
+              onClick={() => setShowLeaderboard(true)}
+              className="font-sora font-bold"
+              style={{
+                padding: '12px 24px',
+                background: 'transparent',
+                border: '1px solid #d0d0d0',
+                borderRadius: '8px',
+                color: '#666666',
+                fontSize: '14px',
+                letterSpacing: '0.5px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                outline: 'none',
+                width: '100%',
+                maxWidth: '300px'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-1px)';
+                target.style.background = '#f8f8f8';
+                target.style.border = '1px solid #c0c0c0';
+                target.style.color = '#000000';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0)';
+                target.style.background = 'transparent';
+                target.style.border = '1px solid #d0d0d0';
+                target.style.color = '#666666';
+              }}
+            >
+              PVP LEADERBOARD
+            </button>
           </div>
         )}
       </div>
