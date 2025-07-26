@@ -446,7 +446,7 @@ export default function Home() {
           style={{ 
             width: '100%',
             display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
+            gridTemplateColumns: 'auto 1fr auto',
             alignItems: 'center',
             padding: '16px 20px',
             maxWidth: '100vw',
@@ -454,7 +454,7 @@ export default function Home() {
             minHeight: '70px'
           }}
         >
-          {/* Left side - Clean Logo */}
+          {/* Left side - Clean Logo + Title */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <div 
               style={{
@@ -470,31 +470,32 @@ export default function Home() {
               />
             </div>
             <span 
+              className="font-sora font-bold"
               style={{
                 color: isGlassMode ? '#ffffff' : '#000000',
                 fontSize: '22px',
-                fontWeight: '900',
                 letterSpacing: '2px',
-                transition: 'color 0.3s ease',
-                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                transition: 'color 0.3s ease'
               }}
             >
               AMMOCAT
             </span>
           </div>
           
-          {/* Center - Enhanced Buttons */}
+          {/* Center - Enhanced Buttons (moved from center, now left of right side) */}
           <div 
             style={{
               display: 'flex',
               gap: '20px',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'flex-start',
+              marginLeft: '40px'
             }}
           >
             {/* PLAY Button */}
             <Link 
               href="/game"
+              className="font-sora font-bold"
               style={{
                 padding: '12px 24px',
                 background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
@@ -502,13 +503,11 @@ export default function Home() {
                 borderRadius: isGlassMode ? '50px' : '8px',
                 color: isGlassMode ? '#ffffff' : '#000000',
                 fontSize: '16px',
-                fontWeight: '600',
                 letterSpacing: '1px',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
                 backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                outline: 'none',
-                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                outline: 'none'
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
@@ -522,9 +521,10 @@ export default function Home() {
               PLAY
             </Link>
 
-            {/* SHOP Button */}
-            <button 
-              onClick={() => setCurrentView('shop')}
+            {/* PVP Button */}
+            <Link 
+              href="/pvp"
+              className="font-sora font-bold"
               style={{
                 padding: '12px 24px',
                 background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
@@ -532,13 +532,40 @@ export default function Home() {
                 borderRadius: isGlassMode ? '50px' : '8px',
                 color: isGlassMode ? '#ffffff' : '#000000',
                 fontSize: '16px',
-                fontWeight: '600',
+                letterSpacing: '1px',
+                textDecoration: 'none',
+                transition: 'all 0.3s ease',
+                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                outline: 'none'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.transform = 'translateY(0)';
+              }}
+            >
+              PVP
+            </Link>
+
+            {/* SHOP Button */}
+            <button 
+              onClick={() => setCurrentView('shop')}
+              className="font-sora font-bold"
+              style={{
+                padding: '12px 24px',
+                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                borderRadius: isGlassMode ? '50px' : '8px',
+                color: isGlassMode ? '#ffffff' : '#000000',
+                fontSize: '16px',
                 letterSpacing: '1px',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                outline: 'none',
-                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                outline: 'none'
               }}
               onMouseEnter={(e) => {
                 const target = e.target as HTMLElement;
