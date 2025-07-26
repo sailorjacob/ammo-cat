@@ -881,9 +881,9 @@ export default function Home() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: videoLoaded && !isTransitioning ? 1 : 0.3,
-            transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            filter: isTransitioning ? 'blur(1px) brightness(1.05)' : 'none'
+            opacity: videoLoaded ? (isTransitioning ? 0.8 : 1) : 0.2,
+            transition: 'opacity 1.0s cubic-bezier(0.4, 0, 0.2, 1)',
+            filter: 'none'
           }}
           src={videos[currentVideoIndex]}
         />
@@ -899,7 +899,7 @@ export default function Home() {
           }}
         ></div>
         
-        {/* Enhanced gradient overlay for diamond-like transition effect */}
+        {/* Clean white fade overlay for seamless transitions */}
         <div 
           style={{
             position: 'absolute',
@@ -907,11 +907,9 @@ export default function Home() {
             left: 0,
             width: '100%',
             height: '100%',
-            background: isTransitioning 
-              ? 'radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.8) 100%)'
-              : 'transparent',
-            opacity: isTransitioning ? 1 : 0,
-            transition: 'all 1.8s cubic-bezier(0.23, 1, 0.32, 1)',
+            background: '#ffffff',
+            opacity: isTransitioning ? 0.95 : 0,
+            transition: 'opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             zIndex: 3,
             pointerEvents: 'none'
           }}
