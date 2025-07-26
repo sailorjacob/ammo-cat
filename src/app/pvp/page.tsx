@@ -914,22 +914,16 @@ export default function PvpPage() {
                 zIndex: 2
               }}
             >
-              {imagesRef.current.loaded && imagesRef.current.player ? (
-                <img
-                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                  alt="Your Character"
-                  width={80}
-                  height={80}
-                  style={{ 
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
-                  }}
-                />
-              ) : (
-                <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-2xl">
-                  🐱
-                </div>
-              )}
+              <img
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Your Character"
+                width={80}
+                height={80}
+                style={{ 
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
+                }}
+              />
               <div className="text-xs font-semibold text-blue-600 mt-2">YOU</div>
             </div>
 
@@ -958,23 +952,20 @@ export default function PvpPage() {
                 opacity: 0.4
               }}
             >
-              {imagesRef.current.loaded && imagesRef.current.player ? (
-                <img
-                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                  alt="Opponent"
-                  width={80}
-                  height={80}
-                  style={{ 
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)) grayscale(100%)'
-                  }}
-                />
-              ) : (
-                <div className="w-20 h-20 bg-gray-400 rounded-full flex items-center justify-center text-2xl">
-                  ❓
-                </div>
-              )}
-              <div className="text-xs font-semibold text-gray-500 mt-2" style={{ transform: 'scaleX(-1)' }}>
+              <img
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                alt="Opponent"
+                width={80}
+                height={80}
+                style={{ 
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)) grayscale(100%)'
+                }}
+              />
+              <div 
+                className="text-xs font-semibold text-gray-500 mt-2" 
+                style={{ transform: 'scaleX(-1)' }}
+              >
                 SEARCHING...
               </div>
             </div>
