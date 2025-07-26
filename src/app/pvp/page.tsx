@@ -308,11 +308,12 @@ export default function PvpPage() {
         return;
       }
 
+      // Always update and render
       updateGame();
       renderGame();
       
-      // Keep running as long as gameRunning is true and game hasn't ended
-      if (gameRunning && gameState === 'playing') {
+      // Keep running as long as gameRunning is true
+      if (gameRunning) {
         requestAnimationFrame(gameLoop);
       } else {
         console.log('Game loop stopped');
@@ -871,6 +872,12 @@ export default function PvpPage() {
     if (gameState === 'playing') {
       console.log('Game is playing, ensuring controls are set up...');
       setupControls();
+      
+      // Make sure the game loop is running
+      if (!(window as any).gameStarted) {
+        console.log('Starting game loop for playing state...');
+        startGame();
+      }
     }
   }, [gameState]);
 
@@ -941,101 +948,7 @@ export default function PvpPage() {
 
       {gameState === 'queued' && (
         <div className="text-center">
-          {/* Battle Arena with Real Assets */}
-          <div 
-            className="mb-8 relative bg-white rounded-lg border border-gray-300"
-            style={{
-              width: '400px',
-              height: '300px',
-              margin: '0 auto',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
-            }}
-          >
-            {/* Player 1 (You) - Left Side */}
-            <div 
-              className="floating-character"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '25%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 2
-              }}
-            >
-              <img
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                alt="Your Character"
-                width={80}
-                height={80}
-                style={{ 
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
-                }}
-              />
-              <div className="text-xs font-semibold text-blue-600 mt-2">YOU</div>
-            </div>
-
-            {/* VS Text in Center */}
-            <div 
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 3
-              }}
-            >
-              <div className="text-3xl font-bold text-gray-600 animate-pulse">VS</div>
-            </div>
-
-            {/* Opponent Placeholder - Right Side */}
-            <div 
-              className="floating-opponent"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '75%',
-                transform: 'translate(-50%, -50%) scaleX(-1)',
-                zIndex: 2,
-                opacity: 0.4
-              }}
-            >
-              <img
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                alt="Opponent"
-                width={80}
-                height={80}
-                style={{ 
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)) grayscale(100%)'
-                }}
-              />
-              <div 
-                className="text-xs font-semibold text-gray-500 mt-2" 
-                style={{ transform: 'scaleX(-1)' }}
-              >
-                SEARCHING...
-              </div>
-            </div>
-
-            {/* Animated Search Dots */}
-            <div 
-              style={{
-                position: 'absolute',
-                bottom: '20px',
-                left: '50%',
-                transform: 'translateX(-50%)'
-              }}
-            >
-              <div className="flex space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-              </div>
-            </div>
-          </div>
-          
-          <p className="text-xl mb-2 text-white">🔍 Searching for worthy opponent...</p>
+          <p className="text-xl mb-2 text-white">🔍 Searching for opponent...</p>
           <p className="text-sm text-gray-400 mb-6">Preparing battle arena...</p>
           
           <button
@@ -1044,26 +957,6 @@ export default function PvpPage() {
           >
             ❌ Leave Queue
           </button>
-
-          {/* CSS for animations */}
-          <style jsx>{`
-            .floating-character {
-              animation: float 3s ease-in-out infinite;
-            }
-            
-            .floating-opponent {
-              animation: float 3s ease-in-out infinite reverse;
-            }
-            
-            @keyframes float {
-              0%, 100% {
-                transform: translate(-50%, -50%) translateY(0px);
-              }
-              50% {
-                transform: translate(-50%, -50%) translateY(-10px);
-              }
-            }
-          `}</style>
         </div>
       )}
 
