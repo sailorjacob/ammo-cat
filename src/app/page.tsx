@@ -617,7 +617,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Background Video - ABSOLUTELY CENTERED */}
+      {/* Background Video - FULL SCREEN */}
       <div 
         className="absolute"
         style={{
@@ -625,9 +625,6 @@ export default function Home() {
           left: 0,
           width: '100vw',
           height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           overflow: 'hidden'
         }}
       >
@@ -637,10 +634,11 @@ export default function Home() {
           loop 
           playsInline
           style={{
-            minWidth: '100%',
-            minHeight: '100%',
-            width: 'auto',
-            height: 'auto',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
             objectFit: 'cover'
           }}
           src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4"

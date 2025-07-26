@@ -39,13 +39,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${sora.variable} antialiased bg-black text-white min-h-screen`}
+        className={`${montserrat.variable} ${sora.variable} antialiased`}
+        style={{ margin: 0, padding: 0, width: '100%', height: '100%' }}
       >
-        <div className="flex flex-col min-h-screen">
-          <main className="flex-1">
         {children}
-          </main>
-        </div>
       </body>
     </html>
   );
