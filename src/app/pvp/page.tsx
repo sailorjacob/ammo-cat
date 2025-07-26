@@ -232,7 +232,7 @@ export default function PvpPage() {
     requestAnimationFrame(gameLoop);
   };
 
-  // Enhanced game update with shooting and effects
+  // Game update with shooting and effects
   const updateGame = () => {
     const player = gameDataRef.current.localPlayer;
     const keys = gameDataRef.current.keys;
@@ -255,7 +255,7 @@ export default function PvpPage() {
       gameDataRef.current.lastShot = null;
     }
 
-    // Update fireballs with enhanced effects
+    // Update fireballs with visual effects
     for (let i = gameDataRef.current.fireballs.length - 1; i >= 0; i--) {
       const fireball = gameDataRef.current.fireballs[i];
       
@@ -329,7 +329,7 @@ export default function PvpPage() {
     }
   };
 
-  // Enhanced shoot fireball function
+  // Shoot fireball function
   const shootFireball = () => {
     const player = gameDataRef.current.localPlayer;
     const curve = (Math.random() - 0.5) * 2; // Random curve like original game
@@ -364,7 +364,7 @@ export default function PvpPage() {
     }
   };
 
-  // Enhanced render with sprites and effects
+  // Render with sprites and effects
   const renderGame = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -440,7 +440,7 @@ export default function PvpPage() {
       ctx.fillRect(gameDataRef.current.opponentPlayer.x, gameDataRef.current.opponentPlayer.y, 50, 50);
     }
 
-    // Draw enhanced fireballs with glow effect
+    // Draw fireballs with glow effect
     gameDataRef.current.fireballs.forEach(fireball => {
       ctx.save();
       
@@ -487,7 +487,7 @@ export default function PvpPage() {
       ctx.restore();
     }
 
-    // Draw enhanced health bars with gradient effects
+    // Draw health bars with gradient effects
     const barWidth = 150;
     const barHeight = 20;
     
@@ -538,7 +538,7 @@ export default function PvpPage() {
     ctx.fillText(`Opponent Health: ${gameDataRef.current.opponentPlayer.health}`, 640, 555);
   };
 
-  // Enhanced controls with shooting and mouse support
+  // Controls with shooting and mouse support
   const setupControls = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -553,7 +553,7 @@ export default function PvpPage() {
       canvas.removeEventListener('mouseup', (window as any).mouseHandlers.handleMouseUp);
     }
 
-    console.log('Setting up enhanced controls with mouse support...');
+    console.log('Setting up controls with mouse support...');
     
     const handleKeyDown = (e: KeyboardEvent) => {
       const keys = gameDataRef.current.keys;
@@ -600,7 +600,7 @@ export default function PvpPage() {
     // Store for cleanup
     (window as any).keyHandlers = { handleKeyDown, handleKeyUp };
     (window as any).mouseHandlers = { handleMouseDown, handleMouseUp };
-    console.log('Enhanced controls with mouse support set up successfully!');
+    console.log('Controls with mouse support set up successfully!');
   };
 
   // Cleanup on unmount
@@ -630,7 +630,7 @@ export default function PvpPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
-      <h1 className="text-4xl mb-8">🔥 Enhanced Ammo Cat PVP 🔥</h1>
+      <h1 className="text-4xl mb-8">🔥 Ammo Cat PVP 🔥</h1>
       
       <canvas
         ref={canvasRef}
@@ -657,7 +657,7 @@ export default function PvpPage() {
           >
             🎯 Join PVP Match
           </button>
-          <p className="text-sm text-gray-300">Enhanced with sprites, explosions & visual effects!</p>
+          <p className="text-sm text-gray-300">Real-time multiplayer with sprites, explosions & visual effects!</p>
         </div>
       )}
 
@@ -674,7 +674,7 @@ export default function PvpPage() {
       )}
 
       {gameState === 'matched' && (
-        <p className="text-xl text-green-500">🎉 Match found! Loading enhanced PVP...</p>
+        <p className="text-xl text-green-500">🎉 Match found! Loading PVP battle...</p>
       )}
 
       {gameState === 'playing' && (
