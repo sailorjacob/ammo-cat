@@ -118,15 +118,9 @@ export default function PvpPage() {
   // Fetch opponent name when matched
   useEffect(() => {
     if (matchData) {
-      const oppId = isPlayer1 ? matchData.player2_id : matchData.player1_id;
-      
-      const supabase = createClient();
-      supabase.auth.admin.getUserById(oppId).then(({ data }) => {
-        if (data.user) setOpponentName(data.user.email?.split('@')[0] || 'Guest');
-      }).catch((error) => {
-        console.error('Error fetching opponent name:', error);
-        setOpponentName('Guest');
-      });
+      // For anonymous users, just use "Guest" to avoid 403 errors
+      // In the future, we could create an API endpoint to safely fetch user display names
+      setOpponentName('Guest');
     }
   }, [matchData, isPlayer1]);
 
@@ -134,9 +128,14 @@ export default function PvpPage() {
   useEffect(() => {
     if (queueStatus !== 'matched' || !matchId || !user) return;
 
+    console.log('Setting up realtime for match:', matchId);
     const supabase = createClient();
     const channel = supabase.channel(`pvp:${matchId}`);
     let readySent = false;
+
+    // Reset ready state
+    readyCountRef.current = 0;
+    setBothReady(false);
 
     channel
       .on('broadcast', { event: 'player_update' }, ({ payload }) => {
@@ -154,10 +153,12 @@ export default function PvpPage() {
         }
       })
       .on('broadcast', { event: 'ready' }, ({ payload }) => {
-        console.log('Received ready:', payload);
+        console.log('Received ready from:', payload.userId);
         if (payload.userId !== user!.id) {
           readyCountRef.current++;
-          if (readyCountRef.current >= 2) {
+          console.log('Ready count:', readyCountRef.current);
+          if (readyCountRef.current >= 1) { // Only need opponent to be ready (we're already ready)
+            console.log('Both players ready! Starting game...');
             setBothReady(true);
             game.startGame();
           }
@@ -185,12 +186,16 @@ export default function PvpPage() {
         }
       })
       .subscribe(async (status) => {
+        console.log('Channel subscription status:', status);
         if (status === 'SUBSCRIBED') {
           await channel.track({ online: true });
           channelRef.current = channel;
           if (!readySent) {
+            console.log('Sending ready signal...');
             channel.send({ type: 'broadcast', event: 'ready', payload: { userId: user!.id } });
             readySent = true;
+            readyCountRef.current++; // Count our own ready signal
+            console.log('Ready count after sending:', readyCountRef.current);
           }
         }
       });
@@ -207,6 +212,7 @@ export default function PvpPage() {
     }, 50);
 
     return () => {
+      console.log('Cleaning up realtime connection');
       if (supabase && channelRef.current) supabase.removeChannel(channelRef.current);
       clearInterval(interval);
       channelRef.current = null;
