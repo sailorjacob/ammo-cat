@@ -1,43 +1,83 @@
-import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createServerSupabaseClient } from '@/lib/supabase-server';
 
+// GET /api/pvp/leaderboard - Fetch top 10 PVP win records
 export async function GET() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
-  }
-
-  const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
-
   try {
-    const { data, error } = await supabaseAdmin
-      .from('pvp_stats')
+    const supabase = await createServerSupabaseClient();
+    
+    const { data, error } = await supabase
+      .from('pvp_leaderboard')
       .select('*')
       .order('wins', { ascending: false })
       .limit(10);
 
     if (error) {
-      console.error('Error fetching PVP stats:', error);
-      return NextResponse.json({ error: 'Failed to fetch leaderboard' }, { status: 500 });
+      console.error('Error fetching PVP leaderboard:', error);
+      return NextResponse.json({ error: 'Failed to fetch PVP leaderboard' }, { status: 500 });
     }
 
-    const leaderboard = [];
-    for (const stat of data || []) {
-      const { data: userData, error: userError } = await supabaseAdmin.auth.admin.getUserById(stat.user_id);
-      let name = 'Anonymous';
-      if (userData?.user && !userError) {
-        name = userData.user.email?.split('@')[0] || 'User' + stat.user_id.substring(0, 4);
+    return NextResponse.json(data || []);
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+// POST /api/pvp/leaderboard - Add new win record
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { player_name } = await request.json();
+
+    if (!player_name) {
+      return NextResponse.json({ error: 'Player name is required' }, { status: 400 });
+    }
+
+    // Check if player already exists
+    const { data: existingPlayer, error: findError } = await supabase
+      .from('pvp_leaderboard')
+      .select('*')
+      .eq('player_name', player_name)
+      .single();
+
+    if (findError && findError.code !== 'PGRST116') {
+      // PGRST116 is "not found" error, which is expected for new players
+      console.error('Error finding player:', findError);
+      return NextResponse.json({ error: 'Failed to check existing player' }, { status: 500 });
+    }
+
+    let result;
+    if (existingPlayer) {
+      // Update existing player's win count
+      const { data, error } = await supabase
+        .from('pvp_leaderboard')
+        .update({ wins: existingPlayer.wins + 1 })
+        .eq('player_name', player_name)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating wins:', error);
+        return NextResponse.json({ error: 'Failed to update wins' }, { status: 500 });
       }
-      leaderboard.push({
-        name,
-        wins: stat.wins,
-        games: stat.games_played
-      });
+      result = data;
+    } else {
+      // Create new player record
+      const { data, error } = await supabase
+        .from('pvp_leaderboard')
+        .insert({ player_name, wins: 1 })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error adding new player:', error);
+        return NextResponse.json({ error: 'Failed to add new player' }, { status: 500 });
+      }
+      result = data;
     }
 
-    return NextResponse.json(leaderboard);
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

@@ -31,6 +31,15 @@ CREATE TABLE IF NOT EXISTS pvp_stats (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Create PVP Leaderboard table (for public leaderboard with player names)
+CREATE TABLE IF NOT EXISTS pvp_leaderboard (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  player_name TEXT NOT NULL,
+  wins INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Create Leaderboard table (if not exists)
 CREATE TABLE IF NOT EXISTS leaderboard (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

@@ -4,6 +4,13 @@ import { useRef, useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { createClient } from '../../lib/supabase';
 
+// PVP Leaderboard entry type
+type PvpLeaderboardEntry = {
+  player_name: string;
+  wins: number;
+  created_at: string;
+};
+
 export default function PvpPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { user, loading } = useAuth();
@@ -14,6 +21,12 @@ export default function PvpPage() {
   const [error, setError] = useState<string | null>(null);
   const [winner, setWinner] = useState<string | null>(null);
   const [hitEffect, setHitEffect] = useState(false);
+  
+  // Leaderboard states
+  const [leaderboard, setLeaderboard] = useState<PvpLeaderboardEntry[]>([]);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [playerName, setPlayerName] = useState('');
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   
   // Game data as refs to avoid re-renders
   const gameDataRef = useRef({
@@ -53,6 +66,84 @@ export default function PvpPage() {
     
     loadImages();
   }, []);
+
+  // Load PVP leaderboard from backend
+  useEffect(() => {
+    const loadPvpLeaderboard = async () => {
+      try {
+        const response = await fetch('/api/pvp/leaderboard');
+        if (response.ok) {
+          const data = await response.json();
+          setLeaderboard(data);
+        }
+      } catch (error) {
+        console.error('Failed to load PVP leaderboard:', error);
+        // Fallback to localStorage if API fails
+        const savedLeaderboard = localStorage.getItem('ammocat-pvp-leaderboard');
+        if (savedLeaderboard) {
+          setLeaderboard(JSON.parse(savedLeaderboard));
+        }
+      }
+    };
+    
+    loadPvpLeaderboard();
+  }, []);
+
+  // Save win to PVP leaderboard
+  const saveWinToLeaderboard = async (name: string) => {
+    const playerName = name.trim() || 'Anonymous';
+    
+    try {
+      // Save to backend
+      const response = await fetch('/api/pvp/leaderboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          player_name: playerName
+        })
+      });
+      
+      if (response.ok) {
+        // Reload leaderboard after successful save
+        const leaderboardResponse = await fetch('/api/pvp/leaderboard');
+        if (leaderboardResponse.ok) {
+          const data = await leaderboardResponse.json();
+          setLeaderboard(data);
+        }
+      } else {
+        throw new Error('Failed to save win');
+      }
+    } catch (error) {
+      console.error('Failed to save win to backend:', error);
+      
+      // Fallback to localStorage if API fails
+      const existingEntry = leaderboard.find(entry => entry.player_name === playerName);
+      let updatedLeaderboard;
+      
+      if (existingEntry) {
+        updatedLeaderboard = leaderboard.map(entry => 
+          entry.player_name === playerName 
+            ? { ...entry, wins: entry.wins + 1 }
+            : entry
+        );
+      } else {
+        const newEntry: PvpLeaderboardEntry = {
+          player_name: playerName,
+          wins: 1,
+          created_at: new Date().toISOString()
+        };
+        updatedLeaderboard = [...leaderboard, newEntry];
+      }
+      
+      updatedLeaderboard.sort((a, b) => b.wins - a.wins);
+      updatedLeaderboard = updatedLeaderboard.slice(0, 10);
+      
+      setLeaderboard(updatedLeaderboard);
+      localStorage.setItem('ammocat-pvp-leaderboard', JSON.stringify(updatedLeaderboard));
+    }
+  };
 
   // Player hit function with visual effects
   const playerHit = (isLocal: boolean) => {
@@ -318,7 +409,7 @@ export default function PvpPage() {
       }
     }
 
-    // Simple win condition
+    // Win condition with leaderboard integration
     if (gameDataRef.current.localPlayer.health <= 0) {
       setGameState('ended');
       setWinner('Opponent');
@@ -326,6 +417,8 @@ export default function PvpPage() {
     if (gameDataRef.current.opponentPlayer.health <= 0) {
       setGameState('ended');
       setWinner('You');
+      // Show name input for winner to save to leaderboard
+      setShowNameInput(true);
     }
   };
 
@@ -657,6 +750,12 @@ export default function PvpPage() {
           >
             🎯 Join PVP Match
           </button>
+          <button
+            onClick={() => setShowLeaderboard(true)}
+            className="px-6 py-3 bg-gray-600 hover:bg-gray-700 rounded-lg text-lg mb-4"
+          >
+            🏆 PVP Leaderboard
+          </button>
           <p className="text-sm text-gray-300">Real-time multiplayer with sprites, explosions & visual effects!</p>
         </div>
       )}
@@ -694,6 +793,9 @@ export default function PvpPage() {
               setGameState('idle');
               setWinner(null);
               setMatchId(null);
+              // Reset leaderboard states
+              setShowNameInput(false);
+              setPlayerName('');
               // Reset game data
               gameDataRef.current.fireballs = [];
               gameDataRef.current.explosions = [];
@@ -704,6 +806,320 @@ export default function PvpPage() {
           >
             🔥 Battle Again
           </button>
+        </div>
+      )}
+
+      {/* PVP Leaderboard Modal */}
+      {showLeaderboard && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 200,
+            cursor: 'pointer'
+          }}
+          onClick={() => setShowLeaderboard(false)}
+        >
+          <div 
+            style={{
+              background: '#f5f5f5',
+              borderRadius: '12px',
+              padding: '32px',
+              minWidth: '400px',
+              maxWidth: '90vw',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              border: '1px solid #e0e0e0',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+              cursor: 'default'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                textAlign: 'center',
+                fontSize: '32px',
+                marginBottom: '12px'
+              }}
+            >
+              🏆
+            </div>
+            
+            <h2 
+              style={{
+                color: '#000000',
+                fontSize: '24px',
+                fontWeight: '900',
+                letterSpacing: '1px',
+                marginBottom: '24px',
+                textAlign: 'center'
+              }}
+            >
+              PVP LEADERBOARD
+            </h2>
+            
+            {leaderboard.length === 0 ? (
+              <p 
+                style={{
+                  color: '#666666',
+                  fontSize: '14px',
+                  textAlign: 'center',
+                  padding: '40px 0'
+                }}
+              >
+                No PVP champions yet. Be the first to win!
+              </p>
+            ) : (
+              <div style={{ marginBottom: '24px' }}>
+                {leaderboard.map((entry, index) => (
+                  <div 
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '12px 16px',
+                      marginBottom: '8px',
+                      background: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : '#ffffff',
+                      borderRadius: '8px',
+                      border: '1px solid #e0e0e0'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span 
+                        style={{
+                          color: index < 3 ? '#000000' : '#666666',
+                          fontSize: '18px',
+                          fontWeight: '900',
+                          marginRight: '16px',
+                          minWidth: '30px'
+                        }}
+                      >
+                        #{index + 1}
+                      </span>
+                      <span 
+                        style={{
+                          color: '#000000',
+                          fontSize: '16px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        {entry.player_name}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span 
+                        style={{
+                          color: '#DC2626',
+                          fontSize: '18px',
+                          fontWeight: '900',
+                          marginRight: '8px'
+                        }}
+                      >
+                        {entry.wins}
+                      </span>
+                      <span 
+                        style={{
+                          color: '#666666',
+                          fontSize: '14px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        {entry.wins === 1 ? 'win' : 'wins'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <button
+              onClick={() => setShowLeaderboard(false)}
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: '#ffffff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#f8f8f8';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.target as HTMLElement;
+                target.style.background = '#ffffff';
+              }}
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Winner Name Input Modal */}
+      {showNameInput && winner === 'You' && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 200
+          }}
+        >
+          <div 
+            style={{
+              background: '#f5f5f5',
+              borderRadius: '8px',
+              padding: '24px',
+              minWidth: '300px',
+              maxWidth: '90vw',
+              border: '1px solid #e0e0e0',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+            }}
+          >
+            <div
+              style={{
+                textAlign: 'center',
+                fontSize: '32px',
+                marginBottom: '12px'
+              }}
+            >
+              🏆
+            </div>
+            
+            <h2 
+              style={{
+                color: '#000000',
+                fontSize: '18px',
+                fontWeight: '600',
+                marginBottom: '8px',
+                textAlign: 'center'
+              }}
+            >
+              VICTORY!
+            </h2>
+            
+            <p 
+              style={{
+                color: '#DC2626',
+                fontSize: '16px',
+                fontWeight: '900',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}
+            >
+              You defeated your opponent!
+            </p>
+            
+            <input
+              type="text"
+              placeholder="Enter your name for leaderboard"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              maxLength={20}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                fontSize: '16px',
+                borderRadius: '8px',
+                border: '1px solid #d0d0d0',
+                marginBottom: '16px',
+                outline: 'none',
+                background: '#ffffff',
+                color: '#000000',
+                boxSizing: 'border-box'
+              }}
+              onKeyPress={async (e) => {
+                if (e.key === 'Enter') {
+                  await saveWinToLeaderboard(playerName || 'Anonymous');
+                  setShowNameInput(false);
+                  setPlayerName('');
+                }
+              }}
+              autoFocus
+            />
+            
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                onClick={async () => {
+                  await saveWinToLeaderboard(playerName || 'Anonymous');
+                  setShowNameInput(false);
+                  setPlayerName('');
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: '#ffffff',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '8px',
+                  color: '#000000',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#f8f8f8';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#ffffff';
+                }}
+              >
+                SAVE TO LEADERBOARD
+              </button>
+              
+              <button
+                onClick={() => {
+                  setShowNameInput(false);
+                  setPlayerName('');
+                }}
+                style={{
+                  padding: '12px 16px',
+                  background: 'transparent',
+                  border: '1px solid #d0d0d0',
+                  borderRadius: '8px',
+                  color: '#666666',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = '#f8f8f8';
+                  target.style.color = '#000000';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.background = 'transparent';
+                  target.style.color = '#666666';
+                }}
+              >
+                SKIP
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
