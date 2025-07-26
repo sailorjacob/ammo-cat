@@ -71,18 +71,18 @@ export default function Home() {
       clearTimeout(transitionTimeoutRef.current);
     }
     
-    // Smooth transition timing that blends videos together
+    // Smooth transition timing that blends videos together with circle effect
     transitionTimeoutRef.current = setTimeout(() => {
       setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
       setVideoLoaded(false);
       
-      // Allow overlap for seamless blending
+      // Allow overlap for seamless blending with smoother timing
       const blendTimeout = setTimeout(() => {
         setIsTransitioning(false);
-      }, 800); // Adjusted for better swag timing
+      }, 1200); // Extended for smoother circle transition
       
       return () => clearTimeout(blendTimeout);
-    }, 400); // Faster transition start for blending effect
+    }, 600); // Slightly longer start for the circle effect to develop
   };
 
   // Reset video loaded state when video index changes
@@ -881,9 +881,10 @@ export default function Home() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: videoLoaded && !isTransitioning ? 1 : 0.3,
-            transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            filter: isTransitioning ? 'blur(1px) brightness(1.15) contrast(1.1)' : 'none'
+            opacity: videoLoaded && !isTransitioning ? 1 : 0.2,
+            transition: 'all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            filter: isTransitioning ? 'blur(2px) brightness(1.1) saturate(1.1)' : 'none',
+            transform: isTransitioning ? 'scale(1.02)' : 'scale(1)'
           }}
           src={videos[currentVideoIndex]}
         />
@@ -899,7 +900,7 @@ export default function Home() {
           }}
         ></div>
         
-        {/* Enhanced gradient overlay for bright diamond-like transition effect */}
+        {/* Smooth circular/diamond transition effect */}
         <div 
           style={{
             position: 'absolute',
@@ -908,11 +909,30 @@ export default function Home() {
             width: '100%',
             height: '100%',
             background: isTransitioning 
-              ? 'radial-gradient(ellipse at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.2) 80%, transparent 100%)'
+              ? 'radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.25) 30%, rgba(255,255,255,0.6) 60%, rgba(0,0,0,0.9) 100%)'
               : 'transparent',
             opacity: isTransitioning ? 1 : 0,
-            transition: 'all 1.8s cubic-bezier(0.23, 1, 0.32, 1)',
+            transition: 'all 2.5s cubic-bezier(0.165, 0.84, 0.44, 1)',
+            transform: isTransitioning ? 'scale(1.1)' : 'scale(1)',
             zIndex: 3,
+            pointerEvents: 'none'
+          }}
+        />
+        
+        {/* Additional smooth overlay for extra smoothness */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: isTransitioning 
+              ? 'radial-gradient(ellipse 150% 100% at center, transparent 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.3) 70%, rgba(0,0,0,0.6) 100%)'
+              : 'transparent',
+            opacity: isTransitioning ? 0.8 : 0,
+            transition: 'all 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            zIndex: 2,
             pointerEvents: 'none'
           }}
         />
