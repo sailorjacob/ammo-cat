@@ -328,6 +328,10 @@ export default function PvpPage() {
       })
       .on('broadcast', { event: 'rematch_accepted' }, ({ payload }) => {
         if (payload.userId !== user!.id) {
+          // Reset rematch states
+          setRematchReceived(false);
+          setRematchRequested(false);
+          
           // Start new game
           startNewGame();
         }
@@ -625,11 +629,18 @@ export default function PvpPage() {
   // Accept rematch
   const acceptRematch = () => {
     if (channelRef.current) {
+      // Reset local rematch states
+      setRematchReceived(false);
+      setRematchRequested(false);
+      
+      // Send acceptance to opponent
       channelRef.current.send({
         type: 'broadcast',
         event: 'rematch_accepted',
         payload: { userId: user!.id }
       });
+      
+      // Start the game immediately (opponent will start when they receive this event)
       startNewGame();
     }
   };
@@ -1054,36 +1065,8 @@ export default function PvpPage() {
             minHeight: '70px'
           }}
         >
-          {/* Left side - Your Lives */}
+          {/* Left side - Home Icon + Your Lives */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-              <span 
-                className="font-sora font-bold"
-                style={{
-                  color: '#000000',
-                  fontSize: '12px',
-                  letterSpacing: '0.5px',
-                  marginRight: '8px'
-                }}
-              >
-                YOU:
-              </span>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                {Array.from({ length: localLives }).map((_, index) => (
-                  <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
-                    <Image 
-                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                      alt="Your Life"
-                      width={24}
-                      height={24}
-                      unoptimized={true}
-                      style={{ display: 'inline-block', filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))' }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-            
             <Link 
               href="/"
               style={{
@@ -1098,7 +1081,8 @@ export default function PvpPage() {
                 justifyContent: 'center',
                 opacity: 0.8,
                 textDecoration: 'none',
-                outline: 'none'
+                outline: 'none',
+                marginRight: '20px'
               }}
               onMouseEnter={(e) => {
                 const target = e.currentTarget as HTMLElement;
@@ -1125,6 +1109,34 @@ export default function PvpPage() {
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
               </svg>
             </Link>
+            
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span 
+                className="font-sora font-bold"
+                style={{
+                  color: '#000000',
+                  fontSize: '12px',
+                  letterSpacing: '0.5px',
+                  marginRight: '8px'
+                }}
+              >
+                YOU:
+              </span>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {Array.from({ length: localLives }).map((_, index) => (
+                  <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
+                    <Image 
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                      alt="Your Life"
+                      width={24}
+                      height={24}
+                      unoptimized={true}
+                      style={{ display: 'inline-block', filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Center - PVP Title */}
@@ -1149,33 +1161,36 @@ export default function PvpPage() {
               alignItems: 'center'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-              <span 
-                className="font-sora font-bold"
-                style={{
-                  color: '#000000',
-                  fontSize: '12px',
-                  letterSpacing: '0.5px',
-                  marginRight: '8px'
-                }}
-              >
-                OPPONENT:
-              </span>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                {Array.from({ length: opponentLives }).map((_, index) => (
-                  <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
-                    <Image 
-                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
-                      alt="Opponent Life"
-                      width={24}
-                      height={24}
-                      unoptimized={true}
-                      style={{ display: 'inline-block', filter: 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.5))' }}
-                    />
-                  </div>
-                ))}
+            {/* Only show opponent lives when game is playing */}
+            {gameState === 'playing' && (
+              <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+                <span 
+                  className="font-sora font-bold"
+                  style={{
+                    color: '#000000',
+                    fontSize: '12px',
+                    letterSpacing: '0.5px',
+                    marginRight: '8px'
+                  }}
+                >
+                  OPPONENT:
+                </span>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  {Array.from({ length: opponentLives }).map((_, index) => (
+                    <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
+                      <Image 
+                        src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                        alt="Opponent Life"
+                        width={24}
+                        height={24}
+                        unoptimized={true}
+                        style={{ display: 'inline-block', filter: 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.5))' }}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             
             <Link 
               href="/game"
@@ -1536,56 +1551,125 @@ export default function PvpPage() {
                 style={{
                   marginBottom: '24px',
                   padding: '16px',
-                  background: '#fef3c7',
-                  border: '1px solid #fcd34d',
+                  background: '#f8f9fa',
+                  border: '1px solid #e9ecef',
                   borderRadius: '8px'
                 }}
               >
-                <p 
-                  className="font-sora font-bold"
-                  style={{
-                    color: '#d97706',
-                    fontSize: '16px',
-                    letterSpacing: '0.5px',
-                    marginBottom: '12px'
-                  }}
-                >
-                  🔄 Your opponent wants a rematch!
-                </p>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                  <svg 
+                    width="16" 
+                    height="16" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="#6c757d" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    style={{ marginRight: '8px' }}
+                  >
+                    <path d="M23 4v6h-6"/>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                  </svg>
+                  <p 
+                    className="font-sora font-bold"
+                    style={{
+                      color: '#495057',
+                      fontSize: '16px',
+                      letterSpacing: '0.5px',
+                      margin: 0
+                    }}
+                  >
+                    Your opponent wants a rematch
+                  </p>
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
                   <button
                     onClick={acceptRematch}
                     className="font-sora font-bold"
                     style={{
                       padding: '8px 16px',
-                      background: '#dcfce7',
-                      border: '1px solid #bbf7d0',
+                      background: '#ffffff',
+                      border: '1px solid #d0d7de',
                       borderRadius: '8px',
-                      color: '#059669',
+                      color: '#24292f',
                       fontSize: '14px',
                       letterSpacing: '0.5px',
                       cursor: 'pointer',
-                      outline: 'none'
+                      outline: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.background = '#f6f8fa';
+                      target.style.borderColor = '#8c959f';
+                    }}
+                    onMouseLeave={(e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.background = '#ffffff';
+                      target.style.borderColor = '#d0d7de';
                     }}
                   >
-                    ✅ Accept
+                    <svg 
+                      width="14" 
+                      height="14" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                      style={{ marginRight: '6px' }}
+                    >
+                      <path d="M20 6 9 17l-5-5"/>
+                    </svg>
+                    Accept
                   </button>
                   <button
                     onClick={() => setRematchReceived(false)}
                     className="font-sora font-bold"
                     style={{
                       padding: '8px 16px',
-                      background: '#fee2e2',
-                      border: '1px solid #fecaca',
+                      background: '#ffffff',
+                      border: '1px solid #d0d7de',
                       borderRadius: '8px',
-                      color: '#dc2626',
+                      color: '#656d76',
                       fontSize: '14px',
                       letterSpacing: '0.5px',
                       cursor: 'pointer',
-                      outline: 'none'
+                      outline: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.background = '#f6f8fa';
+                      target.style.borderColor = '#8c959f';
+                    }}
+                    onMouseLeave={(e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.background = '#ffffff';
+                      target.style.borderColor = '#d0d7de';
                     }}
                   >
-                    ❌ Decline
+                    <svg 
+                      width="14" 
+                      height="14" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                      style={{ marginRight: '6px' }}
+                    >
+                      <path d="M18 6 6 18"/>
+                      <path d="M6 6l12 12"/>
+                    </svg>
+                    Decline
                   </button>
                 </div>
               </div>
@@ -1597,21 +1681,38 @@ export default function PvpPage() {
                 style={{
                   marginBottom: '24px',
                   padding: '16px',
-                  background: '#dbeafe',
-                  border: '1px solid #93c5fd',
+                  background: '#f8f9fa',
+                  border: '1px solid #e9ecef',
                   borderRadius: '8px'
                 }}
               >
-                <p 
-                  className="font-sora font-bold"
-                  style={{
-                    color: '#2563eb',
-                    fontSize: '16px',
-                    letterSpacing: '0.5px'
-                  }}
-                >
-                  🔄 Rematch requested! Waiting for opponent...
-                </p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg 
+                    width="16" 
+                    height="16" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="#6c757d" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    style={{ marginRight: '8px' }}
+                  >
+                    <path d="M23 4v6h-6"/>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                  </svg>
+                  <p 
+                    className="font-sora font-bold"
+                    style={{
+                      color: '#495057',
+                      fontSize: '16px',
+                      letterSpacing: '0.5px',
+                      margin: 0
+                    }}
+                  >
+                    Rematch requested! Waiting for opponent...
+                  </p>
+                </div>
               </div>
             )}
             
@@ -1632,7 +1733,11 @@ export default function PvpPage() {
                     cursor: 'pointer',
                     outline: 'none',
                     width: '100%',
-                    maxWidth: '300px'
+                    maxWidth: '300px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s ease'
                   }}
                   onMouseEnter={(e) => {
                     const target = e.target as HTMLElement;
@@ -1643,7 +1748,21 @@ export default function PvpPage() {
                     target.style.background = '#ffffff';
                   }}
                 >
-                  🔄 REQUEST REMATCH
+                  <svg 
+                    width="16" 
+                    height="16" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    style={{ marginRight: '8px' }}
+                  >
+                    <path d="M23 4v6h-6"/>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                  </svg>
+                  Request Rematch
                 </button>
               )}
               
@@ -1681,7 +1800,11 @@ export default function PvpPage() {
                   cursor: 'pointer',
                   outline: 'none',
                   width: '100%',
-                  maxWidth: '300px'
+                  maxWidth: '300px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   const target = e.target as HTMLElement;
@@ -1692,7 +1815,21 @@ export default function PvpPage() {
                   target.style.background = '#ffffff';
                 }}
               >
-                🎯 FIND NEW OPPONENT
+                <svg 
+                  width="16" 
+                  height="16" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                  style={{ marginRight: '8px' }}
+                >
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                Find New Opponent
               </button>
               
               <button
