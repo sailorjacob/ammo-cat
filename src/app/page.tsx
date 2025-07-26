@@ -454,7 +454,7 @@ export default function Home() {
             minHeight: '70px'
           }}
         >
-          {/* Left side - Clean Logo */}
+          {/* Left side - Logo + Title + Buttons */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <div 
               style={{
@@ -470,115 +470,118 @@ export default function Home() {
               />
             </div>
             <span 
-              className="font-sora"
+              className="font-sora font-bold"
               style={{
                 color: isGlassMode ? '#ffffff' : '#000000',
                 fontSize: '22px',
                 fontWeight: '900',
                 letterSpacing: '2px',
-                transition: 'color 0.3s ease'
+                transition: 'color 0.3s ease',
+                marginRight: '40px'
               }}
             >
               AMMOCAT
             </span>
+            
+            {/* Buttons positioned to the right of title */}
+            <div 
+              style={{
+                display: 'flex',
+                gap: '20px',
+                alignItems: 'center'
+              }}
+            >
+              {/* PLAY Button */}
+              <Link 
+                href="/game"
+                className="font-sora font-bold"
+                style={{
+                  padding: '12px 24px',
+                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                  borderRadius: isGlassMode ? '50px' : '8px',
+                  color: isGlassMode ? '#ffffff' : '#000000',
+                  fontSize: '16px',
+                  letterSpacing: '1px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                  outline: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(0)';
+                }}
+              >
+                PLAY
+              </Link>
+
+              {/* SHOP Button */}
+              <button 
+                onClick={() => setCurrentView('shop')}
+                className="font-sora font-bold"
+                style={{
+                  padding: '12px 24px',
+                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                  borderRadius: isGlassMode ? '50px' : '8px',
+                  color: isGlassMode ? '#ffffff' : '#000000',
+                  fontSize: '16px',
+                  letterSpacing: '1px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                  outline: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(0)';
+                }}
+              >
+                SHOP
+              </button>
+
+              {/* PVP Button */}
+              <Link 
+                href="/pvp"
+                className="font-sora font-bold"
+                style={{
+                  padding: '12px 24px',
+                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                  borderRadius: isGlassMode ? '50px' : '8px',
+                  color: isGlassMode ? '#ffffff' : '#000000',
+                  fontSize: '16px',
+                  letterSpacing: '1px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                  outline: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(0)';
+                }}
+              >
+                PVP
+              </Link>
+            </div>
           </div>
           
-          {/* Center - Enhanced Buttons */}
-          <div 
-            style={{
-              display: 'flex',
-              gap: '20px',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            {/* PLAY Button */}
-            <Link 
-              href="/game"
-              className="font-sora font-bold"
-              style={{
-                padding: '12px 24px',
-                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                borderRadius: isGlassMode ? '50px' : '8px',
-                color: isGlassMode ? '#ffffff' : '#000000',
-                fontSize: '16px',
-                letterSpacing: '1px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                outline: 'none'
-              }}
-              onMouseEnter={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0)';
-              }}
-            >
-              PLAY
-            </Link>
-
-            {/* SHOP Button */}
-            <button 
-              onClick={() => setCurrentView('shop')}
-              className="font-sora font-bold"
-              style={{
-                padding: '12px 24px',
-                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                borderRadius: isGlassMode ? '50px' : '8px',
-                color: isGlassMode ? '#ffffff' : '#000000',
-                fontSize: '16px',
-                letterSpacing: '1px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                outline: 'none'
-              }}
-              onMouseEnter={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0)';
-              }}
-            >
-              SHOP
-            </button>
-
-            {/* PVP Button */}
-            <Link 
-              href="/pvp"
-              className="font-sora font-bold"
-              style={{
-                padding: '12px 24px',
-                background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                borderRadius: isGlassMode ? '50px' : '8px',
-                color: isGlassMode ? '#ffffff' : '#000000',
-                fontSize: '16px',
-                letterSpacing: '1px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-                backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                outline: 'none'
-              }}
-              onMouseEnter={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                const target = e.target as HTMLElement;
-                target.style.transform = 'translateY(0)';
-              }}
-            >
-              PVP
-            </Link>
-          </div>
+          {/* Center - Empty for proper grid spacing */}
+          <div></div>
           
           {/* Right side - Clean Moon Toggle */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
