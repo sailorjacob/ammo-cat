@@ -312,7 +312,7 @@ export default function PvpPage() {
       renderGame();
       
       // Keep running as long as gameRunning is true and game hasn't ended
-      if (gameRunning && gameState !== 'ended') {
+      if (gameRunning && gameState === 'playing') {
         requestAnimationFrame(gameLoop);
       } else {
         console.log('Game loop stopped');
@@ -347,8 +347,8 @@ export default function PvpPage() {
 
   // Game update with shooting and effects
   const updateGame = () => {
-    // CRITICAL: Stop all game updates immediately if game has ended
-    if (gameState === 'ended' || gameState !== 'playing') {
+    // CRITICAL: Stop all game updates immediately if game has ended or is not playing
+    if (gameState !== 'playing') {
       return;
     }
 
