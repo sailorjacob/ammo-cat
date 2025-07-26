@@ -19,11 +19,13 @@ export default function Home() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [nextVideoLoaded, setNextVideoLoaded] = useState(false);
 
-  // Video sequence array
+  // Video sequence array - all 4 videos in proper sequence
   const videos = [
-    "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie11.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTExLm1wNCIsImlhdCI6MTc1MzU0MjE3OSwiZXhwIjoyMDY4OTAyMTc5fQ.geM_QilOlb35kiH9qmbZr7JwSfWISgv0P6KKqC_1rHI",
+    "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4", // Original main homepage video
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/AMMO.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0FNTU8ubXA0IiwiaWF0IjoxNzUzNTQyNzMxLCJleHAiOjIwNjg5MDI3MzF9.TKEoSRs9QSENIkTVwzTyB69S4LRoct1rkg0ahx6nfts",
+    "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie11.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTExLm1wNCIsImlhdCI6MTc1MzU0MjE3OSwiZXhwIjoyMDY4OTAyMTc5fQ.geM_QilOlb35kiH9qmbZr7JwSfWISgv0P6KKqC_1rHI",
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie33.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTMzLm1wNCIsImlhdCI6MTc1MzU0MjQ0NSwiZXhwIjoyMDY4OTAyNDQ1fQ.wuhIiwGs-g3pDw46sXM67BU9tXN-VrJhQ5vgN3H2nQE"
   ];
 
@@ -56,25 +58,35 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [currentView, loading]);
 
-  // Video transition handler
+  // Enhanced video transition handler with smooth blending
   const handleVideoEnd = () => {
     setIsTransitioning(true);
-    setVideoLoaded(false);
     
-    // Start fade to white, then switch to next video
+    // Smooth transition timing that blends videos together
     setTimeout(() => {
       setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+      setVideoLoaded(false);
       
-      // Fade back from white once new video loads
+      // Allow overlap for seamless blending
       setTimeout(() => {
         setIsTransitioning(false);
-      }, 500);
-    }, 1000); // White transition duration
+      }, 800); // Adjusted for better swag timing
+    }, 400); // Faster transition start for blending effect
   };
+
+  // Preload next video for smoother transitions
+  useEffect(() => {
+    const nextIndex = (currentVideoIndex + 1) % videos.length;
+    const nextVideo = document.createElement('video');
+    nextVideo.src = videos[nextIndex];
+    nextVideo.preload = 'auto';
+    nextVideo.onloadeddata = () => setNextVideoLoaded(true);
+  }, [currentVideoIndex, videos]);
 
   // Reset video loaded state when video index changes
   useEffect(() => {
     setVideoLoaded(false);
+    setNextVideoLoaded(false);
   }, [currentVideoIndex]);
 
   // Smooth crosshair following effect
@@ -96,6 +108,27 @@ export default function Home() {
       };
     }
   }, [mousePos, currentView, loading]);
+
+  // Mobile video autoplay optimization
+  useEffect(() => {
+    if (!loading && currentView === 'home') {
+      // Force play on mobile devices with user interaction simulation
+      const playVideo = async () => {
+        const videoElements = document.querySelectorAll('video');
+        for (const video of videoElements) {
+          try {
+            await video.play();
+          } catch (error) {
+            console.log('Video autoplay prevented:', error);
+          }
+        }
+      };
+
+      // Delay to ensure video is loaded
+      const timer = setTimeout(playVideo, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, currentView, currentVideoIndex]);
 
   // Simple Shop Component
   const ShopView = () => (
@@ -810,7 +843,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Background Video - FULL SCREEN */}
+      {/* Background Video - FULL SCREEN with Enhanced Transitions */}
       <div 
         className="absolute"
         style={{
@@ -826,8 +859,11 @@ export default function Home() {
           autoPlay 
           muted 
           playsInline
+          webkit-playsinline="true"
+          preload="auto"
           onEnded={handleVideoEnd}
           onLoadedData={() => setVideoLoaded(true)}
+          onCanPlayThrough={() => setVideoLoaded(true)}
           style={{
             position: 'absolute',
             top: 0,
@@ -835,22 +871,49 @@ export default function Home() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: videoLoaded ? 1 : 0,
-            transition: 'opacity 0.5s ease-in-out'
+            opacity: videoLoaded && !isTransitioning ? 1 : 0,
+            transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            filter: isTransitioning ? 'blur(2px) brightness(1.1)' : 'none'
           }}
           src={videos[currentVideoIndex]}
-        />
+        >
+          <source src={videos[currentVideoIndex]} type="video/mp4" />
+        </video>
+        
+        {/* Previous video for smooth crossfade effect */}
+        {isTransitioning && currentVideoIndex > 0 && (
+          <video 
+            autoPlay={false}
+            muted 
+            playsInline
+            webkit-playsinline="true"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: isTransitioning ? 0.3 : 0,
+              transition: 'opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              zIndex: 1
+            }}
+            src={videos[(currentVideoIndex - 1 + videos.length) % videos.length]}
+          />
+        )}
+        
         <div 
-          className="absolute bg-black/40"
+          className="absolute bg-black/30"
           style={{
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%'
+            height: '100%',
+            zIndex: 2
           }}
         ></div>
         
-        {/* White fade overlay for smooth transitions */}
+        {/* Enhanced gradient overlay for diamond-like transition effect */}
         <div 
           style={{
             position: 'absolute',
@@ -858,10 +921,12 @@ export default function Home() {
             left: 0,
             width: '100%',
             height: '100%',
-            background: '#ffffff',
+            background: isTransitioning 
+              ? 'radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.8) 100%)'
+              : 'transparent',
             opacity: isTransitioning ? 1 : 0,
-            transition: 'opacity 1s ease-in-out',
-            zIndex: 5,
+            transition: 'all 1.8s cubic-bezier(0.23, 1, 0.32, 1)',
+            zIndex: 3,
             pointerEvents: 'none'
           }}
         />
