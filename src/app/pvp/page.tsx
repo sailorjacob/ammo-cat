@@ -34,11 +34,15 @@ export default function PvpPage() {
   const [rematchRequested, setRematchRequested] = useState(false);
   const [rematchReceived, setRematchReceived] = useState(false);
   
+  // Lives state for UI updates
+  const [localLives, setLocalLives] = useState(4);
+  const [opponentLives, setOpponentLives] = useState(4);
+  
   // Game data as refs to avoid re-renders
   const gameDataRef = useRef({
     isPlayer1: false,
-    localPlayer: { x: 100, y: 250, health: 100 },
-    opponentPlayer: { x: 700, y: 250, health: 100 },
+    localPlayer: { x: 100, y: 250, health: 100, lives: 4 },
+    opponentPlayer: { x: 700, y: 250, health: 100, lives: 4 },
     fireballs: [] as Array<{x: number, y: number, playerId: string, speed: number, curve?: number}>,
     keys: { w: false, s: false, a: false, d: false, space: false },
     lastShot: null as number | null,
@@ -151,7 +155,7 @@ export default function PvpPage() {
     }
   };
 
-  // Player hit function with visual effects
+  // Player hit function with visual effects and lives system
   const playerHit = (isLocal: boolean) => {
     // Show hit effect
     setHitEffect(true);
@@ -170,6 +174,67 @@ export default function PvpPage() {
       life: 30,
       maxLife: 30
     });
+    
+    // Check if player died (health <= 0)
+    if (player.health <= 0) {
+      // Reduce lives
+      player.lives--;
+      
+      // Update UI state
+      if (isLocal) {
+        setLocalLives(player.lives);
+      } else {
+        setOpponentLives(player.lives);
+      }
+      
+      // Broadcast lives update
+      if (channelRef.current) {
+        channelRef.current.send({
+          type: 'broadcast',
+          event: 'lives_update',
+          payload: { 
+            userId: user!.id, 
+            lives: isLocal ? player.lives : gameDataRef.current.localPlayer.lives
+          }
+        });
+      }
+      
+      // Check if player has lives left
+      if (player.lives > 0) {
+        // Respawn the player
+        player.health = 100;
+        
+        // Reset position based on which player
+        if (isLocal) {
+          if (gameDataRef.current.isPlayer1) {
+            player.x = 100;
+            player.y = 250;
+          } else {
+            player.x = 700;
+            player.y = 250;
+          }
+        } else {
+          if (gameDataRef.current.isPlayer1) {
+            player.x = 700;
+            player.y = 250;
+          } else {
+            player.x = 100;
+            player.y = 250;
+          }
+        }
+        
+        console.log(`Player respawned with ${player.lives} lives remaining`);
+      } else {
+        // No lives left - game over
+        if (isLocal) {
+          console.log('Local player out of lives - ending game');
+          endGame('Opponent');
+        } else {
+          console.log('Opponent out of lives - ending game');
+          endGame('You');
+        }
+      }
+    }
   };
 
   // Join queue function
@@ -231,11 +296,11 @@ export default function PvpPage() {
     
     // Set initial positions
     if (gameDataRef.current.isPlayer1) {
-      gameDataRef.current.localPlayer = { x: 100, y: 250, health: 100 };
-      gameDataRef.current.opponentPlayer = { x: 700, y: 250, health: 100 };
+      gameDataRef.current.localPlayer = { x: 100, y: 250, health: 100, lives: 4 };
+      gameDataRef.current.opponentPlayer = { x: 700, y: 250, health: 100, lives: 4 };
     } else {
-      gameDataRef.current.localPlayer = { x: 700, y: 250, health: 100 };
-      gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100 };
+      gameDataRef.current.localPlayer = { x: 700, y: 250, health: 100, lives: 4 };
+      gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100, lives: 4 };
     }
 
     channel
@@ -265,6 +330,21 @@ export default function PvpPage() {
         if (payload.userId !== user!.id) {
           // Start new game
           startNewGame();
+        }
+      })
+      .on('broadcast', { event: 'lives_update' }, ({ payload }) => {
+        if (payload.userId === user!.id) {
+          // Update local lives state
+          if (payload.lives !== undefined) {
+            gameDataRef.current.localPlayer.lives = payload.lives;
+            setLocalLives(payload.lives);
+          }
+        } else {
+          // Update opponent's lives state
+          if (payload.lives !== undefined) {
+            gameDataRef.current.opponentPlayer.lives = payload.lives;
+            setOpponentLives(payload.lives);
+          }
         }
       })
       .subscribe(async (status) => {
@@ -449,12 +529,12 @@ export default function PvpPage() {
 
     // CRITICAL: Win condition check (only if game is still playing)
     if (gameState === 'playing') {
-      // Check for game end conditions
-      if (gameDataRef.current.localPlayer.health <= 0) {
-        console.log('Local player defeated - ending game');
+      // Check for game end conditions based on lives, not health
+      if (gameDataRef.current.localPlayer.lives <= 0) {
+        console.log('Local player out of lives - ending game');
         endGame('Opponent');
-      } else if (gameDataRef.current.opponentPlayer.health <= 0) {
-        console.log('Opponent defeated - ending game');
+      } else if (gameDataRef.current.opponentPlayer.lives <= 0) {
+        console.log('Opponent out of lives - ending game');
         endGame('You');
       }
     }
@@ -507,6 +587,10 @@ export default function PvpPage() {
     setShowNameInput(false);
     setPlayerName('');
     
+    // Reset lives UI state
+    setLocalLives(4);
+    setOpponentLives(4);
+    
     // Reset game data
     gameDataRef.current.fireballs = [];
     gameDataRef.current.explosions = [];
@@ -515,11 +599,11 @@ export default function PvpPage() {
     
     // Reset player positions
     if (gameDataRef.current.isPlayer1) {
-      gameDataRef.current.localPlayer = { x: 100, y: 250, health: 100 };
-      gameDataRef.current.opponentPlayer = { x: 700, y: 250, health: 100 };
+      gameDataRef.current.localPlayer = { x: 100, y: 250, health: 100, lives: 4 };
+      gameDataRef.current.opponentPlayer = { x: 700, y: 250, health: 100, lives: 4 };
     } else {
-      gameDataRef.current.localPlayer = { x: 700, y: 250, health: 100 };
-      gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100 };
+      gameDataRef.current.localPlayer = { x: 700, y: 250, health: 100, lives: 4 };
+      gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100, lives: 4 };
     }
     
     // Restart the game
@@ -970,8 +1054,36 @@ export default function PvpPage() {
             minHeight: '70px'
           }}
         >
-          {/* Left side - Back to Home */}
+          {/* Left side - Your Lives */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+              <span 
+                className="font-sora font-bold"
+                style={{
+                  color: '#000000',
+                  fontSize: '12px',
+                  letterSpacing: '0.5px',
+                  marginRight: '8px'
+                }}
+              >
+                YOU:
+              </span>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {Array.from({ length: localLives }).map((_, index) => (
+                  <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
+                    <Image 
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                      alt="Your Life"
+                      width={24}
+                      height={24}
+                      unoptimized={true}
+                      style={{ display: 'inline-block', filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
             <Link 
               href="/"
               style={{
@@ -1029,7 +1141,7 @@ export default function PvpPage() {
             </span>
           </div>
           
-          {/* Right side - Game Link */}
+          {/* Right side - Opponent Lives + Game Link */}
           <div 
             style={{ 
               display: 'flex', 
@@ -1037,6 +1149,34 @@ export default function PvpPage() {
               alignItems: 'center'
             }}
           >
+            <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+              <span 
+                className="font-sora font-bold"
+                style={{
+                  color: '#000000',
+                  fontSize: '12px',
+                  letterSpacing: '0.5px',
+                  marginRight: '8px'
+                }}
+              >
+                OPPONENT:
+              </span>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {Array.from({ length: opponentLives }).map((_, index) => (
+                  <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
+                    <Image 
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                      alt="Opponent Life"
+                      width={24}
+                      height={24}
+                      unoptimized={true}
+                      style={{ display: 'inline-block', filter: 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.5))' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
             <Link 
               href="/game"
               className="font-sora font-bold"
@@ -1518,11 +1658,16 @@ export default function PvpPage() {
                   // Reset leaderboard states
                   setShowNameInput(false);
                   setPlayerName('');
+                  // Reset lives
+                  setLocalLives(4);
+                  setOpponentLives(4);
                   // Reset game data
                   gameDataRef.current.fireballs = [];
                   gameDataRef.current.explosions = [];
                   gameDataRef.current.localPlayer.health = 100;
+                  gameDataRef.current.localPlayer.lives = 4;
                   gameDataRef.current.opponentPlayer.health = 100;
+                  gameDataRef.current.opponentPlayer.lives = 4;
                 }}
                 className="font-sora font-bold"
                 style={{
