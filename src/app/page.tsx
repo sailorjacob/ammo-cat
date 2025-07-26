@@ -417,16 +417,13 @@ export default function Home() {
   // Main homepage
   return (
     <div 
+      className="bg-black relative"
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
         width: '100vw',
         height: '100vh',
         margin: 0,
         padding: 0,
-        overflow: 'hidden',
-        background: '#000000'
+        overflow: 'hidden'
       }}
     >
       {/* CLEAN GLASSMORPHISM HOMEPAGE HEADER */}
@@ -449,7 +446,7 @@ export default function Home() {
           style={{ 
             width: '100%',
             display: 'grid',
-            gridTemplateColumns: 'auto 1fr auto',
+            gridTemplateColumns: '1fr auto 1fr',
             alignItems: 'center',
             padding: '16px 20px',
             maxWidth: '100vw',
@@ -457,7 +454,7 @@ export default function Home() {
             minHeight: '70px'
           }}
         >
-          {/* Left side - Clean Logo + Title */}
+          {/* Left side - Clean Logo */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <div 
               style={{
@@ -486,16 +483,13 @@ export default function Home() {
             </span>
           </div>
           
-          {/* Center - Empty space */}
-          <div></div>
-          
-          {/* Right side - Buttons and Toggle */}
+          {/* Center - Enhanced Buttons */}
           <div 
             style={{
               display: 'flex',
               gap: '20px',
               alignItems: 'center',
-              justifyContent: 'flex-end'
+              justifyContent: 'center'
             }}
           >
             {/* PLAY Button */}
@@ -584,8 +578,10 @@ export default function Home() {
             >
               SHOP
             </button>
-            
-            {/* Glass Mode Toggle */}
+          </div>
+          
+          {/* Right side - Clean Moon Toggle */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
             <button
               onClick={() => setIsGlassMode(!isGlassMode)}
               title="Toggle Glass Mode"
@@ -623,8 +619,8 @@ export default function Home() {
 
       {/* Background Video - ABSOLUTELY CENTERED */}
       <div 
+        className="absolute"
         style={{
-          position: 'fixed',
           top: 0,
           left: 0,
           width: '100vw',
@@ -641,10 +637,6 @@ export default function Home() {
           loop 
           playsInline
           style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
             minWidth: '100%',
             minHeight: '100%',
             width: 'auto',
@@ -654,13 +646,12 @@ export default function Home() {
           src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4"
         />
         <div 
+          className="absolute bg-black/40"
           style={{
-            position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.4)'
+            height: '100%'
           }}
         ></div>
       </div>
@@ -711,16 +702,15 @@ export default function Home() {
 
       {/* Main Content - ABSOLUTELY CENTERED */}
       <div 
+        className="absolute z-20"
         style={{
-          position: 'fixed',
           top: 0,
           left: 0,
           width: '100vw',
           height: '100vh',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 20
+          justifyContent: 'center'
         }}
       >
         <div 
