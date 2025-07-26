@@ -594,6 +594,37 @@ export default function PvpPage() {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, 800, 600);
 
+    // Render different content based on game state
+    if (gameState === 'idle' || gameState === 'ended') {
+      // Show intro/lobby content (like single-player ready state)
+      if (imagesRef.current.loaded && imagesRef.current.player) {
+        // Floating character in center
+        ctx.save();
+        try {
+          ctx.drawImage(imagesRef.current.player, 
+            375, 250, // Centered
+            50, 50);
+        } catch (e) {
+          // Fallback
+          ctx.fillStyle = '#0066FF';
+          ctx.fillRect(375, 250, 50, 50);
+        }
+        ctx.restore();
+        
+        // Add "Ready for Battle" text
+        ctx.fillStyle = '#333333';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Ready for PVP Battle', 400, 350);
+        ctx.font = '16px Arial';
+        ctx.fillText('Click "Join PVP Match" to begin', 400, 380);
+      }
+      return;
+    }
+
+    if (gameState !== 'playing') return;
+
+    // Game playing state - render actual game
     // Determine directions - Player1 faces right, Player2 faces left
     const localPlayerFacesRight = gameDataRef.current.isPlayer1;
     const opponentPlayerFacesRight = !gameDataRef.current.isPlayer1;
@@ -827,6 +858,22 @@ export default function PvpPage() {
     console.log('Controls with mouse support set up successfully!');
   };
 
+  // Effect to handle canvas rendering for different states
+  useEffect(() => {
+    if (gameState === 'idle' || gameState === 'ended') {
+      // Render intro/lobby content
+      renderGame();
+    }
+  }, [gameState, imagesRef.current.loaded]);
+
+  // Setup controls when game starts
+  useEffect(() => {
+    if (gameState === 'playing') {
+      console.log('Game is playing, ensuring controls are set up...');
+      setupControls();
+    }
+  }, [gameState]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -863,7 +910,7 @@ export default function PvpPage() {
         className={`border border-white mb-4 bg-white ${hitEffect ? 'opacity-70' : ''}`}
         style={{
           filter: hitEffect ? 'drop-shadow(0 0 20px rgba(255, 0, 0, 0.8))' : 'none',
-          display: gameState === 'playing' ? 'block' : 'none'
+          display: (gameState === 'queued' || gameState === 'matched') ? 'none' : 'block'
         }}
       />
 
