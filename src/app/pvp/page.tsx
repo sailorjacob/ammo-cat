@@ -927,12 +927,22 @@ export default function PvpPage() {
       window.removeEventListener('keydown', (window as any).keyHandlers.handleKeyDown);
       window.removeEventListener('keyup', (window as any).keyHandlers.handleKeyUp);
     }
-    if ((window as any).mouseHandlers) {
-      canvas.removeEventListener('mousedown', (window as any).mouseHandlers.handleMouseDown);
-      canvas.removeEventListener('mouseup', (window as any).mouseHandlers.handleMouseUp);
+    if ((window as any).mouseHandlers && canvasRef.current) {
+      canvasRef.current.removeEventListener('mousedown', (window as any).mouseHandlers.handleMouseDown);
+      canvasRef.current.removeEventListener('mouseup', (window as any).mouseHandlers.handleMouseUp);
+    }
+    if ((window as any).touchHandlers && canvasRef.current) {
+      canvasRef.current.removeEventListener('touchstart', (window as any).touchHandlers.handleTouchStart);
+      canvasRef.current.removeEventListener('touchmove', (window as any).touchHandlers.handleTouchMove);
+      canvasRef.current.removeEventListener('touchend', (window as any).touchHandlers.handleTouchEnd);
     }
 
-    console.log('Setting up controls with mouse support...');
+    console.log('Setting up controls with mouse and touch support...');
+    
+    // Touch state for mobile controls
+    let isDragging = false;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
     
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't handle game keys if modal is open or game is not playing
@@ -977,15 +987,115 @@ export default function PvpPage() {
       // Mouse shooting is handled by the cooldown system
     };
 
+    // Touch handlers for mobile controls
+    const handleTouchStart = (e: TouchEvent) => {
+      if (gameState !== 'playing' || showNameInput || showLeaderboard || !e.touches[0]) return;
+      
+      // Get the touch position relative to the canvas
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
+      
+      // Scale touch coordinates to canvas coordinates (800x600)
+      const scaleX = 800 / rect.width;
+      const scaleY = 600 / rect.height;
+      const scaledTouchX = touchX * scaleX;
+      const scaledTouchY = touchY * scaleY;
+      
+      const player = gameDataRef.current.localPlayer;
+      
+      // Check if touch is close to player (enlarged touch area for easier dragging)
+      const playerCenterX = player.x + 25; // 50/2 = 25 (player size is 50x50)
+      const playerCenterY = player.y + 25;
+      const touchRadius = 75; // Larger touch area
+      
+      const isOnPlayer = Math.abs(scaledTouchX - playerCenterX) < touchRadius &&
+                         Math.abs(scaledTouchY - playerCenterY) < touchRadius;
+      
+      if (isOnPlayer) {
+        // Start dragging
+        isDragging = true;
+        lastTouchX = scaledTouchX;
+        lastTouchY = scaledTouchY;
+      } else {
+        // Shoot when tapping outside player area
+        if (!gameDataRef.current.lastShot) {
+          shootFireball();
+          gameDataRef.current.lastShot = Date.now();
+        }
+      }
+      
+      // Prevent default to avoid scrolling the page
+      e.preventDefault();
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (gameState !== 'playing' || showNameInput || showLeaderboard || !e.touches[0]) return;
+      
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
+      
+      // Scale touch coordinates to canvas coordinates
+      const scaleX = 800 / rect.width;
+      const scaleY = 600 / rect.height;
+      const scaledTouchX = touchX * scaleX;
+      const scaledTouchY = touchY * scaleY;
+      
+      const player = gameDataRef.current.localPlayer;
+      
+      // More lenient check to start dragging during movement
+      if (!isDragging) {
+        const playerCenterX = player.x + 25;
+        const playerCenterY = player.y + 25;
+        const touchRadius = 100; // Even larger area for movement detection
+        
+        const isNearPlayer = Math.abs(scaledTouchX - playerCenterX) < touchRadius &&
+                            Math.abs(scaledTouchY - playerCenterY) < touchRadius;
+        if (isNearPlayer) {
+          isDragging = true;
+          lastTouchX = scaledTouchX;
+          lastTouchY = scaledTouchY;
+        }
+      }
+      
+      // If we're dragging, move the player directly
+      if (isDragging) {
+        // Move player to touch position (centered on touch)
+        const newX = Math.max(0, Math.min(750, scaledTouchX - 25)); // 750 = 800 - 50 (player width)
+        const newY = Math.max(0, Math.min(550, scaledTouchY - 25)); // 550 = 600 - 50 (player height)
+        
+        player.x = newX;
+        player.y = newY;
+      }
+      
+      // Prevent default to avoid scrolling the page
+      e.preventDefault();
+    };
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (gameState !== 'playing') return;
+      isDragging = false;
+      
+      // Prevent default
+      e.preventDefault();
+    };
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('touchstart', handleTouchStart as EventListener);
+    canvas.addEventListener('touchmove', handleTouchMove as EventListener);
+    canvas.addEventListener('touchend', handleTouchEnd as EventListener);
 
     // Store for cleanup
     (window as any).keyHandlers = { handleKeyDown, handleKeyUp };
     (window as any).mouseHandlers = { handleMouseDown, handleMouseUp };
-    console.log('Controls with mouse support set up successfully!');
+    (window as any).touchHandlers = { handleTouchStart, handleTouchMove, handleTouchEnd };
+    console.log('Controls with mouse and touch support set up successfully!');
   };
 
   // Effect to handle canvas rendering for intro/lobby states
@@ -1045,6 +1155,11 @@ export default function PvpPage() {
       if ((window as any).mouseHandlers && canvasRef.current) {
         canvasRef.current.removeEventListener('mousedown', (window as any).mouseHandlers.handleMouseDown);
         canvasRef.current.removeEventListener('mouseup', (window as any).mouseHandlers.handleMouseUp);
+      }
+      if ((window as any).touchHandlers && canvasRef.current) {
+        canvasRef.current.removeEventListener('touchstart', (window as any).touchHandlers.handleTouchStart);
+        canvasRef.current.removeEventListener('touchmove', (window as any).touchHandlers.handleTouchMove);
+        canvasRef.current.removeEventListener('touchend', (window as any).touchHandlers.handleTouchEnd);
       }
       if (channelRef.current) {
         const supabase = createClient();
