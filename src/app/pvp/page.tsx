@@ -44,6 +44,9 @@ export default function PvpPage() {
   // User wins state for UI updates
   const [userWins, setUserWins] = useState(0);
   
+  // Mobile detection state
+  const [isMobile, setIsMobile] = useState(false);
+  
   // Game data as refs to avoid re-renders
   const gameDataRef = useRef({
     isPlayer1: false,
@@ -62,6 +65,18 @@ export default function PvpPage() {
     player: null as HTMLImageElement | null,
     loaded: false
   });
+
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Load game images
   useEffect(() => {
@@ -2183,22 +2198,23 @@ export default function PvpPage() {
       </div>
 
       {/* Left Sidebar - Clean Minimalistic Controls */}
-      <div 
-        className="hidden md:block pvp-sidebar-left"
-        style={{
-          position: 'fixed',
-          left: '20px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          zIndex: 40,
-          background: '#f5f5f5',
-          borderRadius: '8px',
-          padding: '20px 16px',
-          border: '1px solid #e0e0e0',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          minWidth: '200px'
-        }}
-      >
+      {!isMobile && (
+        <div 
+          className="pvp-sidebar-left"
+          style={{
+            position: 'fixed',
+            left: '20px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 40,
+            background: '#f5f5f5',
+            borderRadius: '8px',
+            padding: '20px 16px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            minWidth: '200px'
+          }}
+        >
         <div style={{ marginBottom: '24px' }}>
           <h3 
             style={{
@@ -2248,26 +2264,28 @@ export default function PvpPage() {
             Spacebar or Mouse to shoot
           </p>
         </div>
-      </div>
+        </div>
+      )}
 
       {/* Right Sidebar - Wins */}
-      <div 
-        className="hidden md:block pvp-sidebar-right"
-        style={{
-          position: 'fixed',
-          right: '20px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          zIndex: 40,
-          background: '#f5f5f5',
-          borderRadius: '8px',
-          padding: '16px 12px',
-          border: '1px solid #e0e0e0',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          minWidth: '120px',
-          textAlign: 'center'
-        }}
-      >
+      {!isMobile && (
+        <div 
+          className="pvp-sidebar-right"
+          style={{
+            position: 'fixed',
+            right: '20px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 40,
+            background: '#f5f5f5',
+            borderRadius: '8px',
+            padding: '16px 12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            minWidth: '120px',
+            textAlign: 'center'
+          }}
+        >
         <div>
           <h3 
             style={{
@@ -2291,7 +2309,8 @@ export default function PvpPage() {
             {userWins}
           </p>
         </div>
-      </div>
+        </div>
+      )}
 
 
 
