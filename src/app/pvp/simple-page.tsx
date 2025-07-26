@@ -91,6 +91,8 @@ export default function SimplePvpPage() {
       gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100 };
     }
 
+    let readyReceived = false;
+
     channel
       .on('broadcast', { event: 'player_update' }, ({ payload }) => {
         if (payload.userId !== user!.id) {
@@ -99,17 +101,31 @@ export default function SimplePvpPage() {
       })
       .on('broadcast', { event: 'ready' }, ({ payload }) => {
         console.log('Received ready from:', payload.userId);
-        if (payload.userId !== user!.id) {
-          console.log('Starting game!');
+        if (payload.userId !== user!.id && !readyReceived) {
+          readyReceived = true;
+          console.log('Both players ready! Starting game...');
           setGameState('playing');
-          startGame();
+          
+          // Small delay to ensure both players are in sync
+          setTimeout(() => {
+            startGame();
+          }, 500);
         }
       })
       .subscribe(async (status) => {
+        console.log('Channel status:', status);
         if (status === 'SUBSCRIBED') {
           channelRef.current = channel;
           console.log('Sending ready signal');
+          
+          // Send ready signal immediately and also after a short delay
           channel.send({ type: 'broadcast', event: 'ready', payload: { userId: user!.id } });
+          
+          // Send again after 1 second to ensure it's received
+          setTimeout(() => {
+            console.log('Sending ready signal again (backup)');
+            channel.send({ type: 'broadcast', event: 'ready', payload: { userId: user!.id } });
+          }, 1000);
         }
       });
   };
@@ -118,11 +134,12 @@ export default function SimplePvpPage() {
   const startGame = () => {
     console.log('Game starting!');
     
-    // Simple game loop
+    // Simple game loop - always render if we have a canvas
     const gameLoop = () => {
       updateGame();
       renderGame();
-      if (gameState === 'playing') {
+      // Keep running as long as we're in playing state OR matched state
+      if (gameState === 'playing' || gameState === 'matched') {
         requestAnimationFrame(gameLoop);
       }
     };
@@ -132,7 +149,7 @@ export default function SimplePvpPage() {
     
     // Start broadcasting player position
     const broadcastInterval = setInterval(() => {
-      if (channelRef.current && gameState === 'playing') {
+      if (channelRef.current && (gameState === 'playing' || gameState === 'matched')) {
         channelRef.current.send({
           type: 'broadcast',
           event: 'player_update',
@@ -147,6 +164,7 @@ export default function SimplePvpPage() {
     (window as any).broadcastInterval = broadcastInterval;
     
     // Start game loop
+    console.log('Starting game loop...');
     requestAnimationFrame(gameLoop);
   };
 
