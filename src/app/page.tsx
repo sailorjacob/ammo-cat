@@ -14,8 +14,18 @@ export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [showArtModal, setShowArtModal] = useState<number | null>(null);
-  const [videoEnded, setVideoEnded] = useState(false);
-  const [showSpinner, setShowSpinner] = useState(false);
+  
+  // Video sequence states
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  // Video sequence array
+  const videos = [
+    "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie11.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTExLm1wNCIsImlhdCI6MTc1MzU0MjE3OSwiZXhwIjoyMDY4OTAyMTc5fQ.geM_QilOlb35kiH9qmbZr7JwSfWISgv0P6KKqC_1rHI",
+    "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/AMMO.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0FNTU8ubXA0IiwiaWF0IjoxNzUzNTQyNzMxLCJleHAiOjIwNjg5MDI3MzF9.TKEoSRs9QSENIkTVwzTyB69S4LRoct1rkg0ahx6nfts",
+    "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie33.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTMzLm1wNCIsImlhdCI6MTc1MzU0MjQ0NSwiZXhwIjoyMDY4OTAyNDQ1fQ.wuhIiwGs-g3pDw46sXM67BU9tXN-VrJhQ5vgN3H2nQE"
+  ];
 
   useEffect(() => {
     // Animate loading progress from 0 to 100
@@ -45,6 +55,27 @@ export default function Home() {
 
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [currentView, loading]);
+
+  // Video transition handler
+  const handleVideoEnd = () => {
+    setIsTransitioning(true);
+    setVideoLoaded(false);
+    
+    // Start fade to white, then switch to next video
+    setTimeout(() => {
+      setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+      
+      // Fade back from white once new video loads
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 500);
+    }, 1000); // White transition duration
+  };
+
+  // Reset video loaded state when video index changes
+  useEffect(() => {
+    setVideoLoaded(false);
+  }, [currentVideoIndex]);
 
   // Smooth crosshair following effect
   useEffect(() => {
@@ -791,22 +822,23 @@ export default function Home() {
         }}
       >
         <video 
+          key={currentVideoIndex}
           autoPlay 
           muted 
           playsInline
-          onEnded={() => {
-            setVideoEnded(true);
-            setTimeout(() => setShowSpinner(true), 500);
-          }}
+          onEnded={handleVideoEnd}
+          onLoadedData={() => setVideoLoaded(true)}
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'cover'
+            objectFit: 'cover',
+            opacity: videoLoaded ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out'
           }}
-          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4"
+          src={videos[currentVideoIndex]}
         />
         <div 
           className="absolute bg-black/40"
@@ -818,58 +850,24 @@ export default function Home() {
           }}
         ></div>
         
-        {/* White fade overlay after video ends */}
-        {videoEnded && (
-          <div 
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: '#ffffff',
-              opacity: showSpinner ? 1 : 0,
-              transition: 'opacity 0.5s ease',
-              zIndex: 5
-            }}
-          />
-        )}
-        
-        {/* Spinning Diamond */}
-        {showSpinner && (
-          <div 
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              zIndex: 10,
-              animation: 'spin 0.8s linear infinite'
-            }}
-          >
-            <svg 
-              width="40" 
-              height="40" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="#000000" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <path d="M6 3h12l4 6-10 13L2 9z"/>
-            </svg>
-          </div>
-        )}
+        {/* White fade overlay for smooth transitions */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: '#ffffff',
+            opacity: isTransitioning ? 1 : 0,
+            transition: 'opacity 1s ease-in-out',
+            zIndex: 5,
+            pointerEvents: 'none'
+          }}
+        />
       </div>
 
-      {/* Spinning Animation CSS */}
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: translate(-50%, -50%) rotate(0deg); }
-          100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-      `}</style>
+
 
       {/* Crosshairs - Hidden for now */}
       {false && currentView === 'home' && !loading && (
