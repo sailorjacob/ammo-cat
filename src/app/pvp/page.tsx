@@ -1302,7 +1302,7 @@ export default function PvpPage() {
                       width={24}
                       height={24}
                       unoptimized={true}
-                      style={{ display: 'inline-block', filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))' }}
+                      style={{ display: 'inline-block' }}
                     />
                   </div>
                 ))}
@@ -2293,44 +2293,7 @@ export default function PvpPage() {
         </div>
       </div>
 
-      {/* Mobile Wins - Above Canvas */}
-      <div 
-        className="mobile-pvp-wins"
-        style={{
-          position: 'fixed',
-          top: '90px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 30,
-          background: 'rgba(245, 245, 245, 0.95)',
-          borderRadius: '8px',
-          padding: '8px 16px',
-          border: '1px solid #e0e0e0',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center'
-        }}
-      >
-        <span 
-          style={{
-            color: '#000000',
-            fontSize: '12px',
-            fontWeight: '600',
-            marginRight: '8px',
-            letterSpacing: '0.5px'
-          }}
-        >
-          WINS
-        </span>
-        <span 
-          style={{
-            color: '#DC2626',
-            fontSize: '16px',
-            fontWeight: '900'
-          }}
-        >
-          {userWins}
-        </span>
-      </div>
+
 
       {/* Loading Spinner Animation */}
       <style jsx>{`
