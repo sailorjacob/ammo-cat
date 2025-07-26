@@ -1,5 +1,14 @@
 import { createServerSupabaseClient } from '../../../../lib/supabase-server';
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+// Create service role client for admin operations
+const getServiceSupabase = () => {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+};
 
 // POST: Join queue and attempt to find match
 export async function POST(request: Request) {
@@ -16,7 +25,7 @@ export async function POST(request: Request) {
     console.log('User ID:', user.id);
     console.log('User metadata:', user.user_metadata);
 
-    // STEP 1: Clean up any existing entries for this user
+    // STEP 1: Clean up any existing entries for this user (using regular client - RLS allows this)
     const { data: deletedEntries, error: deleteError } = await supabase
       .from('pvp_queue')
       .delete()
@@ -29,7 +38,7 @@ export async function POST(request: Request) {
       console.log('Deleted old entries:', deletedEntries?.length || 0);
     }
 
-    // STEP 2: Add current user to queue
+    // STEP 2: Add current user to queue (using regular client - RLS allows this)
     const { data: newEntry, error: insertError } = await supabase
       .from('pvp_queue')
       .insert({ user_id: user.id, status: 'queued' })
@@ -44,9 +53,11 @@ export async function POST(request: Request) {
     console.log('Created queue entry:', newEntry.id);
 
     // STEP 3: Wait a moment for database consistency, then find all queued users
+    // Using SERVICE ROLE to bypass RLS and see ALL users
     await new Promise(resolve => setTimeout(resolve, 100));
 
-    const { data: allQueuedUsers, error: findError } = await supabase
+    const serviceSupabase = getServiceSupabase();
+    const { data: allQueuedUsers, error: findError } = await serviceSupabase
       .from('pvp_queue')
       .select('*')
       .eq('status', 'queued')
@@ -66,8 +77,8 @@ export async function POST(request: Request) {
       
       console.log('Creating match between:', player1Entry.user_id, 'and', player2Entry.user_id);
 
-      // Create the match
-      const { data: match, error: matchError } = await supabase
+      // Create the match (using service role)
+      const { data: match, error: matchError } = await serviceSupabase
         .from('pvp_matches')
         .insert({
           player1_id: player1Entry.user_id,
@@ -84,8 +95,8 @@ export async function POST(request: Request) {
 
       console.log('Match created:', match.id);
 
-      // Update both queue entries to matched status
-      const { error: updateError } = await supabase
+      // Update both queue entries to matched status (using service role)
+      const { error: updateError } = await serviceSupabase
         .from('pvp_queue')
         .update({ status: 'matched', match_id: match.id })
         .in('id', [player1Entry.id, player2Entry.id]);
@@ -174,9 +185,10 @@ export async function DELETE(request: Request) {
 // OPTIONS: Debug endpoint to see all queue entries
 export async function OPTIONS(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    // Use service role to see ALL entries for debugging
+    const serviceSupabase = getServiceSupabase();
 
-    const { data: allEntries, error } = await supabase
+    const { data: allEntries, error } = await serviceSupabase
       .from('pvp_queue')
       .select('*')
       .order('created_at', { ascending: true });
