@@ -301,11 +301,18 @@ export default function PvpPage() {
     
     // Simple game loop - always render if we have a canvas
     const gameLoop = () => {
+      // SAFETY: Immediately stop if game has ended
+      if (gameState === 'ended') {
+        gameRunning = false;
+        console.log('Game loop stopped due to ended state');
+        return;
+      }
+
       updateGame();
       renderGame();
       
-      // Keep running as long as gameRunning is true
-      if (gameRunning) {
+      // Keep running as long as gameRunning is true and game hasn't ended
+      if (gameRunning && gameState !== 'ended') {
         requestAnimationFrame(gameLoop);
       } else {
         console.log('Game loop stopped');
@@ -340,8 +347,8 @@ export default function PvpPage() {
 
   // Game update with shooting and effects
   const updateGame = () => {
-    // Stop all game updates if game has ended
-    if (gameState === 'ended') {
+    // CRITICAL: Stop all game updates immediately if game has ended
+    if (gameState === 'ended' || gameState !== 'playing') {
       return;
     }
 
@@ -349,8 +356,8 @@ export default function PvpPage() {
     const keys = gameDataRef.current.keys;
     const speed = 5;
 
-    // Move player based on keys (only if not typing in modal)
-    if (!showNameInput) {
+    // Move player based on keys (only if not typing in modal and game is active)
+    if (!showNameInput && !showLeaderboard && gameState === 'playing') {
       if (keys.w) player.y = Math.max(0, player.y - speed);
       if (keys.s) player.y = Math.min(550, player.y + speed);
       if (keys.a) player.x = Math.max(0, player.x - speed);
@@ -368,90 +375,121 @@ export default function PvpPage() {
       }
     }
 
-    // Update fireballs with visual effects
-    for (let i = gameDataRef.current.fireballs.length - 1; i >= 0; i--) {
-      const fireball = gameDataRef.current.fireballs[i];
-      
-      // Determine shooting direction based on player position
-      // Player1 is on left side and shoots right (+)
-      // Player2 is on right side and shoots left (-)
-      const isPlayer1Fireball = (fireball.playerId === user!.id && gameDataRef.current.isPlayer1) ||
-                                (fireball.playerId !== user!.id && !gameDataRef.current.isPlayer1);
-      
-      // Move fireball in correct direction
-      if (isPlayer1Fireball) {
-        fireball.x += fireball.speed; // Player1 shoots right
-      } else {
-        fireball.x -= fireball.speed; // Player2 shoots left
-      }
-      
-      // Apply curve effect
-      if (fireball.curve) {
-        fireball.y += fireball.curve;
-      }
-      
-      // Remove fireballs that are off-screen
-      if (fireball.x < -20 || fireball.x > 820 || fireball.y < -20 || fireball.y > 620) {
-        gameDataRef.current.fireballs.splice(i, 1);
-        continue;
-      }
-      
-      // Check collision with opponent
-      const targetPlayer = fireball.playerId === user!.id ? 
-        gameDataRef.current.opponentPlayer : gameDataRef.current.localPlayer;
-      
-      if (fireball.x < targetPlayer.x + 50 &&
-          fireball.x + 10 > targetPlayer.x &&
-          fireball.y < targetPlayer.y + 50 &&
-          fireball.y + 10 > targetPlayer.y) {
-        
-        // Hit! Remove fireball and damage player
-        gameDataRef.current.fireballs.splice(i, 1);
-        
-        if (fireball.playerId !== user!.id) {
-          // We got hit
-          gameDataRef.current.localPlayer.health -= 20;
-          playerHit(true);
-        } else {
-          // We hit opponent
-          gameDataRef.current.opponentPlayer.health -= 20;
-          playerHit(false);
-        }
-      }
-    }
-
-    // Update explosions
-    for (let i = gameDataRef.current.explosions.length - 1; i >= 0; i--) {
-      const explosion = gameDataRef.current.explosions[i];
-      explosion.life--;
-      explosion.size = ((explosion.maxLife - explosion.life) / explosion.maxLife) * 40;
-      
-      if (explosion.life <= 0) {
-        gameDataRef.current.explosions.splice(i, 1);
-      }
-    }
-
-    // Win condition with leaderboard integration (only check if game is still playing)
+    // Update fireballs with visual effects (only if game is still playing)
     if (gameState === 'playing') {
-      if (gameDataRef.current.localPlayer.health <= 0) {
-        setGameState('ended');
-        setWinner('Opponent');
-        // Stop the game loop
-        if ((window as any).stopGame) {
-          (window as any).stopGame();
+      for (let i = gameDataRef.current.fireballs.length - 1; i >= 0; i--) {
+        const fireball = gameDataRef.current.fireballs[i];
+        
+        // Determine shooting direction based on player position
+        // Player1 is on left side and shoots right (+)
+        // Player2 is on right side and shoots left (-)
+        const isPlayer1Fireball = (fireball.playerId === user!.id && gameDataRef.current.isPlayer1) ||
+                                  (fireball.playerId !== user!.id && !gameDataRef.current.isPlayer1);
+        
+        // Move fireball in correct direction
+        if (isPlayer1Fireball) {
+          fireball.x += fireball.speed; // Player1 shoots right
+        } else {
+          fireball.x -= fireball.speed; // Player2 shoots left
         }
-      }
-      if (gameDataRef.current.opponentPlayer.health <= 0) {
-        setGameState('ended');
-        setWinner('You');
-        // Show name input for winner to save to leaderboard
-        setShowNameInput(true);
-        // Stop the game loop
-        if ((window as any).stopGame) {
-          (window as any).stopGame();
+        
+        // Apply curve effect
+        if (fireball.curve) {
+          fireball.y += fireball.curve;
+        }
+        
+        // Remove fireballs that are off-screen
+        if (fireball.x < -20 || fireball.x > 820 || fireball.y < -20 || fireball.y > 620) {
+          gameDataRef.current.fireballs.splice(i, 1);
+          continue;
+        }
+        
+        // Check collision with opponent (only if game is still playing)
+        if (gameState === 'playing') {
+          const targetPlayer = fireball.playerId === user!.id ? 
+            gameDataRef.current.opponentPlayer : gameDataRef.current.localPlayer;
+          
+          if (fireball.x < targetPlayer.x + 50 &&
+              fireball.x + 10 > targetPlayer.x &&
+              fireball.y < targetPlayer.y + 50 &&
+              fireball.y + 10 > targetPlayer.y) {
+            
+            // Hit! Remove fireball and damage player
+            gameDataRef.current.fireballs.splice(i, 1);
+            
+            if (fireball.playerId !== user!.id) {
+              // We got hit
+              gameDataRef.current.localPlayer.health -= 20;
+              playerHit(true);
+            } else {
+              // We hit opponent
+              gameDataRef.current.opponentPlayer.health -= 20;
+              playerHit(false);
+            }
+          }
         }
       }
     }
+
+    // Update explosions (only if game is playing)
+    if (gameState === 'playing') {
+      for (let i = gameDataRef.current.explosions.length - 1; i >= 0; i--) {
+        const explosion = gameDataRef.current.explosions[i];
+        explosion.life--;
+        explosion.size = ((explosion.maxLife - explosion.life) / explosion.maxLife) * 40;
+        
+        if (explosion.life <= 0) {
+          gameDataRef.current.explosions.splice(i, 1);
+        }
+      }
+    }
+
+    // CRITICAL: Win condition check (only if game is still playing)
+    if (gameState === 'playing') {
+      // Check for game end conditions
+      if (gameDataRef.current.localPlayer.health <= 0) {
+        console.log('Local player defeated - ending game');
+        endGame('Opponent');
+      } else if (gameDataRef.current.opponentPlayer.health <= 0) {
+        console.log('Opponent defeated - ending game');
+        endGame('You');
+      }
+    }
+  };
+
+  // Centralized game ending function
+  const endGame = (winner: string) => {
+    console.log('Game ending with winner:', winner);
+    
+    // Immediately set game state to ended
+    setGameState('ended');
+    setWinner(winner);
+    
+    // Stop the game loop immediately
+    if ((window as any).stopGame) {
+      (window as any).stopGame();
+    }
+    
+    // Clear all intervals and timeouts
+    if ((window as any).broadcastInterval) {
+      clearInterval((window as any).broadcastInterval);
+    }
+    
+    // Reset all movement keys to prevent continued movement
+    if (gameDataRef.current.keys) {
+      gameDataRef.current.keys.w = false;
+      gameDataRef.current.keys.s = false;
+      gameDataRef.current.keys.a = false;
+      gameDataRef.current.keys.d = false;
+      gameDataRef.current.keys.space = false;
+    }
+    
+    // Show name input for winner
+    if (winner === 'You') {
+      setShowNameInput(true);
+    }
+    
+    console.log('Game ended successfully');
   };
 
   // Start new game for rematch
@@ -855,27 +893,110 @@ export default function PvpPage() {
 
       {gameState === 'queued' && (
         <div className="text-center">
-          {/* Animated Battle Arena */}
-          <div className="mb-8 relative">
-            <div className="animate-pulse">
-              <div className="text-6xl mb-4">⚔️</div>
-            </div>
-            <div className="flex justify-center items-center gap-8 mb-4">
-              <div className="animate-bounce" style={{ animationDelay: '0ms' }}>
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-2xl">
+          {/* Battle Arena with Real Assets */}
+          <div 
+            className="mb-8 relative bg-white rounded-lg border border-gray-300"
+            style={{
+              width: '400px',
+              height: '300px',
+              margin: '0 auto',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+            }}
+          >
+            {/* Player 1 (You) - Left Side */}
+            <div 
+              className="floating-character"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '25%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 2
+              }}
+            >
+              {imagesRef.current.loaded && imagesRef.current.player ? (
+                <img
+                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                  alt="Your Character"
+                  width={80}
+                  height={80}
+                  style={{ 
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))'
+                  }}
+                />
+              ) : (
+                <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-2xl">
                   🐱
                 </div>
-              </div>
-              <div className="text-4xl animate-pulse">VS</div>
-              <div className="animate-bounce" style={{ animationDelay: '500ms' }}>
-                <div className="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center text-2xl">
+              )}
+              <div className="text-xs font-semibold text-blue-600 mt-2">YOU</div>
+            </div>
+
+            {/* VS Text in Center */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 3
+              }}
+            >
+              <div className="text-3xl font-bold text-gray-600 animate-pulse">VS</div>
+            </div>
+
+            {/* Opponent Placeholder - Right Side */}
+            <div 
+              className="floating-opponent"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '75%',
+                transform: 'translate(-50%, -50%) scaleX(-1)',
+                zIndex: 2,
+                opacity: 0.4
+              }}
+            >
+              {imagesRef.current.loaded && imagesRef.current.player ? (
+                <img
+                  src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                  alt="Opponent"
+                  width={80}
+                  height={80}
+                  style={{ 
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)) grayscale(100%)'
+                  }}
+                />
+              ) : (
+                <div className="w-20 h-20 bg-gray-400 rounded-full flex items-center justify-center text-2xl">
                   ❓
                 </div>
+              )}
+              <div className="text-xs font-semibold text-gray-500 mt-2" style={{ transform: 'scaleX(-1)' }}>
+                SEARCHING...
+              </div>
+            </div>
+
+            {/* Animated Search Dots */}
+            <div 
+              style={{
+                position: 'absolute',
+                bottom: '20px',
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}
+            >
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             </div>
           </div>
           
-          <p className="text-xl mb-2">🔍 Searching for worthy opponent...</p>
+          <p className="text-xl mb-2 text-white">🔍 Searching for worthy opponent...</p>
           <p className="text-sm text-gray-400 mb-6">Preparing battle arena...</p>
           
           <button
@@ -884,6 +1005,26 @@ export default function PvpPage() {
           >
             ❌ Leave Queue
           </button>
+
+          {/* CSS for animations */}
+          <style jsx>{`
+            .floating-character {
+              animation: float 3s ease-in-out infinite;
+            }
+            
+            .floating-opponent {
+              animation: float 3s ease-in-out infinite reverse;
+            }
+            
+            @keyframes float {
+              0%, 100% {
+                transform: translate(-50%, -50%) translateY(0px);
+              }
+              50% {
+                transform: translate(-50%, -50%) translateY(-10px);
+              }
+            }
+          `}</style>
         </div>
       )}
 
