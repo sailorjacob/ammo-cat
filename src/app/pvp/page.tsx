@@ -28,6 +28,10 @@ export default function PvpPage() {
   const [playerName, setPlayerName] = useState('');
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   
+  // Rematch states
+  const [rematchRequested, setRematchRequested] = useState(false);
+  const [rematchReceived, setRematchReceived] = useState(false);
+  
   // Game data as refs to avoid re-renders
   const gameDataRef = useRef({
     isPlayer1: false,
@@ -250,6 +254,17 @@ export default function PvpPage() {
           });
         }
       })
+      .on('broadcast', { event: 'rematch_request' }, ({ payload }) => {
+        if (payload.userId !== user!.id) {
+          setRematchReceived(true);
+        }
+      })
+      .on('broadcast', { event: 'rematch_accepted' }, ({ payload }) => {
+        if (payload.userId !== user!.id) {
+          // Start new game
+          startNewGame();
+        }
+      })
       .subscribe(async (status) => {
         console.log('Channel status:', status);
         if (status === 'SUBSCRIBED') {
@@ -325,25 +340,32 @@ export default function PvpPage() {
 
   // Game update with shooting and effects
   const updateGame = () => {
+    // Stop all game updates if game has ended
+    if (gameState === 'ended') {
+      return;
+    }
+
     const player = gameDataRef.current.localPlayer;
     const keys = gameDataRef.current.keys;
     const speed = 5;
 
-    // Move player based on keys
-    if (keys.w) player.y = Math.max(0, player.y - speed);
-    if (keys.s) player.y = Math.min(550, player.y + speed);
-    if (keys.a) player.x = Math.max(0, player.x - speed);
-    if (keys.d) player.x = Math.min(750, player.x + speed);
+    // Move player based on keys (only if not typing in modal)
+    if (!showNameInput) {
+      if (keys.w) player.y = Math.max(0, player.y - speed);
+      if (keys.s) player.y = Math.min(550, player.y + speed);
+      if (keys.a) player.x = Math.max(0, player.x - speed);
+      if (keys.d) player.x = Math.min(750, player.x + speed);
 
-    // Handle shooting with cooldown
-    if (keys.space && !gameDataRef.current.lastShot) {
-      shootFireball();
-      gameDataRef.current.lastShot = Date.now();
-    }
-    
-    // Reset shooting cooldown after 200ms
-    if (gameDataRef.current.lastShot && Date.now() - gameDataRef.current.lastShot > 200) {
-      gameDataRef.current.lastShot = null;
+      // Handle shooting with cooldown
+      if (keys.space && !gameDataRef.current.lastShot) {
+        shootFireball();
+        gameDataRef.current.lastShot = Date.now();
+      }
+      
+      // Reset shooting cooldown after 200ms
+      if (gameDataRef.current.lastShot && Date.now() - gameDataRef.current.lastShot > 200) {
+        gameDataRef.current.lastShot = null;
+      }
     }
 
     // Update fireballs with visual effects
@@ -409,16 +431,81 @@ export default function PvpPage() {
       }
     }
 
-    // Win condition with leaderboard integration
-    if (gameDataRef.current.localPlayer.health <= 0) {
-      setGameState('ended');
-      setWinner('Opponent');
+    // Win condition with leaderboard integration (only check if game is still playing)
+    if (gameState === 'playing') {
+      if (gameDataRef.current.localPlayer.health <= 0) {
+        setGameState('ended');
+        setWinner('Opponent');
+        // Stop the game loop
+        if ((window as any).stopGame) {
+          (window as any).stopGame();
+        }
+      }
+      if (gameDataRef.current.opponentPlayer.health <= 0) {
+        setGameState('ended');
+        setWinner('You');
+        // Show name input for winner to save to leaderboard
+        setShowNameInput(true);
+        // Stop the game loop
+        if ((window as any).stopGame) {
+          (window as any).stopGame();
+        }
+      }
     }
-    if (gameDataRef.current.opponentPlayer.health <= 0) {
-      setGameState('ended');
-      setWinner('You');
-      // Show name input for winner to save to leaderboard
-      setShowNameInput(true);
+  };
+
+  // Start new game for rematch
+  const startNewGame = () => {
+    console.log('Starting new game for rematch...');
+    
+    // Reset all game states
+    setGameState('playing');
+    setWinner(null);
+    setRematchRequested(false);
+    setRematchReceived(false);
+    setShowNameInput(false);
+    setPlayerName('');
+    
+    // Reset game data
+    gameDataRef.current.fireballs = [];
+    gameDataRef.current.explosions = [];
+    gameDataRef.current.localPlayer.health = 100;
+    gameDataRef.current.opponentPlayer.health = 100;
+    
+    // Reset player positions
+    if (gameDataRef.current.isPlayer1) {
+      gameDataRef.current.localPlayer = { x: 100, y: 250, health: 100 };
+      gameDataRef.current.opponentPlayer = { x: 700, y: 250, health: 100 };
+    } else {
+      gameDataRef.current.localPlayer = { x: 700, y: 250, health: 100 };
+      gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100 };
+    }
+    
+    // Restart the game
+    startGame();
+  };
+
+  // Send rematch request
+  const requestRematch = () => {
+    if (channelRef.current) {
+      setRematchRequested(true);
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'rematch_request',
+        payload: { userId: user!.id }
+      });
+    }
+  };
+
+  // Accept rematch
+  const acceptRematch = () => {
+    if (channelRef.current) {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'rematch_accepted',
+        payload: { userId: user!.id }
+      });
+      startNewGame();
     }
   };
 
@@ -649,6 +736,11 @@ export default function PvpPage() {
     console.log('Setting up controls with mouse support...');
     
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't handle game keys if modal is open or game has ended
+      if (showNameInput || showLeaderboard || gameState === 'ended') {
+        return;
+      }
+      
       const keys = gameDataRef.current.keys;
       switch (e.key.toLowerCase()) {
         case 'w': keys.w = true; e.preventDefault(); break;
@@ -660,6 +752,7 @@ export default function PvpPage() {
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
+      // Always reset keys to avoid stuck keys
       const keys = gameDataRef.current.keys;
       switch (e.key.toLowerCase()) {
         case 'w': keys.w = false; break;
@@ -672,7 +765,7 @@ export default function PvpPage() {
 
     // Mouse handlers for shooting
     const handleMouseDown = (e: MouseEvent) => {
-      if (gameState !== 'playing') return;
+      if (gameState !== 'playing' || showNameInput || showLeaderboard) return;
       
       // Shoot when mouse is pressed
       if (!gameDataRef.current.lastShot) {
@@ -762,18 +855,56 @@ export default function PvpPage() {
 
       {gameState === 'queued' && (
         <div className="text-center">
-          <p className="text-xl">🔍 Searching for opponent...</p>
+          {/* Animated Battle Arena */}
+          <div className="mb-8 relative">
+            <div className="animate-pulse">
+              <div className="text-6xl mb-4">⚔️</div>
+            </div>
+            <div className="flex justify-center items-center gap-8 mb-4">
+              <div className="animate-bounce" style={{ animationDelay: '0ms' }}>
+                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-2xl">
+                  🐱
+                </div>
+              </div>
+              <div className="text-4xl animate-pulse">VS</div>
+              <div className="animate-bounce" style={{ animationDelay: '500ms' }}>
+                <div className="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center text-2xl">
+                  ❓
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <p className="text-xl mb-2">🔍 Searching for worthy opponent...</p>
+          <p className="text-sm text-gray-400 mb-6">Preparing battle arena...</p>
+          
           <button
             onClick={() => setGameState('idle')}
-            className="mt-4 px-6 py-3 bg-red-500 hover:bg-red-600 rounded-lg"
+            className="px-6 py-3 bg-red-500 hover:bg-red-600 rounded-lg"
           >
-            Leave Queue
+            ❌ Leave Queue
           </button>
         </div>
       )}
 
       {gameState === 'matched' && (
-        <p className="text-xl text-green-500">🎉 Match found! Loading PVP battle...</p>
+        <div className="text-center">
+          <div className="mb-6">
+            <div className="text-6xl mb-4 animate-bounce">🎉</div>
+            <p className="text-xl text-green-500 mb-2">Match Found!</p>
+            <p className="text-lg text-gray-300">Connecting to battle arena...</p>
+          </div>
+          
+          <div className="flex justify-center items-center gap-4">
+            <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl">
+              🐱
+            </div>
+            <div className="text-2xl text-green-500">⚔️</div>
+            <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-xl">
+              🐱
+            </div>
+          </div>
+        </div>
       )}
 
       {gameState === 'playing' && (
@@ -785,27 +916,90 @@ export default function PvpPage() {
 
       {gameState === 'ended' && (
         <div className="text-center">
-          <p className="text-4xl font-bold mb-4">
-            {winner === 'You' ? '🏆 Victory!' : '💀 Defeat!'}
-          </p>
-          <button
-            onClick={() => {
-              setGameState('idle');
-              setWinner(null);
-              setMatchId(null);
-              // Reset leaderboard states
-              setShowNameInput(false);
-              setPlayerName('');
-              // Reset game data
-              gameDataRef.current.fireballs = [];
-              gameDataRef.current.explosions = [];
-              gameDataRef.current.localPlayer.health = 100;
-              gameDataRef.current.opponentPlayer.health = 100;
-            }}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-xl"
-          >
-            🔥 Battle Again
-          </button>
+          <div className="mb-6">
+            <p className="text-4xl font-bold mb-2">
+              {winner === 'You' ? '🏆 Victory!' : '💀 Defeat!'}
+            </p>
+            <p className="text-lg text-gray-300">
+              {winner === 'You' 
+                ? 'You dominated the battlefield!' 
+                : 'Better luck next time, warrior!'
+              }
+            </p>
+          </div>
+          
+          {/* Rematch Request Received */}
+          {rematchReceived && (
+            <div className="mb-6 p-4 bg-yellow-600 bg-opacity-20 border border-yellow-500 rounded-lg">
+              <p className="text-lg font-semibold text-yellow-300 mb-3">
+                🔄 Your opponent wants a rematch!
+              </p>
+              <div className="flex justify-center gap-3">
+                <button
+                  onClick={acceptRematch}
+                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold"
+                >
+                  ✅ Accept Rematch
+                </button>
+                <button
+                  onClick={() => setRematchReceived(false)}
+                  className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold"
+                >
+                  ❌ Decline
+                </button>
+              </div>
+            </div>
+          )}
+          
+          {/* Rematch Requested */}
+          {rematchRequested && !rematchReceived && (
+            <div className="mb-6 p-4 bg-blue-600 bg-opacity-20 border border-blue-500 rounded-lg">
+              <p className="text-lg font-semibold text-blue-300">
+                🔄 Rematch requested! Waiting for opponent...
+              </p>
+            </div>
+          )}
+          
+          <div className="flex flex-col items-center gap-3">
+            {/* Rematch Button (only show if no request pending) */}
+            {!rematchRequested && !rematchReceived && (
+              <button
+                onClick={requestRematch}
+                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-xl font-semibold"
+              >
+                🔄 Request Rematch
+              </button>
+            )}
+            
+            <button
+              onClick={() => {
+                setGameState('idle');
+                setWinner(null);
+                setMatchId(null);
+                // Reset rematch states
+                setRematchRequested(false);
+                setRematchReceived(false);
+                // Reset leaderboard states
+                setShowNameInput(false);
+                setPlayerName('');
+                // Reset game data
+                gameDataRef.current.fireballs = [];
+                gameDataRef.current.explosions = [];
+                gameDataRef.current.localPlayer.health = 100;
+                gameDataRef.current.opponentPlayer.health = 100;
+              }}
+              className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-xl"
+            >
+              🎯 Find New Opponent
+            </button>
+            
+            <button
+              onClick={() => setShowLeaderboard(true)}
+              className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-lg text-lg"
+            >
+              🏆 View Leaderboard
+            </button>
+          </div>
         </div>
       )}
 
@@ -978,12 +1172,13 @@ export default function PvpPage() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0, 0, 0, 0.8)',
+            background: 'rgba(0, 0, 0, 0.9)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 200
+            zIndex: 300
           }}
+          onClick={(e) => e.stopPropagation()}
         >
           <div 
             style={{
@@ -1041,80 +1236,51 @@ export default function PvpPage() {
                 padding: '12px 16px',
                 fontSize: '16px',
                 borderRadius: '8px',
-                border: '1px solid #d0d0d0',
+                border: '2px solid #d0d0d0',
                 marginBottom: '16px',
                 outline: 'none',
                 background: '#ffffff',
                 color: '#000000',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                zIndex: '400'
               }}
-              onKeyPress={async (e) => {
+              onKeyDown={(e) => {
+                e.stopPropagation(); // Prevent game controls from interfering
                 if (e.key === 'Enter') {
-                  await saveWinToLeaderboard(playerName || 'Anonymous');
-                  setShowNameInput(false);
-                  setPlayerName('');
+                  e.preventDefault();
+                  saveWinToLeaderboard(playerName || 'Anonymous').then(() => {
+                    setShowNameInput(false);
+                    setPlayerName('');
+                  });
                 }
               }}
+              onFocus={(e) => e.target.select()}
               autoFocus
             />
             
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
-                onClick={async () => {
-                  await saveWinToLeaderboard(playerName || 'Anonymous');
-                  setShowNameInput(false);
-                  setPlayerName('');
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  saveWinToLeaderboard(playerName || 'Anonymous').then(() => {
+                    setShowNameInput(false);
+                    setPlayerName('');
+                  });
                 }}
-                style={{
-                  flex: 1,
-                  padding: '12px',
-                  background: '#ffffff',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '8px',
-                  color: '#000000',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = '#f8f8f8';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = '#ffffff';
-                }}
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 flex-1"
               >
-                SAVE TO LEADERBOARD
+                🏆 SAVE TO LEADERBOARD
               </button>
               
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setShowNameInput(false);
                   setPlayerName('');
                 }}
-                style={{
-                  padding: '12px 16px',
-                  background: 'transparent',
-                  border: '1px solid #d0d0d0',
-                  borderRadius: '8px',
-                  color: '#666666',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = '#f8f8f8';
-                  target.style.color = '#000000';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.background = 'transparent';
-                  target.style.color = '#666666';
-                }}
+                className="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200"
               >
                 SKIP
               </button>
