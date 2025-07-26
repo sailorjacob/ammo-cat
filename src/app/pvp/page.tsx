@@ -774,8 +774,8 @@ export default function PvpPage() {
     console.log('Setting up controls with mouse support...');
     
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't handle game keys if modal is open or game has ended
-      if (showNameInput || showLeaderboard || gameState === 'ended') {
+      // Don't handle game keys if modal is open or game is not playing
+      if (showNameInput || showLeaderboard || gameState !== 'playing') {
         return;
       }
       
@@ -862,7 +862,8 @@ export default function PvpPage() {
         height={600}
         className={`border border-white mb-4 bg-white ${hitEffect ? 'opacity-70' : ''}`}
         style={{
-          filter: hitEffect ? 'drop-shadow(0 0 20px rgba(255, 0, 0, 0.8))' : 'none'
+          filter: hitEffect ? 'drop-shadow(0 0 20px rgba(255, 0, 0, 0.8))' : 'none',
+          display: gameState === 'playing' ? 'block' : 'none'
         }}
       />
 
