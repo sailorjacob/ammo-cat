@@ -224,14 +224,14 @@ export default function PvpPage() {
         setOpponentLives(player.lives);
       }
       
-      // Broadcast lives update
-      if (channelRef.current) {
+      // Broadcast lives update (always send local player's lives)
+      if (channelRef.current && isLocal) {
         channelRef.current.send({
           type: 'broadcast',
           event: 'lives_update',
           payload: { 
             userId: user!.id, 
-            lives: isLocal ? player.lives : gameDataRef.current.localPlayer.lives
+            lives: gameDataRef.current.localPlayer.lives
           }
         });
       }
@@ -376,9 +376,8 @@ export default function PvpPage() {
       .on('broadcast', { event: 'player_ready' }, ({ payload }) => {
         if (payload.userId !== user!.id) {
           setOpponentPlayerReady(true);
-        } else {
-          setLocalPlayerReady(true);
         }
+        // Removed problematic else branch that should never execute
       })
       .on('broadcast', { event: 'lives_update' }, ({ payload }) => {
         if (payload.userId === user!.id) {
@@ -393,6 +392,14 @@ export default function PvpPage() {
             gameDataRef.current.opponentPlayer.lives = payload.lives;
             setOpponentLives(payload.lives);
           }
+        }
+      })
+      .on('broadcast', { event: 'game_end' }, ({ payload }) => {
+        if (payload.userId !== user!.id && gameState === 'playing') {
+          console.log('Received game end broadcast from opponent:', payload.winner);
+          // Synchronize game end state from opponent
+          const localWinner = payload.winner === 'You' ? 'Opponent' : 'You';
+          endGame(localWinner);
         }
       })
       .subscribe(async (status) => {
@@ -596,6 +603,18 @@ export default function PvpPage() {
     setGameState('ended');
     setWinner(winner);
     
+    // Broadcast game end to opponent for synchronization
+    if (channelRef.current) {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'game_end',
+        payload: { 
+          userId: user!.id, 
+          winner: winner 
+        }
+      });
+    }
+    
     // Stop the game loop immediately
     if ((window as any).stopGame) {
       (window as any).stopGame();
@@ -627,6 +646,19 @@ export default function PvpPage() {
   const startNewGame = () => {
     console.log('Starting new game for rematch...');
     
+    // Clear any existing timeouts
+    if ((window as any).readyTimeout) {
+      clearTimeout((window as any).readyTimeout);
+    }
+    
+    // Stop any running game loops first
+    if ((window as any).stopGame) {
+      (window as any).stopGame();
+    }
+    
+    // Reset game started flag to allow new game to start
+    (window as any).gameStarted = false;
+    
     // Reset all game states
     setGameState('playing');
     setWinner(null);
@@ -642,13 +674,11 @@ export default function PvpPage() {
     setLocalLives(4);
     setOpponentLives(4);
     
-    // Reset game data
+    // Reset game data completely
     gameDataRef.current.fireballs = [];
     gameDataRef.current.explosions = [];
-    gameDataRef.current.localPlayer.health = 100;
-    gameDataRef.current.opponentPlayer.health = 100;
     
-    // Reset player positions
+    // Reset player positions and stats
     if (gameDataRef.current.isPlayer1) {
       gameDataRef.current.localPlayer = { x: 100, y: 250, health: 100, lives: 4 };
       gameDataRef.current.opponentPlayer = { x: 700, y: 250, health: 100, lives: 4 };
@@ -657,8 +687,19 @@ export default function PvpPage() {
       gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100, lives: 4 };
     }
     
-    // Restart the game
-    startGame();
+    // Reset movement keys
+    if (gameDataRef.current.keys) {
+      gameDataRef.current.keys.w = false;
+      gameDataRef.current.keys.s = false;
+      gameDataRef.current.keys.a = false;
+      gameDataRef.current.keys.d = false;
+      gameDataRef.current.keys.space = false;
+    }
+    
+    // Small delay to ensure state updates, then restart the game
+    setTimeout(() => {
+      startGame();
+    }, 100);
   };
 
   // Send rematch request
@@ -689,6 +730,16 @@ export default function PvpPage() {
         event: 'rematch_accepted',
         payload: { userId: user!.id }
       });
+      
+      // Set timeout to reset rematch states if opponent doesn't ready up
+      setTimeout(() => {
+        if (rematchAccepted && !opponentPlayerReady) {
+          console.log('Opponent took too long to ready up, resetting rematch state');
+          setRematchAccepted(false);
+          setLocalPlayerReady(false);
+          setOpponentPlayerReady(false);
+        }
+      }, 30000); // 30 second timeout
     }
   };
 
@@ -1163,6 +1214,7 @@ export default function PvpPage() {
       (window as any).gameStarted = false; // Reset game started flag
       if ((window as any).pollInterval) clearInterval((window as any).pollInterval);
       if ((window as any).broadcastInterval) clearInterval((window as any).broadcastInterval);
+      if ((window as any).readyTimeout) clearTimeout((window as any).readyTimeout);
       if ((window as any).keyHandlers) {
         window.removeEventListener('keydown', (window as any).keyHandlers.handleKeyDown);
         window.removeEventListener('keyup', (window as any).keyHandlers.handleKeyUp);
@@ -1201,9 +1253,21 @@ export default function PvpPage() {
   useEffect(() => {
     if (rematchAccepted && localPlayerReady && opponentPlayerReady) {
       console.log('Both players ready, starting rematch!');
-      setTimeout(() => {
-        startNewGame();
-      }, 1000); // Small delay for better UX
+      
+      // Clear any existing ready timeout
+      if ((window as any).readyTimeout) {
+        clearTimeout((window as any).readyTimeout);
+      }
+      
+      // Start the rematch with a brief countdown
+      (window as any).readyTimeout = setTimeout(() => {
+        // Double-check states are still valid before starting
+        if (rematchAccepted && localPlayerReady && opponentPlayerReady) {
+          startNewGame();
+        } else {
+          console.log('Rematch start aborted - states changed during countdown');
+        }
+      }, 1000);
     }
   }, [rematchAccepted, localPlayerReady, opponentPlayerReady]);
 
