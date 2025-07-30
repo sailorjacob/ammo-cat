@@ -55,7 +55,11 @@ export default function PvpPage() {
     fireballs: [] as Array<{x: number, y: number, playerId: string, speed: number, curve?: number}>,
     keys: { w: false, s: false, a: false, d: false, space: false },
     lastShot: null as number | null,
-    explosions: [] as Array<{x: number, y: number, size: number, life: number, maxLife: number}>
+    explosions: [] as Array<{x: number, y: number, size: number, life: number, maxLife: number}>,
+    spaceHeld: false,
+    spaceHoldStart: null as number | null,
+    mouseHeld: false,
+    mouseHoldStart: null as number | null
   });
 
   const channelRef = useRef<any>(null);
@@ -501,15 +505,27 @@ export default function PvpPage() {
       if (keys.a) player.x = Math.max(0, player.x - speed);
       if (keys.d) player.x = Math.min(750, player.x + speed);
 
-      // Handle shooting with cooldown
-      if (keys.space && !gameDataRef.current.lastShot) {
-        shootFireball();
-        gameDataRef.current.lastShot = Date.now();
+      // Handle shooting - allow rapid fire on tap, rate limit on hold
+      if (keys.space) {
+        const now = Date.now();
+        
+        // If first shot or enough time has passed, shoot
+        if (!gameDataRef.current.lastShot || now - gameDataRef.current.lastShot > 200) {
+          shootFireball();
+          gameDataRef.current.lastShot = now;
+        }
+        
+        // Track if spacebar was held vs tapped
+        if (!gameDataRef.current.spaceHeld) {
+          gameDataRef.current.spaceHeld = true;
+          gameDataRef.current.spaceHoldStart = now;
+        }
       }
       
-      // Reset shooting cooldown after 200ms
-      if (gameDataRef.current.lastShot && Date.now() - gameDataRef.current.lastShot > 200) {
-        gameDataRef.current.lastShot = null;
+      // Reset shooting state when spacebar is released
+      if (!keys.space && gameDataRef.current.spaceHeld) {
+        gameDataRef.current.spaceHeld = false;
+        gameDataRef.current.lastShot = null; // Allow immediate next shot on tap
       }
     }
 
@@ -687,7 +703,7 @@ export default function PvpPage() {
       gameDataRef.current.opponentPlayer = { x: 100, y: 250, health: 100, lives: 4 };
     }
     
-    // Reset movement keys
+    // Reset movement keys and shooting state
     if (gameDataRef.current.keys) {
       gameDataRef.current.keys.w = false;
       gameDataRef.current.keys.s = false;
@@ -695,6 +711,13 @@ export default function PvpPage() {
       gameDataRef.current.keys.d = false;
       gameDataRef.current.keys.space = false;
     }
+    
+    // Reset shooting tracking variables
+    gameDataRef.current.lastShot = null;
+    gameDataRef.current.spaceHeld = false;
+    gameDataRef.current.spaceHoldStart = null;
+    gameDataRef.current.mouseHeld = false;
+    gameDataRef.current.mouseHoldStart = null;
     
     // Small delay to ensure state updates, then restart the game
     setTimeout(() => {
@@ -1042,15 +1065,27 @@ export default function PvpPage() {
     const handleMouseDown = (e: MouseEvent) => {
       if (gameState !== 'playing' || showNameInput || showLeaderboard) return;
       
-      // Shoot when mouse is pressed
-      if (!gameDataRef.current.lastShot) {
+      const now = Date.now();
+      
+      // Shoot when mouse is pressed (allow rapid clicks)
+      if (!gameDataRef.current.lastShot || now - gameDataRef.current.lastShot > 200) {
         shootFireball();
-        gameDataRef.current.lastShot = Date.now();
+        gameDataRef.current.lastShot = now;
+      }
+      
+      // Track mouse hold state
+      if (!gameDataRef.current.mouseHeld) {
+        gameDataRef.current.mouseHeld = true;
+        gameDataRef.current.mouseHoldStart = now;
       }
     };
 
     const handleMouseUp = () => {
-      // Mouse shooting is handled by the cooldown system
+      // Reset mouse state to allow rapid clicking
+      if (gameDataRef.current.mouseHeld) {
+        gameDataRef.current.mouseHeld = false;
+        gameDataRef.current.lastShot = null; // Allow immediate next shot on click
+      }
     };
 
     // Touch handlers for mobile controls

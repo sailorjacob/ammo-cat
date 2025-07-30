@@ -365,14 +365,13 @@ export default function Home() {
             onClick={() => setShowArtModal(3)}
           />
           <ProductCard 
-            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
-                alt="Art Print Series IV"
-            title="Art Print 4 - Series IV"
-            description="Limited edition tactical warfare art collection"
-            limit=""
-            price="COMING SOON"
-            isAvailable={false}
-            isHero={true}
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxMzg0LCJleHAiOjIwNjkyMzEzODR9.r0BdRCqY-J8ECfQPTbYnYlY-lXSzHEy-nBwRuLbd4s4"
+                alt="Shooter Hat"
+            title="Shooter Hat"
+            description="Foam Trucker Hat"
+            limit="Available now"
+            price="$40"
+            isAvailable={true}
           />
           <ProductCard 
             imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
@@ -1037,6 +1036,45 @@ export default function Home() {
             />
           </div>
         </div>
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 1000
+      }}>
+        <Link href="/feedback">
+          <button
+            className="font-sora"
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '8px',
+              color: '#ffffff',
+              padding: '8px 16px',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            💡 Feedback
+          </button>
+        </Link>
       </div>
     </div>
   );
