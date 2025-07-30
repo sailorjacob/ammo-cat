@@ -365,7 +365,7 @@ export default function Home() {
             onClick={() => setShowArtModal(3)}
           />
           <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxMzg0LCJleHAiOjIwNjkyMzEzODR9.r0BdRCqY-J8ECfQPTbYnYlY-lXSzHEy-nBwRuLbd4s4"
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxNzgxLCJleHAiOjIwNjkyMzE3ODF9.uTsaVZ_eOuVEd7EmzMmt2xFfb8nnK9vOoHOP-zXsNLU"
                 alt="Shooter Hat"
             title="Shooter Hat"
             description="Foam Trucker Hat"
@@ -591,7 +591,7 @@ export default function Home() {
         >
           <div className="w-40 h-40 mb-8 animate-pulse">
             <Image 
-              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+              src="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/trasnparentshooter4.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3RyYXNucGFyZW50c2hvb3RlcjQucG5nIiwiaWF0IjoxNzUzODcxODE2LCJleHAiOjE3ODU0MDc4MTZ9.Db4-S8L0kPOBXcdLY1ozxaq54iX8N3VTXQopRlCihv4"
               alt="AMMOCAT"
               width={160}
               height={160}
