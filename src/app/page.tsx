@@ -371,6 +371,16 @@ export default function Home() {
             onClick={() => setShowArtModal(3)}
           />
           <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
+                alt="AMMO Beanie"
+            title="AMMO Beanie"
+            description="Premium Knit Beanie"
+            limit="Available now"
+            price="$60"
+            isAvailable={true}
+            onClick={() => setShowBeanieModal(1)}
+          />
+          <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxNzgxLCJleHAiOjIwNjkyMzE3ODF9.uTsaVZ_eOuVEd7EmzMmt2xFfb8nnK9vOoHOP-zXsNLU"
                 alt="Shooter Hat"
             title="Shooter Hat"
@@ -411,26 +421,7 @@ export default function Home() {
             isAvailable={true}
             onClick={() => setShowStickerModal(2)}
           />
-          <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
-                alt="AMMO Beanie"
-            title="AMMO Beanie"
-            description="Premium Knit Beanie"
-            limit="Available now"
-            price="$60"
-            isAvailable={true}
-            onClick={() => setShowBeanieModal(1)}
-          />
-          <ProductCard 
-            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
-                alt="Art Print Series V"
-            title="Art Print 5 - Series V"
-            description="Limited edition character collection"
-            limit=""
-            price="COMING SOON"
-            isAvailable={false}
-            isHero={true}
-          />
+          {/* Art Print 5 Series V temporarily hidden for later re-enable */}
         </div>
       </div>
 
