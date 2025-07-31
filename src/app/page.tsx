@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 import HatModal from "@/components/HatModal";
+import StickerModal from "@/components/StickerModal";
 import ArtModal from "@/components/ArtModal";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [showArtModal, setShowArtModal] = useState<number | null>(null);
   const [showHatModal, setShowHatModal] = useState<number | null>(null);
+  const [showStickerModal, setShowStickerModal] = useState<number | null>(null);
   
   // Video sequence states
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -387,6 +389,26 @@ export default function Home() {
             onClick={() => setShowHatModal(2)}
           />
           <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4"
+                alt="AMMO Sticker"
+            title="AMMO Sticker"
+            description="Kiss Cut Sticker"
+            limit="Available now"
+            price="$12"
+            isAvailable={true}
+            onClick={() => setShowStickerModal(1)}
+          />
+          <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiesticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZXN0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTgwNjU5LCJleHAiOjIwNjkzNDA2NTl9.fOK8aHDBjJayZs2VwenhnBs_fPDLXAvY46pAmMnWtLA"
+                alt="Zombie Sticker"
+            title="Zombie Sticker"
+            description="Kiss Cut Sticker"
+            limit="Available now"
+            price="$12"
+            isAvailable={true}
+            onClick={() => setShowStickerModal(2)}
+          />
+          <ProductCard 
             imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
                 alt="Art Print Series V"
             title="Art Print 5 - Series V"
@@ -594,6 +616,26 @@ export default function Home() {
           about={showHatModal === 1 ? "The Shooter Hat combines tactical style with everyday comfort. Featuring premium foam construction and breathable mesh panels, this trucker hat is perfect for range days, outdoor adventures, or casual wear. The adjustable snapback ensures a perfect fit for most head sizes." : "The Zombie Hat brings apocalyptic style to your everyday wardrobe. Built with the same premium foam construction as our Shooter Hat, this design features unique zombie-themed artwork. Perfect for horror fans, gamers, or anyone who wants to stand out from the crowd."}
           price="$40"
           onClose={() => setShowHatModal(null)}
+        />
+      )}
+
+      {/* Sticker Modals */}
+      {showStickerModal !== null && (
+        <StickerModal 
+          imageSrc={showStickerModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiesticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZXN0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTgwNjU5LCJleHAiOjIwNjkzNDA2NTl9.fOK8aHDBjJayZs2VwenhnBs_fPDLXAvY46pAmMnWtLA"}
+          alt={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
+          title={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
+          specs={[
+            "• High-quality kiss cut sticker",
+            "• Weather-resistant vinyl material",
+            "• Vibrant, fade-resistant colors",
+            "• Easy peel-and-stick application",
+            "• Suitable for indoor/outdoor use",
+            "• Approximately 3\" in size"
+          ]}
+          about={showStickerModal === 1 ? "The AMMO Sticker features our iconic character in premium kiss cut vinyl. Perfect for personalizing laptops, water bottles, cars, or any smooth surface. Made with weather-resistant materials that maintain vibrant colors and strong adhesion over time." : "The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike."}
+          price="$12"
+          onClose={() => setShowStickerModal(null)}
         />
       )}
     </div>
