@@ -338,13 +338,13 @@ export default function Home() {
           }}
         >
           <ProductCard 
-            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg"
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_2354-2.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR18yMzU0LTIuanBnIiwiaWF0IjoxNzUzOTg5MDkwLCJleHAiOjE3ODU1MjUwOTB9.KehTlAVPdKn8E1wtA2_mRWgq5-MAcXKZf9Q-MISwPqY"
                 alt="Limited Art Print Series I"
             title="Art Print 1 - Series I"
             description="Limited edition art print"
             limit="Limited to 800 total prints"
             price="$1500"
-            stripeLink="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
+            stripeLink="https://buy.stripe.com/cNidRafC31vm6IL45t57W05"
             isAvailable={true}
             onClick={() => setShowArtModal(1)}
           />
@@ -360,13 +360,13 @@ export default function Home() {
             onClick={() => setShowArtModal(2)}
           />
           <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/best-2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2Jlc3QtMi5wbmciLCJpYXQiOjE3NTM5ODg2NDksImV4cCI6MTc4NTUyNDY0OX0.ga7Ei4H7ebI0jrWyswkkEAzFuBdMdG1YC6PovsoNb34"
+            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg"
                 alt="Limited Art Print Series III"
             title="Art Print 3 - Series III"
             description="Limited edition art print"
             limit="Limited to 800 total prints"
             price="$1500"
-            stripeLink="https://buy.stripe.com/cNidRafC31vm6IL45t57W05"
+            stripeLink="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
             isAvailable={true}
             onClick={() => setShowArtModal(3)}
           />
@@ -584,7 +584,7 @@ export default function Home() {
       {/* Art Print Modals */}
       {showArtModal !== null && (
         <ArtModal 
-          imageSrc={showArtModal === 1 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg" : showArtModal === 2 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/best-2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2Jlc3QtMi5wbmciLCJpYXQiOjE3NTM5ODg2NDksImV4cCI6MTc4NTUyNDY0OX0.ga7Ei4H7ebI0jrWyswkkEAzFuBdMdG1YC6PovsoNb34"}
+          imageSrc={showArtModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_2354-2.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR18yMzU0LTIuanBnIiwiaWF0IjoxNzUzOTg5MDkwLCJleHAiOjE3ODU1MjUwOTB9.KehTlAVPdKn8E1wtA2_mRWgq5-MAcXKZf9Q-MISwPqY" : showArtModal === 2 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg" : "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg"}
           alt={`Limited Art Print Series ${showArtModal}`}
           title={`Art Print ${showArtModal} - Series ${showArtModal === 1 ? 'I' : showArtModal === 2 ? 'II' : 'III'}`}
           specs={[
@@ -597,7 +597,7 @@ export default function Home() {
           ]}
           about="This exclusive limited edition fine art print is meticulously crafted on premium fine art paper using museum-quality archival inks. Each print is individually numbered and comes with a certificate of authenticity, making it a valuable collector's item."
           price="$1500"
-          stripeLink={showArtModal === 1 ? "https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03" : showArtModal === 2 ? "https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04" : "https://buy.stripe.com/cNidRafC31vm6IL45t57W05"}
+          stripeLink={showArtModal === 1 ? "https://buy.stripe.com/cNidRafC31vm6IL45t57W05" : showArtModal === 2 ? "https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04" : "https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"}
           onClose={() => setShowArtModal(null)}
         />
       )}
