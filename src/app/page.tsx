@@ -371,16 +371,6 @@ export default function Home() {
             onClick={() => setShowArtModal(3)}
           />
           <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
-                alt="AMMO Beanie"
-            title="AMMO Beanie"
-            description="Premium Knit Beanie"
-            limit="Available now"
-            price="$60"
-            isAvailable={true}
-            onClick={() => setShowBeanieModal(1)}
-          />
-          <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxNzgxLCJleHAiOjIwNjkyMzE3ODF9.uTsaVZ_eOuVEd7EmzMmt2xFfb8nnK9vOoHOP-zXsNLU"
                 alt="Shooter Hat"
             title="Shooter Hat"
@@ -400,11 +390,21 @@ export default function Home() {
             isAvailable={true}
             onClick={() => setShowHatModal(2)}
           />
+          <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
+                alt="AMMO Beanie"
+            title="AMMO Beanie"
+            description="Premium Knit Beanie"
+            limit="Available now"
+            price="$60"
+            isAvailable={true}
+            onClick={() => setShowBeanieModal(1)}
+          />
 
           <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4"
-                alt="AMMO Sticker"
-            title="AMMO Sticker"
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"
+                alt="Zombie Sticker"
+            title="Zombie Sticker"
             description="Kiss Cut Sticker"
             limit="Available now"
             price="$12"
@@ -412,9 +412,9 @@ export default function Home() {
             onClick={() => setShowStickerModal(1)}
           />
           <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"
-                alt="Zombie Sticker"
-            title="Zombie Sticker"
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/bigstick2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2JpZ3N0aWNrMi5wbmciLCJpYXQiOjE3NTQwMDUwNTUsImV4cCI6MTc4NTU0MTA1NX0.MEvem8ZJ7vFiEx4RsTITCPbzZYA57zjxZL4pJqWDISU"
+                alt="AMMO Sticker"
+            title="AMMO Sticker"
             description="Kiss Cut Sticker"
             limit="Available now"
             price="$12"
@@ -627,9 +627,9 @@ export default function Home() {
       {/* Sticker Modals */}
       {showStickerModal !== null && (
         <StickerModal 
-          imageSrc={showStickerModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"}
-          alt={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
-          title={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
+          imageSrc={showStickerModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/bigstick2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2JpZ3N0aWNrMi5wbmciLCJpYXQiOjE3NTQwMDUwNTUsImV4cCI6MTc4NTU0MTA1NX0.MEvem8ZJ7vFiEx4RsTITCPbzZYA57zjxZL4pJqWDISU"}
+          alt={showStickerModal === 1 ? "Zombie Sticker" : "AMMO Sticker"}
+          title={showStickerModal === 1 ? "Zombie Sticker" : "AMMO Sticker"}
           specs={[
             "• High-quality kiss cut sticker",
             "• Weather-resistant vinyl material",
@@ -638,7 +638,7 @@ export default function Home() {
             "• Suitable for indoor/outdoor use",
             "• Approximately 3\" in size"
           ]}
-          about={showStickerModal === 1 ? "The AMMO Sticker features our iconic character in premium kiss cut vinyl. Perfect for personalizing laptops, water bottles, cars, or any smooth surface. Made with weather-resistant materials that maintain vibrant colors and strong adhesion over time." : "The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike."}
+          about={showStickerModal === 1 ? "The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike." : "The AMMO Sticker features our iconic character in premium kiss cut vinyl. Perfect for personalizing laptops, water bottles, cars, or any smooth surface. Made with weather-resistant materials that maintain vibrant colors and strong adhesion over time."}
           price="$12"
           onClose={() => setShowStickerModal(null)}
         />
