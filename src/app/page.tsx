@@ -337,7 +337,39 @@ export default function Home() {
             margin: '0 auto'
           }}
         >
-          {/* Art Print products temporarily hidden */}
+          <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print1frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MWZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkwOCwiZXhwIjoxNzg1NTM5OTA4fQ.LX-jv8i6_yls1HtW9qZvmFcd_ZRjf7xgsD8WfEtuZ_c"
+                alt="AMMO CAT - 10x10 Framed Alt Character"
+            title="AMMO CAT - 10x10 Framed Alt Character"
+            description="Limited edition framed art print"
+            limit="Limited to 800 total prints"
+            price="$1500"
+            stripeLink="https://buy.stripe.com/cNidRafC31vm6IL45t57W05"
+            isAvailable={true}
+            onClick={() => setShowArtModal(1)}
+          />
+          <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print2frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MmZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkxNywiZXhwIjoxNzg1NTM5OTE3fQ.T7pUJnT78CwvdYhVpqd7UWifuRmVqNR2coe_4-3-4y0"
+                alt="11x14 Framed Print"
+            title="11x14 Framed Print"
+            description="Limited edition framed art print"
+            limit="Limited to 800 total prints"
+            price="$1500"
+            stripeLink="https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04"
+            isAvailable={true}
+            onClick={() => setShowArtModal(2)}
+          />
+          <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print3frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50M2ZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkzMiwiZXhwIjoxNzg1NTM5OTMyfQ.xd1IArLg8_G_oDXGz0_QV8k3p-SDrNwewwny1PxBFZY"
+                alt="Zombie - 12x16 Framed Print"
+            title="Zombie - 12x16 Framed Print"
+            description="Limited edition framed art print"
+            limit="Limited to 800 total prints"
+            price="$1500"
+            stripeLink="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
+            isAvailable={true}
+            onClick={() => setShowArtModal(3)}
+          />
           <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxNzgxLCJleHAiOjIwNjkyMzE3ODF9.uTsaVZ_eOuVEd7EmzMmt2xFfb8nnK9vOoHOP-zXsNLU"
                 alt="Shooter Hat"
@@ -552,16 +584,17 @@ export default function Home() {
       {/* Art Print Modals */}
       {showArtModal !== null && (
         <ArtModal 
-          imageSrc={showArtModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_2354-2.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR18yMzU0LTIuanBnIiwiaWF0IjoxNzUzOTg5MDkwLCJleHAiOjE3ODU1MjUwOTB9.KehTlAVPdKn8E1wtA2_mRWgq5-MAcXKZf9Q-MISwPqY" : showArtModal === 2 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg" : "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg"}
-          alt={`Limited Art Print Series ${showArtModal}`}
-          title={`Art Print ${showArtModal} - Series ${showArtModal === 1 ? 'I' : showArtModal === 2 ? 'II' : 'III'}`}
+          imageSrc={showArtModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print1frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MWZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkwOCwiZXhwIjoxNzg1NTM5OTA4fQ.LX-jv8i6_yls1HtW9qZvmFcd_ZRjf7xgsD8WfEtuZ_c" : showArtModal === 2 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print2frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MmZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkxNywiZXhwIjoxNzg1NTM5OTE3fQ.T7pUJnT78CwvdYhVpqd7UWifuRmVqNR2coe_4-3-4y0" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print3frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50M2ZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkzMiwiZXhwIjoxNzg1NTM5OTMyfQ.xd1IArLg8_G_oDXGz0_QV8k3p-SDrNwewwny1PxBFZY"}
+          alt={showArtModal === 1 ? "AMMO CAT - 10x10 Framed Alt Character" : showArtModal === 2 ? "11x14 Framed Print" : "Zombie - 12x16 Framed Print"}
+          title={showArtModal === 1 ? "AMMO CAT - 10x10 Framed Alt Character" : showArtModal === 2 ? "11x14 Framed Print" : "Zombie - 12x16 Framed Print"}
           specs={[
             "• Limited fine art print",
-            "• 8\" × 10\" dimensions",
+            `• ${showArtModal === 1 ? "10\" × 10\"" : showArtModal === 2 ? "11\" × 14\"" : "12\" × 16\""} dimensions`,
             "• Premium fine art paper",
-            "• Museum-quality archival inks",
+            "• Museum-quality archival inks", 
             "• Limited to 800 total prints",
-            "• Numbered and authenticated"
+            "• Numbered and authenticated",
+            "• Ready to hang with included frame"
           ]}
           about="This exclusive limited edition fine art print is meticulously crafted on premium fine art paper using museum-quality archival inks. Each print is individually numbered and comes with a certificate of authenticity, making it a valuable collector's item."
           price="$1500"
