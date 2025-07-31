@@ -391,7 +391,7 @@ export default function Home() {
             onClick={() => setShowHatModal(2)}
           />
           <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4"
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/bigstick2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2JpZ3N0aWNrMi5wbmciLCJpYXQiOjE3NTM5ODgxOTcsImV4cCI6MjA2OTM0ODE5N30.-P0TY9BEilJBaVKPkjy3C5Vrr9A-ELeCOUZuDQnN24Y"
                 alt="AMMO Sticker"
             title="AMMO Sticker"
             description="Kiss Cut Sticker"
@@ -401,7 +401,7 @@ export default function Home() {
             onClick={() => setShowStickerModal(1)}
           />
           <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiesticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZXN0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTgwNjU5LCJleHAiOjIwNjkzNDA2NTl9.fOK8aHDBjJayZs2VwenhnBs_fPDLXAvY46pAmMnWtLA"
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"
                 alt="Zombie Sticker"
             title="Zombie Sticker"
             description="Kiss Cut Sticker"
@@ -634,7 +634,7 @@ export default function Home() {
       {/* Sticker Modals */}
       {showStickerModal !== null && (
         <StickerModal 
-          imageSrc={showStickerModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiesticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZXN0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTgwNjU5LCJleHAiOjIwNjkzNDA2NTl9.fOK8aHDBjJayZs2VwenhnBs_fPDLXAvY46pAmMnWtLA"}
+          imageSrc={showStickerModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/bigstick2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2JpZ3N0aWNrMi5wbmciLCJpYXQiOjE3NTM5ODgxOTcsImV4cCI6MjA2OTM0ODE5N30.-P0TY9BEilJBaVKPkjy3C5Vrr9A-ELeCOUZuDQnN24Y" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"}
           alt={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
           title={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
           specs={[
