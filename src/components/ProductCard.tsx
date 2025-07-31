@@ -42,7 +42,7 @@ export default function ProductCard({ imageSrc, alt, title, description, limit, 
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: isAvailable ? '#f8f8f8' : undefined,
+          background: 'transparent',
           borderRadius: '12px',
           overflow: 'hidden',
           cursor: isAvailable ? 'pointer' : 'default',
@@ -52,14 +52,14 @@ export default function ProductCard({ imageSrc, alt, title, description, limit, 
           if (isAvailable) {
             const target = e.target as HTMLElement;
             target.style.transform = 'scale(1.02)';
-            target.style.background = '#f0f0f0';
+            target.style.background = 'rgba(0, 0, 0, 0.05)';
           }
         }}
         onMouseLeave={(e) => {
           if (isAvailable) {
             const target = e.target as HTMLElement;
             target.style.transform = 'scale(1)';
-            target.style.background = '#f8f8f8';
+            target.style.background = 'transparent';
           }
         }}
       >

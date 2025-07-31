@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
+import HatModal from "@/components/HatModal";
 import ArtModal from "@/components/ArtModal";
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [showArtModal, setShowArtModal] = useState<number | null>(null);
+  const [showHatModal, setShowHatModal] = useState<number | null>(null);
   
   // Video sequence states
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -372,6 +374,17 @@ export default function Home() {
             limit="Available now"
             price="$40"
             isAvailable={true}
+            onClick={() => setShowHatModal(1)}
+          />
+          <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiehat.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZWhhdC5wbmciLCJpYXQiOjE3NTM5Nzk2ODUsImV4cCI6MjA2OTMzOTY4NX0.Pyz_Qm37fQ3fXVawIT4GTHqhfMOqeX76zZBXGI0pgLI"
+                alt="Zombie Hat"
+            title="Zombie Hat"
+            description="Foam Trucker Hat"
+            limit="Available now"
+            price="$40"
+            isAvailable={true}
+            onClick={() => setShowHatModal(2)}
           />
           <ProductCard 
             imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
@@ -561,6 +574,26 @@ export default function Home() {
           price="$1500"
           stripeLink={showArtModal === 1 ? "https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03" : showArtModal === 2 ? "https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04" : "https://buy.stripe.com/cNidRafC31vm6IL45t57W05"}
           onClose={() => setShowArtModal(null)}
+        />
+      )}
+
+      {/* Hat Modals */}
+      {showHatModal !== null && (
+        <HatModal 
+          imageSrc={showHatModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxNzgxLCJleHAiOjIwNjkyMzE3ODF9.uTsaVZ_eOuVEd7EmzMmt2xFfb8nnK9vOoHOP-zXsNLU" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiehat.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZWhhdC5wbmciLCJpYXQiOjE3NTM5Nzk2ODUsImV4cCI6MjA2OTMzOTY4NX0.Pyz_Qm37fQ3fXVawIT4GTHqhfMOqeX76zZBXGI0pgLI"}
+          alt={showHatModal === 1 ? "Shooter Hat" : "Zombie Hat"}
+          title={showHatModal === 1 ? "Shooter Hat" : "Zombie Hat"}
+          specs={[
+            "• Premium foam trucker hat",
+            "• Adjustable snapback closure",
+            "• Breathable mesh back panels",
+            "• High-quality embroidered design",
+            "• One size fits most",
+            "• Comfortable foam front"
+          ]}
+          about={showHatModal === 1 ? "The Shooter Hat combines tactical style with everyday comfort. Featuring premium foam construction and breathable mesh panels, this trucker hat is perfect for range days, outdoor adventures, or casual wear. The adjustable snapback ensures a perfect fit for most head sizes." : "The Zombie Hat brings apocalyptic style to your everyday wardrobe. Built with the same premium foam construction as our Shooter Hat, this design features unique zombie-themed artwork. Perfect for horror fans, gamers, or anyone who wants to stand out from the crowd."}
+          price="$40"
+          onClose={() => setShowHatModal(null)}
         />
       )}
     </div>
