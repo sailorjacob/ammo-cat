@@ -360,7 +360,7 @@ export default function Home() {
             onClick={() => setShowArtModal(2)}
           />
           <ProductCard 
-            imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//best-2.png"
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/best-2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2Jlc3QtMi5wbmciLCJpYXQiOjE3NTM5ODg2NDksImV4cCI6MTc4NTUyNDY0OX0.ga7Ei4H7ebI0jrWyswkkEAzFuBdMdG1YC6PovsoNb34"
                 alt="Limited Art Print Series III"
             title="Art Print 3 - Series III"
             description="Limited edition art print"
@@ -390,16 +390,7 @@ export default function Home() {
             isAvailable={true}
             onClick={() => setShowHatModal(2)}
           />
-          <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/bigstick2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2JpZ3N0aWNrMi5wbmciLCJpYXQiOjE3NTM5ODgxOTcsImV4cCI6MjA2OTM0ODE5N30.-P0TY9BEilJBaVKPkjy3C5Vrr9A-ELeCOUZuDQnN24Y"
-                alt="AMMO Sticker"
-            title="AMMO Sticker"
-            description="Kiss Cut Sticker"
-            limit="Available now"
-            price="$12"
-            isAvailable={true}
-            onClick={() => setShowStickerModal(1)}
-          />
+
           <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"
                 alt="Zombie Sticker"
@@ -408,7 +399,7 @@ export default function Home() {
             limit="Available now"
             price="$12"
             isAvailable={true}
-            onClick={() => setShowStickerModal(2)}
+            onClick={() => setShowStickerModal(1)}
           />
           <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
@@ -593,7 +584,7 @@ export default function Home() {
       {/* Art Print Modals */}
       {showArtModal !== null && (
         <ArtModal 
-          imageSrc={showArtModal === 1 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg" : showArtModal === 2 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg" : "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//best-2.png"}
+          imageSrc={showArtModal === 1 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs//IMG_2628%20(1).jpg" : showArtModal === 2 ? "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//print22.jpeg" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/best-2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2Jlc3QtMi5wbmciLCJpYXQiOjE3NTM5ODg2NDksImV4cCI6MTc4NTUyNDY0OX0.ga7Ei4H7ebI0jrWyswkkEAzFuBdMdG1YC6PovsoNb34"}
           alt={`Limited Art Print Series ${showArtModal}`}
           title={`Art Print ${showArtModal} - Series ${showArtModal === 1 ? 'I' : showArtModal === 2 ? 'II' : 'III'}`}
           specs={[
@@ -634,9 +625,9 @@ export default function Home() {
       {/* Sticker Modals */}
       {showStickerModal !== null && (
         <StickerModal 
-          imageSrc={showStickerModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/bigstick2.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2JpZ3N0aWNrMi5wbmciLCJpYXQiOjE3NTM5ODgxOTcsImV4cCI6MjA2OTM0ODE5N30.-P0TY9BEilJBaVKPkjy3C5Vrr9A-ELeCOUZuDQnN24Y" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"}
-          alt={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
-          title={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
+          imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"
+          alt="Zombie Sticker"
+          title="Zombie Sticker"
           specs={[
             "• High-quality kiss cut sticker",
             "• Weather-resistant vinyl material",
@@ -645,7 +636,7 @@ export default function Home() {
             "• Suitable for indoor/outdoor use",
             "• Approximately 3\" in size"
           ]}
-          about={showStickerModal === 1 ? "The AMMO Sticker features our iconic character in premium kiss cut vinyl. Perfect for personalizing laptops, water bottles, cars, or any smooth surface. Made with weather-resistant materials that maintain vibrant colors and strong adhesion over time." : "The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike."}
+          about="The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike."
           price="$12"
           onClose={() => setShowStickerModal(null)}
         />
