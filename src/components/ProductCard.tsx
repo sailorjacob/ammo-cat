@@ -101,12 +101,12 @@ export default function ProductCard({ imageSrc, alt, title, description, limit, 
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              background: '#000000',
-              border: 'none',
-              color: '#ffffff',
-              padding: '18px 36px',
+              background: '#f5f5f5',
+              border: '1px solid #e0e0e0',
+              color: '#999999',
+              padding: '12px 24px',
               borderRadius: '8px',
-              fontSize: '16px',
+              fontSize: '14px',
               fontWeight: '700',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
@@ -116,15 +116,15 @@ export default function ProductCard({ imageSrc, alt, title, description, limit, 
             }}
             onMouseEnter={(e) => {
               const target = e.target as HTMLElement;
-              target.style.background = '#333333';
-              target.style.transform = 'translateY(-2px)';
-              target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.3)';
+              target.style.background = '#e8e8e8';
+              target.style.color = '#666666';
+              target.style.transform = 'translateY(-1px)';
             }}
             onMouseLeave={(e) => {
               const target = e.target as HTMLElement;
-              target.style.background = '#000000';
+              target.style.background = '#f5f5f5';
+              target.style.color = '#999999';
               target.style.transform = 'translateY(0)';
-              target.style.boxShadow = 'none';
             }}
           >
             BUY NOW
