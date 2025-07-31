@@ -2858,14 +2858,13 @@ export default function PvpPage() {
         right: '20px',
         zIndex: 1000
       }}>
-        <Link href="/feedback">
+        <Link href="/feedback" style={{ textDecoration: 'none' }}>
           <button
             style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              background: '#ffffff',
+              border: '1px solid #e0e0e0',
               borderRadius: '8px',
-              color: '#ffffff',
+              color: '#333333',
               padding: '8px 16px',
               fontSize: '14px',
               fontWeight: '500',
@@ -2874,18 +2873,20 @@ export default function PvpPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              textDecoration: 'none'
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.background = '#f5f5f5';
               e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.background = '#ffffff';
               e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
             }}
           >
-            💡 Feedback
+            Feedback
           </button>
         </Link>
       </div>

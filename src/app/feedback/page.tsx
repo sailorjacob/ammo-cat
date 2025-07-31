@@ -1,73 +1,142 @@
 "use client";
 
+import { useState } from 'react';
 import Link from 'next/link';
 
 export default function FeedbackPage() {
+  const [formData, setFormData] = useState({
+    type: 'bug',
+    title: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsSubmitted(true);
+    setIsSubmitting(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
   const posts = [
     {
       id: 1,
-      type: '💡 IDEA',
+      type: 'IDEA',
       title: 'Add weapon customization system',
       content: 'Would love to see different weapon skins and upgrades for the guns. Maybe unlockable through gameplay?',
       author: 'Player_42',
-      time: '2 hours ago',
-      color: '#4ECDC4'
+      time: '2 hours ago'
     },
     {
       id: 2,
-      type: '🐛 BUG',
+      type: 'BUG',
       title: 'PVP matchmaking issue',
       content: 'Sometimes get stuck in matchmaking queue for over 5 minutes. Refreshing fixes it but annoying.',
       author: 'GamerX',
-      time: '5 hours ago',
-      color: '#FF6B6B'
+      time: '5 hours ago'
     },
     {
       id: 3,
-      type: '⭐ FEEDBACK',
-      title: 'Love the new art style!',
+      type: 'FEEDBACK',
+      title: 'Love the new art style',
       content: 'The recent art updates look amazing. The character designs are really cool and fit the theme perfectly.',
       author: 'ArtLover23',
-      time: '1 day ago',
-      color: '#95E1A3'
+      time: '1 day ago'
     },
     {
       id: 4,
-      type: '🎮 FEATURE',
+      type: 'FEATURE',
       title: 'Mobile version request',
       content: 'Any plans for a mobile version? Would be awesome to play on the go.',
       author: 'MobileGamer',
-      time: '2 days ago',
-      color: '#F7DC6F'
+      time: '2 days ago'
     },
     {
       id: 5,
-      type: '💡 IDEA',
+      type: 'IDEA',
       title: 'Team modes for PVP',
       content: 'What about 2v2 or 3v3 team battles? Could add more strategy to the gameplay.',
       author: 'StrategyKing',
-      time: '3 days ago',
-      color: '#4ECDC4'
+      time: '3 days ago'
     }
   ];
+
+  if (isSubmitted) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: '#f5f5f5',
+        padding: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          background: '#ffffff',
+          borderRadius: '8px',
+          padding: '40px',
+          maxWidth: '500px',
+          width: '100%',
+          textAlign: 'center',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+        }}>
+          <h1 style={{
+            color: '#000000',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            marginBottom: '16px'
+          }}>
+            Thank You
+          </h1>
+          <p style={{
+            color: '#666666',
+            fontSize: '16px',
+            marginBottom: '32px',
+            lineHeight: '1.6'
+          }}>
+            Your feedback has been submitted successfully. We appreciate you taking the time to help improve AMMOCAT.
+          </p>
+          <Link href="/">
+            <button style={{
+              background: '#000000',
+              border: 'none',
+              borderRadius: '8px',
+              color: '#ffffff',
+              padding: '12px 24px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              textDecoration: 'none'
+            }}>
+              Back to Home
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#f5f5f5',
-      padding: '20px'
+      background: '#f5f5f5'
     }}>
       {/* Header */}
       <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        background: '#f5f5f5',
+        background: '#ffffff',
         borderBottom: '1px solid #e0e0e0',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        zIndex: 50,
-        padding: '16px 20px',
+        padding: '16px 20px'
       }}>
         <div style={{
           maxWidth: '1200px',
@@ -79,222 +148,229 @@ export default function FeedbackPage() {
           <Link href="/" style={{
             color: '#000000',
             textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
             fontSize: '16px',
-            fontWeight: '500',
-            transition: 'opacity 0.2s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
-          onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}>
+            fontWeight: '500'
+          }}>
             ← Back to Home
           </Link>
           
           <h1 style={{
-            fontSize: '24px',
+            fontSize: '20px',
             fontWeight: 'bold',
             color: '#000000',
             margin: 0
           }}>
-            Community Feedback Board
+            Feedback
           </h1>
           
-          <button style={{
-            background: '#f5f5f5',
-            border: '1px solid #e0e0e0',
-            color: '#999999',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'not-allowed'
-          }}>
-            + Post Feedback
-          </button>
+          <div style={{ width: '100px' }}></div>
         </div>
       </div>
 
-      {/* Content */}
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        paddingTop: '100px'
+        padding: '40px 20px',
+        display: 'grid',
+        gridTemplateColumns: '1fr 400px',
+        gap: '40px'
       }}>
-        {/* Welcome Section */}
-        <div style={{
-          background: 'transparent',
-          borderRadius: '16px',
-          padding: '40px',
-          textAlign: 'center',
-          marginBottom: '40px'
-        }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎯</div>
+        {/* Left Column - Existing Feedback */}
+        <div>
           <h2 style={{
-            fontSize: '32px',
+            fontSize: '18px',
             fontWeight: 'bold',
             color: '#000000',
-            marginBottom: '16px'
+            marginBottom: '20px'
           }}>
-            Welcome to the AMMOCAT Community Board
+            Recent Feedback
           </h2>
-          <p style={{
-            color: '#666666',
-            fontSize: '18px',
-            lineHeight: '1.6',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            This is where our community shares ideas, reports bugs, and helps make AMMOCAT even better. 
-            Check out what others are saying and join the conversation!
-          </p>
-        </div>
-
-        {/* Posts Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-          gap: '24px',
-          marginBottom: '40px'
-        }}>
-          {posts.map((post) => (
-            <div key={post.id} style={{
-              background: '#ffffff',
-              borderRadius: '12px',
-              padding: '24px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #e0e0e0',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                marginBottom: '16px'
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {posts.map((post) => (
+              <div key={post.id} style={{
+                background: '#ffffff',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                padding: '20px'
               }}>
-                <span style={{
-                  background: post.color,
-                  color: '#ffffff',
-                  padding: '4px 12px',
-                  borderRadius: '20px',
-                  fontSize: '12px',
-                  fontWeight: 'bold'
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  marginBottom: '12px'
                 }}>
-                  {post.type}
-                </span>
-                <span style={{
-                  color: '#999999',
-                  fontSize: '14px'
+                  <span style={{
+                    background: '#000000',
+                    color: '#ffffff',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase'
+                  }}>
+                    {post.type}
+                  </span>
+                  <span style={{
+                    color: '#999999',
+                    fontSize: '13px'
+                  }}>
+                    {post.time}
+                  </span>
+                </div>
+                
+                <h3 style={{
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  color: '#000000',
+                  marginBottom: '8px'
                 }}>
-                  {post.time}
-                </span>
-              </div>
-              
-              <h3 style={{
-                fontSize: '18px',
-                fontWeight: 'bold',
-                color: '#000000',
-                marginBottom: '12px',
-                lineHeight: '1.4'
-              }}>
-                {post.title}
-              </h3>
-              
-              <p style={{
-                color: '#666666',
-                fontSize: '14px',
-                lineHeight: '1.5',
-                marginBottom: '16px'
-              }}>
-                {post.content}
-              </p>
-              
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}>
+                  {post.title}
+                </h3>
+                
+                <p style={{
+                  color: '#666666',
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                  marginBottom: '12px'
+                }}>
+                  {post.content}
+                </p>
+                
                 <span style={{
                   color: '#999999',
                   fontSize: '12px'
                 }}>
                   by {post.author}
                 </span>
-                <div style={{
-                  display: 'flex',
-                  gap: '8px'
-                }}>
-                  <button style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#999999',
-                    fontSize: '14px',
-                    cursor: 'pointer'
-                  }}>
-                    👍 12
-                  </button>
-                  <button style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#999999',
-                    fontSize: '14px',
-                    cursor: 'pointer'
-                  }}>
-                    💬 3
-                  </button>
-                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Call to Action */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '16px',
-          padding: '32px',
-          textAlign: 'center',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e0e0e0'
-        }}>
-          <h3 style={{
-            fontSize: '20px',
+        {/* Right Column - Submit Form */}
+        <div>
+          <h2 style={{
+            fontSize: '18px',
             fontWeight: 'bold',
             color: '#000000',
-            marginBottom: '12px'
-          }}>
-            Want to share your thoughts?
-          </h3>
-          <p style={{
-            color: '#666666',
-            fontSize: '16px',
             marginBottom: '20px'
           }}>
-            Join our community and help shape the future of AMMOCAT
-          </p>
-          <button style={{
-            background: '#f5f5f5',
+            Submit Feedback
+          </h2>
+          
+          <form onSubmit={handleSubmit} style={{
+            background: '#ffffff',
             border: '1px solid #e0e0e0',
-            color: '#999999',
-            padding: '12px 24px',
             borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'not-allowed'
+            padding: '24px'
           }}>
-            Feature Coming Soon
-          </button>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '600',
+                marginBottom: '8px',
+                display: 'block'
+              }}>
+                Type
+              </label>
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  background: '#ffffff'
+                }}
+              >
+                <option value="bug">Bug Report</option>
+                <option value="feature">Feature Request</option>
+                <option value="feedback">General Feedback</option>
+                <option value="idea">Game Idea</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '600',
+                marginBottom: '8px',
+                display: 'block'
+              }}>
+                Title
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Brief description"
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '4px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '600',
+                marginBottom: '8px',
+                display: 'block'
+              }}>
+                Message
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Detailed feedback, ideas, or suggestions"
+                required
+                rows={6}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  resize: 'vertical',
+                  minHeight: '120px'
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                background: isSubmitting ? '#cccccc' : '#000000',
+                border: 'none',
+                borderRadius: '4px',
+                color: '#ffffff',
+                padding: '12px 24px',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                width: '100%'
+              }}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
+            </button>
+          </form>
         </div>
       </div>
     </div>
   );
-} 
+}
