@@ -33,7 +33,6 @@ export default function FeedbackPage() {
       type: 'IDEA',
       title: 'Add weapon customization system',
       content: 'Would love to see different weapon skins and upgrades for the guns. Maybe unlockable through gameplay?',
-      author: 'Player_42',
       time: '2 hours ago'
     },
     {
@@ -41,7 +40,6 @@ export default function FeedbackPage() {
       type: 'BUG',
       title: 'PVP matchmaking issue',
       content: 'Sometimes get stuck in matchmaking queue for over 5 minutes. Refreshing fixes it but annoying.',
-      author: 'GamerX',
       time: '5 hours ago'
     },
     {
@@ -49,7 +47,6 @@ export default function FeedbackPage() {
       type: 'FEEDBACK',
       title: 'Love the new art style',
       content: 'The recent art updates look amazing. The character designs are really cool and fit the theme perfectly.',
-      author: 'ArtLover23',
       time: '1 day ago'
     },
     {
@@ -57,7 +54,6 @@ export default function FeedbackPage() {
       type: 'FEATURE',
       title: 'Mobile version request',
       content: 'Any plans for a mobile version? Would be awesome to play on the go.',
-      author: 'MobileGamer',
       time: '2 days ago'
     },
     {
@@ -65,7 +61,6 @@ export default function FeedbackPage() {
       type: 'IDEA',
       title: 'Team modes for PVP',
       content: 'What about 2v2 or 3v3 team battles? Could add more strategy to the gameplay.',
-      author: 'StrategyKing',
       time: '3 days ago'
     }
   ];
@@ -237,12 +232,7 @@ export default function FeedbackPage() {
                 {post.content}
               </p>
               
-                <span style={{
-                  color: '#999999',
-                  fontSize: '12px'
-                }}>
-                  by {post.author}
-                </span>
+
               </div>
             ))}
             </div>
