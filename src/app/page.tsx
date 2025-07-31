@@ -339,10 +339,10 @@ export default function Home() {
         >
           <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print1frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MWZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkwOCwiZXhwIjoxNzg1NTM5OTA4fQ.LX-jv8i6_yls1HtW9qZvmFcd_ZRjf7xgsD8WfEtuZ_c"
-                alt="AMMO CAT - 10x10 Framed Alt Character"
-            title="AMMO CAT - 10x10 Framed Alt Character"
+                alt="ammo cat - 10x10 framed"
+            title="ammo cat - 10x10 framed"
             description="Limited edition framed art print"
-            limit="Limited to 800 total prints"
+            limit=""
             price="$1500"
             stripeLink="https://buy.stripe.com/cNidRafC31vm6IL45t57W05"
             isAvailable={true}
@@ -350,10 +350,10 @@ export default function Home() {
           />
           <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print2frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MmZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkxNywiZXhwIjoxNzg1NTM5OTE3fQ.T7pUJnT78CwvdYhVpqd7UWifuRmVqNR2coe_4-3-4y0"
-                alt="11x14 Framed Print"
-            title="11x14 Framed Print"
+                alt="alt character - 11x14 framed"
+            title="alt character - 11x14 framed"
             description="Limited edition framed art print"
-            limit="Limited to 800 total prints"
+            limit=""
             price="$1500"
             stripeLink="https://buy.stripe.com/4gMaEY89B8XO2sv0Th57W04"
             isAvailable={true}
@@ -361,10 +361,10 @@ export default function Home() {
           />
           <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print3frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50M2ZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkzMiwiZXhwIjoxNzg1NTM5OTMyfQ.xd1IArLg8_G_oDXGz0_QV8k3p-SDrNwewwny1PxBFZY"
-                alt="Zombie - 12x16 Framed Print"
-            title="Zombie - 12x16 Framed Print"
+                alt="zombie - 12x16 framed"
+            title="zombie - 12x16 framed"
             description="Limited edition framed art print"
-            limit="Limited to 800 total prints"
+            limit=""
             price="$1500"
             stripeLink="https://buy.stripe.com/5kQdRa2PhfmcaZ159x57W03"
             isAvailable={true}
@@ -392,6 +392,16 @@ export default function Home() {
           />
 
           <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4"
+                alt="AMMO Sticker"
+            title="AMMO Sticker"
+            description="Kiss Cut Sticker"
+            limit="Available now"
+            price="$12"
+            isAvailable={true}
+            onClick={() => setShowStickerModal(1)}
+          />
+          <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"
                 alt="Zombie Sticker"
             title="Zombie Sticker"
@@ -399,7 +409,7 @@ export default function Home() {
             limit="Available now"
             price="$12"
             isAvailable={true}
-            onClick={() => setShowStickerModal(1)}
+            onClick={() => setShowStickerModal(2)}
           />
           <ProductCard 
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
@@ -585,14 +595,14 @@ export default function Home() {
       {showArtModal !== null && (
         <ArtModal 
           imageSrc={showArtModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print1frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MWZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkwOCwiZXhwIjoxNzg1NTM5OTA4fQ.LX-jv8i6_yls1HtW9qZvmFcd_ZRjf7xgsD8WfEtuZ_c" : showArtModal === 2 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print2frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MmZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkxNywiZXhwIjoxNzg1NTM5OTE3fQ.T7pUJnT78CwvdYhVpqd7UWifuRmVqNR2coe_4-3-4y0" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print3frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50M2ZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkzMiwiZXhwIjoxNzg1NTM5OTMyfQ.xd1IArLg8_G_oDXGz0_QV8k3p-SDrNwewwny1PxBFZY"}
-          alt={showArtModal === 1 ? "AMMO CAT - 10x10 Framed Alt Character" : showArtModal === 2 ? "11x14 Framed Print" : "Zombie - 12x16 Framed Print"}
-          title={showArtModal === 1 ? "AMMO CAT - 10x10 Framed Alt Character" : showArtModal === 2 ? "11x14 Framed Print" : "Zombie - 12x16 Framed Print"}
+          alt={showArtModal === 1 ? "ammo cat - 10x10 framed" : showArtModal === 2 ? "alt character - 11x14 framed" : "zombie - 12x16 framed"}
+          title={showArtModal === 1 ? "ammo cat - 10x10 framed" : showArtModal === 2 ? "alt character - 11x14 framed" : "zombie - 12x16 framed"}
           specs={[
             "• Limited fine art print",
             `• ${showArtModal === 1 ? "10\" × 10\"" : showArtModal === 2 ? "11\" × 14\"" : "12\" × 16\""} dimensions`,
             "• Premium fine art paper",
             "• Museum-quality archival inks", 
-            "• Limited to 800 total prints",
+
             "• Numbered and authenticated",
             "• Ready to hang with included frame"
           ]}
@@ -626,9 +636,9 @@ export default function Home() {
       {/* Sticker Modals */}
       {showStickerModal !== null && (
         <StickerModal 
-          imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"
-          alt="Zombie Sticker"
-          title="Zombie Sticker"
+          imageSrc={showStickerModal === 1 ? "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/ammosticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2FtbW9zdGlja2VyLnBuZyIsImlhdCI6MTc1Mzk4MDYxNiwiZXhwIjoyMDY5MzQwNjE2fQ.CPucdes6o9-4s_BqWB9aWQfco7ErjL0LsqqpBJUR2d4" : "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/sticker.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3N0aWNrZXIucG5nIiwiaWF0IjoxNzUzOTg4MTE4LCJleHAiOjIwNjkzNDgxMTh9.SreqtZ3-1Wg4liN0NF5hFn5mq8zcbsxZ1WcaCBFtI_k"}
+          alt={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
+          title={showStickerModal === 1 ? "AMMO Sticker" : "Zombie Sticker"}
           specs={[
             "• High-quality kiss cut sticker",
             "• Weather-resistant vinyl material",
@@ -637,7 +647,7 @@ export default function Home() {
             "• Suitable for indoor/outdoor use",
             "• Approximately 3\" in size"
           ]}
-          about="The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike."
+          about={showStickerModal === 1 ? "The AMMO Sticker features our iconic character in premium kiss cut vinyl. Perfect for personalizing laptops, water bottles, cars, or any smooth surface. Made with weather-resistant materials that maintain vibrant colors and strong adhesion over time." : "The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike."}
           price="$12"
           onClose={() => setShowStickerModal(null)}
         />

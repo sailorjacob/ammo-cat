@@ -145,15 +145,15 @@ export default function FeedbackPage() {
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
-          <Link href="/" style={{
+      <Link href="/" style={{
             color: '#000000',
-            textDecoration: 'none',
-            fontSize: '16px',
+        textDecoration: 'none',
+        fontSize: '16px',
             fontWeight: '500'
           }}>
-            ← Back to Home
-          </Link>
-          
+        ← Back to Home
+      </Link>
+
           <h1 style={{
             fontSize: '20px',
             fontWeight: 'bold',
@@ -187,56 +187,56 @@ export default function FeedbackPage() {
           </h2>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {posts.map((post) => (
-              <div key={post.id} style={{
-                background: '#ffffff',
-                border: '1px solid #e0e0e0',
+          {posts.map((post) => (
+            <div key={post.id} style={{
+              background: '#ffffff',
+              border: '1px solid #e0e0e0',
                 borderRadius: '8px',
                 padding: '20px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
                   marginBottom: '12px'
-                }}>
-                  <span style={{
+              }}>
+                <span style={{
                     background: '#000000',
-                    color: '#ffffff',
+                  color: '#ffffff',
                     padding: '2px 8px',
                     borderRadius: '4px',
                     fontSize: '11px',
                     fontWeight: 'bold',
                     textTransform: 'uppercase'
-                  }}>
-                    {post.type}
-                  </span>
-                  <span style={{
-                    color: '#999999',
+                }}>
+                  {post.type}
+                </span>
+                <span style={{
+                  color: '#999999',
                     fontSize: '13px'
-                  }}>
-                    {post.time}
-                  </span>
-                </div>
-                
-                <h3 style={{
+                }}>
+                  {post.time}
+                </span>
+              </div>
+              
+              <h3 style={{
                   fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: '#000000',
+                fontWeight: 'bold',
+                color: '#000000',
                   marginBottom: '8px'
-                }}>
-                  {post.title}
-                </h3>
-                
-                <p style={{
-                  color: '#666666',
-                  fontSize: '14px',
-                  lineHeight: '1.5',
+              }}>
+                {post.title}
+              </h3>
+              
+              <p style={{
+                color: '#666666',
+                fontSize: '14px',
+                lineHeight: '1.5',
                   marginBottom: '12px'
-                }}>
-                  {post.content}
-                </p>
-                
+              }}>
+                {post.content}
+              </p>
+              
                 <span style={{
                   color: '#999999',
                   fontSize: '12px'
@@ -245,7 +245,7 @@ export default function FeedbackPage() {
                 </span>
               </div>
             ))}
-          </div>
+            </div>
         </div>
 
         {/* Right Column - Submit Form */}
@@ -325,8 +325,8 @@ export default function FeedbackPage() {
             <div style={{ marginBottom: '20px' }}>
               <label style={{
                 color: '#000000',
-                fontSize: '14px',
-                fontWeight: '600',
+            fontSize: '14px',
+            fontWeight: '600',
                 marginBottom: '8px',
                 display: 'block'
               }}>
@@ -367,10 +367,10 @@ export default function FeedbackPage() {
               }}
             >
               {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
-            </button>
+          </button>
           </form>
         </div>
       </div>
     </div>
   );
-}
+} 
