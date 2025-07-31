@@ -6,6 +6,7 @@ import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 import HatModal from "@/components/HatModal";
 import StickerModal from "@/components/StickerModal";
+import BeanieModal from "@/components/BeanieModal";
 import ArtModal from "@/components/ArtModal";
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
   const [showArtModal, setShowArtModal] = useState<number | null>(null);
   const [showHatModal, setShowHatModal] = useState<number | null>(null);
   const [showStickerModal, setShowStickerModal] = useState<number | null>(null);
+  const [showBeanieModal, setShowBeanieModal] = useState<number | null>(null);
   
   // Video sequence states
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -409,6 +411,16 @@ export default function Home() {
             onClick={() => setShowStickerModal(2)}
           />
           <ProductCard 
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
+                alt="AMMO Beanie"
+            title="AMMO Beanie"
+            description="Premium Knit Beanie"
+            limit="Available now"
+            price="$60"
+            isAvailable={true}
+            onClick={() => setShowBeanieModal(1)}
+          />
+          <ProductCard 
             imageSrc="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
                 alt="Art Print Series V"
             title="Art Print 5 - Series V"
@@ -636,6 +648,26 @@ export default function Home() {
           about={showStickerModal === 1 ? "The AMMO Sticker features our iconic character in premium kiss cut vinyl. Perfect for personalizing laptops, water bottles, cars, or any smooth surface. Made with weather-resistant materials that maintain vibrant colors and strong adhesion over time." : "The Zombie Sticker showcases our apocalyptic character design in high-quality kiss cut vinyl. Built to last with weather-resistant properties, this sticker is perfect for adding some undead style to your gear. Great for horror fans and gamers alike."}
           price="$12"
           onClose={() => setShowStickerModal(null)}
+        />
+      )}
+
+      {/* Beanie Modal */}
+      {showBeanieModal !== null && (
+        <BeanieModal 
+          imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
+          alt="AMMO Beanie"
+          title="AMMO Beanie"
+          specs={[
+            "• Premium knit construction",
+            "• 100% acrylic yarn material",
+            "• Soft fleece-lined interior",
+            "• Embroidered AMMO logo design",
+            "• One size fits most adults",
+            "• Warm and comfortable fit"
+          ]}
+          about="The AMMO Beanie combines street style with premium comfort. Crafted from high-quality acrylic yarn with a soft fleece lining, this beanie provides exceptional warmth and comfort. The embroidered AMMO logo adds a tactical aesthetic perfect for cold weather adventures, urban exploration, or everyday wear."
+          price="$60"
+          onClose={() => setShowBeanieModal(null)}
         />
       )}
     </div>
