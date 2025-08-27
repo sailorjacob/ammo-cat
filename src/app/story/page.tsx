@@ -47,23 +47,9 @@ export default function StoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Background image container - constrained and centered */}
-      <div 
-        className="absolute inset-0 flex items-center justify-center"
-        style={{
-          backgroundImage: `url('https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs/Ammo%20Cat%20Original.jpg')`,
-          backgroundSize: 'contain',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          maxWidth: '80%',
-          maxHeight: '80%',
-          margin: 'auto'
-        }}
-      />
-      
+    <div className="min-h-screen bg-white">
       {/* Header with back button */}
-      <div className="relative z-10 p-6">
+      <div className="p-6">
         <Link 
           href="/"
           className="inline-flex items-center text-black hover:text-gray-600 transition-colors duration-200"
@@ -85,14 +71,23 @@ export default function StoryPage() {
         </Link>
       </div>
 
+      {/* Background image - simple and clean */}
+      <div className="flex justify-center items-center mb-8">
+        <img 
+          src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs/Ammo%20Cat%20Original.jpg"
+          alt="Ammo Cat"
+          className="max-w-2xl w-full h-auto"
+        />
+      </div>
+
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
-        {/* Title - just "Ammo Cat" without drop shadow */}
+      <div className="flex flex-col items-center px-6 text-center">
+        {/* Title */}
         <h1 className="text-6xl md:text-8xl font-bold text-black mb-8">
           Ammo Cat
         </h1>
 
-        {/* Audio Player - styled more like the reference */}
+        {/* Audio Player */}
         <div className="bg-white border-2 border-gray-300 rounded-lg p-6 mb-12 shadow-sm max-w-md w-full">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Audio Story</h2>
           
@@ -134,10 +129,7 @@ export default function StoryPage() {
               max={duration || 0}
               value={currentTime}
               onChange={handleSeek}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-              style={{
-                background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / (duration || 1)) * 100}%, #e5e7eb ${(currentTime / (duration || 1)) * 100}%, #e5e7eb 100%)`
-              }}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
             />
           </div>
 
@@ -158,7 +150,7 @@ export default function StoryPage() {
         </div>
 
         {/* Copyright */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm mb-8">
           <div className="font-mono text-sm md:text-base text-black">
             <span>©2025 Ammo Cat. All rights reserved. | </span>
             <a 
@@ -172,30 +164,6 @@ export default function StoryPage() {
           </div>
         </div>
       </div>
-
-      {/* Custom CSS for slider */}
-      <style jsx>{`
-        .slider::-webkit-slider-thumb {
-          appearance: none;
-          height: 16px;
-          width: 16px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-        
-        .slider::-moz-range-thumb {
-          height: 16px;
-          width: 16px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-      `}</style>
     </div>
   );
 }
