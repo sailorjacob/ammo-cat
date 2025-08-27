@@ -900,6 +900,37 @@ export default function Home() {
               >
                 PVP
               </Link>
+
+              {/* About Button */}
+              <a 
+                href="https://ammocat3000.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-montserrat font-bold"
+                style={{
+                  padding: '12px 24px',
+                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                  borderRadius: isGlassMode ? '50px' : '8px',
+                  color: isGlassMode ? '#ffffff' : '#000000',
+                  fontSize: '16px',
+                  letterSpacing: '1px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                  outline: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'translateY(0)';
+                }}
+              >
+                ABOUT
+              </a>
             </div>
           </div>
           
