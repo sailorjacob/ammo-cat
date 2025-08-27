@@ -856,7 +856,6 @@ export default function Home() {
                   fontSize: '16px',
                   letterSpacing: '1px',
                   textDecoration: 'none',
-                  cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
                   outline: 'none'
