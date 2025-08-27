@@ -840,7 +840,7 @@ export default function Home() {
                   target.style.transform = 'translateY(0)';
                 }}
               >
-                PLAY
+                play
               </Link>
 
               {/* SHOP Button */}
@@ -869,7 +869,7 @@ export default function Home() {
                   target.style.transform = 'translateY(0)';
                 }}
               >
-                SHOP
+                shop
               </button>
 
               {/* PVP Button */}
@@ -898,7 +898,7 @@ export default function Home() {
                   target.style.transform = 'translateY(0)';
                 }}
               >
-                PVP
+                pvp
               </Link>
 
               {/* Story Button */}
@@ -929,7 +929,7 @@ export default function Home() {
                   target.style.transform = 'translateY(0)';
                 }}
               >
-                STORY
+                story
               </a>
             </div>
           </div>
