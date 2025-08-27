@@ -48,14 +48,14 @@ export default function StoryPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Main Content Container */}
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Hero Section with Image */}
         <div className="text-center mb-20">
-          <div className="mb-12">
+          <div className="mb-12 flex justify-center">
             <img 
               src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs/Ammo%20Cat%20Original.jpg"
               alt="Ammo Cat"
-              className="mx-auto w-full max-w-4xl h-auto object-contain"
+              className="w-auto h-auto max-w-md max-h-96 object-contain"
             />
           </div>
           
