@@ -84,10 +84,10 @@ export default function Home() {
       // Allow overlap for seamless blending
       const blendTimeout = setTimeout(() => {
         setIsTransitioning(false);
-      }, 800); // Adjusted for better swag timing
+      }, 1200); // Increased blend time for smoother transitions with 3 videos
       
       return () => clearTimeout(blendTimeout);
-    }, 400); // Faster transition start for blending effect
+    }, 600); // Slightly slower transition start for more natural pacing
   };
 
   // Reset video loaded state when video index changes
@@ -1001,7 +1001,7 @@ export default function Home() {
             height: '100%',
             objectFit: 'cover',
             opacity: videoLoaded && !isTransitioning ? 1 : 0.3,
-            transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)',
             filter: isTransitioning ? 'blur(1px) brightness(1.05)' : 'none'
           }}
           src={videos[currentVideoIndex]}
