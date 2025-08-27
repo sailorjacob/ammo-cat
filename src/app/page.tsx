@@ -901,7 +901,7 @@ export default function Home() {
                 PVP
               </Link>
 
-              {/* About Button */}
+              {/* Story Button */}
               <a 
                 href="https://ammocat3000.com"
                 target="_blank"
@@ -929,7 +929,7 @@ export default function Home() {
                   target.style.transform = 'translateY(0)';
                 }}
               >
-                ABOUT
+                STORY
               </a>
             </div>
           </div>
