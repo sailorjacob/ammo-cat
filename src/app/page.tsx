@@ -936,40 +936,8 @@ export default function Home() {
           {/* Center - Empty for proper grid spacing */}
           <div></div>
           
-          {/* Right side - Clean Moon Toggle */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <button
-              onClick={() => setIsGlassMode(!isGlassMode)}
-              title="Toggle Glass Mode"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                borderRadius: '50%',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                outline: 'none'
-              }}
-            >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill="none"
-                stroke={isGlassMode ? '#ffffff' : '#666666'} 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-                style={{ transition: 'stroke 0.3s ease' }}
-              >
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-              </svg>
-            </button>
-          </div>
+          {/* Right side - Empty for proper grid spacing */}
+          <div></div>
         </div>
       </div>
 
