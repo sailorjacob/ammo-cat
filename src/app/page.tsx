@@ -844,8 +844,12 @@ export default function Home() {
               </Link>
 
               {/* SHOP Button */}
-              <button 
-                onClick={() => setCurrentView('shop')}
+              <a 
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentView('shop');
+                }}
                 className="font-montserrat font-bold"
                 style={{
                   padding: '12px 24px',
@@ -858,7 +862,8 @@ export default function Home() {
                   textDecoration: 'none',
                   transition: 'all 0.3s ease',
                   backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                  outline: 'none'
+                  outline: 'none',
+                  cursor: 'pointer'
                 }}
                 onMouseEnter={(e) => {
                   const target = e.target as HTMLElement;
@@ -870,7 +875,7 @@ export default function Home() {
                 }}
               >
                 shop
-              </button>
+              </a>
 
               {/* PVP Button */}
               <Link 
