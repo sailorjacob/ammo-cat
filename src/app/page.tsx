@@ -855,6 +855,7 @@ export default function Home() {
                   color: isGlassMode ? '#ffffff' : '#000000',
                   fontSize: '16px',
                   letterSpacing: '1px',
+                  textDecoration: 'none',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
