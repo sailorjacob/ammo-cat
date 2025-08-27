@@ -47,23 +47,26 @@ export default function StoryPage() {
   };
 
   return (
-    <div 
-      className="min-h-screen relative overflow-hidden"
-      style={{
-        backgroundImage: `url('https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs/Ammo%20Cat%20Original.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/20"></div>
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* Background image container - constrained and centered */}
+      <div 
+        className="absolute inset-0 flex items-center justify-center"
+        style={{
+          backgroundImage: `url('https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs/Ammo%20Cat%20Original.jpg')`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          maxWidth: '80%',
+          maxHeight: '80%',
+          margin: 'auto'
+        }}
+      />
       
       {/* Header with back button */}
       <div className="relative z-10 p-6">
         <Link 
           href="/"
-          className="inline-flex items-center text-white hover:text-gray-200 transition-colors duration-200"
+          className="inline-flex items-center text-black hover:text-gray-600 transition-colors duration-200"
         >
           <svg 
             className="w-6 h-6 mr-2" 
@@ -84,14 +87,14 @@ export default function StoryPage() {
 
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
-        {/* Title */}
-        <h1 className="text-6xl md:text-8xl font-bold text-white mb-8 drop-shadow-2xl">
-          AMMO CAT STORY
+        {/* Title - just "Ammo Cat" without drop shadow */}
+        <h1 className="text-6xl md:text-8xl font-bold text-black mb-8">
+          Ammo Cat
         </h1>
 
-        {/* Audio Player */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 mb-12 shadow-2xl max-w-md w-full">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Listen to the Story</h2>
+        {/* Audio Player - styled more like the reference */}
+        <div className="bg-white border-2 border-gray-300 rounded-lg p-6 mb-12 shadow-sm max-w-md w-full">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Audio Story</h2>
           
           <audio
             ref={audioRef}
@@ -110,21 +113,21 @@ export default function StoryPage() {
           {/* Play/Pause Button */}
           <button
             onClick={handlePlayPause}
-            className="w-16 h-16 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center mb-6 transition-colors duration-200 mx-auto"
+            className="w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center mb-4 transition-colors duration-200 mx-auto"
           >
             {isPlaying ? (
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
               </svg>
             ) : (
-              <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z"/>
               </svg>
             )}
           </button>
 
           {/* Progress Bar */}
-          <div className="mb-4">
+          <div className="mb-3">
             <input
               type="range"
               min="0"
@@ -146,8 +149,8 @@ export default function StoryPage() {
         </div>
 
         {/* Story Text */}
-        <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-2xl max-w-2xl">
-          <div className="font-mono text-lg md:text-xl text-white leading-relaxed space-y-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8 shadow-sm max-w-2xl">
+          <div className="font-mono text-lg md:text-xl text-black leading-relaxed space-y-2">
             <p>Ammo cat is enjoying life in his castle</p>
             <p>when zombie neighbors start launching</p>
             <p>rockets at him and his friends!</p>
@@ -155,9 +158,9 @@ export default function StoryPage() {
         </div>
 
         {/* Copyright */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
-          <div className="font-mono text-sm md:text-base text-gray-800">
-            <p>©2025 Ammo Cat. All rights reserved. | </p>
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div className="font-mono text-sm md:text-base text-black">
+            <span>©2025 Ammo Cat. All rights reserved. | </span>
             <a 
               href="https://haven.engineer" 
               target="_blank" 
@@ -174,23 +177,23 @@ export default function StoryPage() {
       <style jsx>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
-          height: 20px;
-          width: 20px;
+          height: 16px;
+          width: 16px;
           border-radius: 50%;
           background: #3b82f6;
           cursor: pointer;
           border: 2px solid #ffffff;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
         
         .slider::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
+          height: 16px;
+          width: 16px;
           border-radius: 50%;
           background: #3b82f6;
           cursor: pointer;
           border: 2px solid #ffffff;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
       `}</style>
     </div>
