@@ -907,10 +907,8 @@ export default function Home() {
               </Link>
 
               {/* Story Button */}
-              <a 
-                href="https://ammocat3000.com"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link 
+                href="/story"
                 className="font-montserrat font-bold"
                 style={{
                   padding: '12px 24px',
@@ -935,7 +933,7 @@ export default function Home() {
                 }}
               >
                 story
-              </a>
+              </Link>
             </div>
           </div>
           
