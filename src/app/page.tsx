@@ -907,8 +907,10 @@ export default function Home() {
               </Link>
 
               {/* Story Button */}
-              <Link 
-                href="/story"
+              <a 
+                href="https://ammocat3000.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="font-montserrat font-bold"
                 style={{
                   padding: '12px 24px',
@@ -921,7 +923,8 @@ export default function Home() {
                   textDecoration: 'none',
                   transition: 'all 0.3s ease',
                   backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                  outline: 'none'
+                  outline: 'none',
+                  cursor: 'pointer'
                 }}
                 onMouseEnter={(e) => {
                   const target = e.target as HTMLElement;
@@ -933,7 +936,7 @@ export default function Home() {
                 }}
               >
                 story
-              </Link>
+              </a>
             </div>
           </div>
           
