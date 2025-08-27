@@ -47,12 +47,12 @@ export default function StoryPage() {
 
   return (
     <div className="min-h-screen bg-white relative">
-      {/* Background Image */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* Background Image - Much Smaller */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img 
           src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs/Ammo%20Cat%20Original.jpg"
           alt="Ammo Cat"
-          className="w-auto h-auto max-w-sm max-h-48 object-contain opacity-20"
+          className="w-32 h-32 md:w-48 md:h-48 object-contain opacity-10"
         />
       </div>
 
