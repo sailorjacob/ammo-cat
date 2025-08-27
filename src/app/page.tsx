@@ -29,9 +29,10 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Video sequence array - 3 videos in sequence
+  // Video sequence array - 4 videos in sequence for smooth transitions
   const videos = [
     "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4", // Original main homepage video
+    "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/AMMO.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0FNTU8ubXA0IiwiaWF0IjoxNzUzNTQyNzMxLCJleHAiOjIwNjg5MDI3MzF9.TKEoSRs9QSENIkTVwzTyB69S4LRoct1rkg0ahx6nfts",
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie11.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTExLm1wNCIsImlhdCI6MTc1MzU0MjE3OSwiZXhwIjoyMDY4OTAyMTc5fQ.geM_QilOlb35kiH9qmbZr7JwSfWISgv0P6KKqC_1rHI",
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie33.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTMzLm1wNCIsImlhdCI6MTc1MzU0MjQ0NSwiZXhwIjoyMDY4OTAyNDQ1fQ.wuhIiwGs-g3pDw46sXM67BU9tXN-VrJhQ5vgN3H2nQE"
   ];
@@ -84,10 +85,10 @@ export default function Home() {
       // Allow overlap for seamless blending
       const blendTimeout = setTimeout(() => {
         setIsTransitioning(false);
-      }, 1200); // Increased blend time for smoother transitions with 3 videos
+      }, 800); // Adjusted for better swag timing
       
       return () => clearTimeout(blendTimeout);
-    }, 600); // Slightly slower transition start for more natural pacing
+    }, 400); // Faster transition start for blending effect
   };
 
   // Reset video loaded state when video index changes
@@ -969,7 +970,7 @@ export default function Home() {
             height: '100%',
             objectFit: 'cover',
             opacity: videoLoaded && !isTransitioning ? 1 : 0.3,
-            transition: 'opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
             filter: isTransitioning ? 'blur(1px) brightness(1.05)' : 'none'
           }}
           src={videos[currentVideoIndex]}
