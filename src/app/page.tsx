@@ -20,6 +20,8 @@ export default function Home() {
   const [showHatModal, setShowHatModal] = useState<number | null>(null);
   const [showStickerModal, setShowStickerModal] = useState<number | null>(null);
   const [showBeanieModal, setShowBeanieModal] = useState<number | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Video sequence states
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -36,6 +38,34 @@ export default function Home() {
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie33.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTMzLm1wNCIsImlhdCI6MTc1MzU0MjQ0NSwiZXhwIjoyMDY4OTAyNDQ1fQ.wuhIiwGs-g3pDw46sXM67BU9tXN-VrJhQ5vgN3H2nQE",
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/AMMO.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0FNTU8ubXA0IiwiaWF0IjoxNzUzNTQyNzMxLCJleHAiOjIwNjg5MDI3MzF9.TKEoSRs9QSENIkTVwzTyB69S4LRoct1rkg0ahx6nfts"
   ];
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.mobile-menu-container') && !target.closest('.mobile-menu-button')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     // Animate loading progress from 0 to 100
@@ -800,151 +830,353 @@ export default function Home() {
                 fontWeight: '900',
                 letterSpacing: '2px',
                 transition: 'color 0.3s ease',
-                marginRight: '40px'
+                marginRight: isMobile ? '0' : '40px'
               }}
             >
               AMMOCAT
             </span>
             
-            {/* Buttons positioned to the right of title */}
-            <div 
-              style={{
-                display: 'flex',
-                gap: '20px',
-                alignItems: 'center'
-              }}
-            >
-              {/* PLAY Button */}
-              <Link 
-                href="/game"
-                className="font-montserrat font-bold"
+            {/* Desktop Navigation Buttons */}
+            {!isMobile && (
+              <div 
                 style={{
-                  padding: '12px 24px',
-                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                  borderRadius: isGlassMode ? '50px' : '8px',
-                  color: isGlassMode ? '#ffffff' : '#000000',
-                  fontSize: '16px',
-                  letterSpacing: '1px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                  outline: 'none'
-                }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(0)';
+                  display: 'flex',
+                  gap: '20px',
+                  alignItems: 'center'
                 }}
               >
-                play
-              </Link>
+                {/* PLAY Button */}
+                <Link 
+                  href="/game"
+                  className="font-montserrat font-bold"
+                  style={{
+                    padding: '12px 24px',
+                    background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                    border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                    borderRadius: isGlassMode ? '50px' : '8px',
+                    color: isGlassMode ? '#ffffff' : '#000000',
+                    fontSize: '16px',
+                    letterSpacing: '1px',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(0)';
+                  }}
+                >
+                  play
+                </Link>
 
-              {/* SHOP Button */}
-              <a 
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentView('shop');
-                }}
-                className="font-montserrat font-bold"
-                style={{
-                  padding: '12px 24px',
-                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                  borderRadius: isGlassMode ? '50px' : '8px',
-                  color: isGlassMode ? '#ffffff' : '#000000',
-                  fontSize: '16px',
-                  letterSpacing: '1px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(0)';
-                }}
-              >
-                shop
-              </a>
+                {/* SHOP Button */}
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentView('shop');
+                  }}
+                  className="font-montserrat font-bold"
+                  style={{
+                    padding: '12px 24px',
+                    background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                    border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                    borderRadius: isGlassMode ? '50px' : '8px',
+                    color: isGlassMode ? '#ffffff' : '#000000',
+                    fontSize: '16px',
+                    letterSpacing: '1px',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(0)';
+                  }}
+                >
+                  shop
+                </a>
 
-              {/* PVP Button */}
-              <Link 
-                href="/pvp"
-                className="font-montserrat font-bold"
-                style={{
-                  padding: '12px 24px',
-                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                  borderRadius: isGlassMode ? '50px' : '8px',
-                  color: isGlassMode ? '#ffffff' : '#000000',
-                  fontSize: '16px',
-                  letterSpacing: '1px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                  outline: 'none'
-                }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(0)';
-                }}
-              >
-                pvp
-              </Link>
+                {/* PVP Button */}
+                <Link 
+                  href="/pvp"
+                  className="font-montserrat font-bold"
+                  style={{
+                    padding: '12px 24px',
+                    background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                    border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                    borderRadius: isGlassMode ? '50px' : '8px',
+                    color: isGlassMode ? '#ffffff' : '#000000',
+                    fontSize: '16px',
+                    letterSpacing: '1px',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(0)';
+                  }}
+                >
+                  pvp
+                </Link>
 
-              {/* Story Button */}
-              <a 
-                href="https://ammocat3000.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-montserrat font-bold"
-                style={{
-                  padding: '12px 24px',
-                  background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                  border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                  borderRadius: isGlassMode ? '50px' : '8px',
-                  color: isGlassMode ? '#ffffff' : '#000000',
-                  fontSize: '16px',
-                  letterSpacing: '1px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.transform = 'translateY(0)';
-                }}
-              >
-                story
-              </a>
-            </div>
+                {/* Story Button */}
+                <a 
+                  href="https://ammocat3000.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-montserrat font-bold"
+                  style={{
+                    padding: '12px 24px',
+                    background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                    border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                    borderRadius: isGlassMode ? '50px' : '8px',
+                    color: isGlassMode ? '#ffffff' : '#000000',
+                    fontSize: '16px',
+                    letterSpacing: '1px',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = 'translateY(0)';
+                  }}
+                >
+                  story
+                </a>
+              </div>
+            )}
           </div>
           
           {/* Center - Empty for proper grid spacing */}
           <div></div>
           
-          {/* Right side - Empty for proper grid spacing */}
-          <div></div>
+          {/* Right side - Mobile Menu Button */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {isMobile && (
+              <div className="mobile-menu-container" style={{ position: 'relative' }}>
+                {/* Mobile Menu Button */}
+                <button
+                  className="mobile-menu-button"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '8px',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.3s ease',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.background = 'rgba(0, 0, 0, 0.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.background = 'transparent';
+                  }}
+                >
+                  <div 
+                    style={{
+                      width: '24px',
+                      height: '2px',
+                      background: isGlassMode ? '#ffffff' : '#000000',
+                      transition: 'all 0.3s ease',
+                      transform: isMobileMenuOpen ? 'rotate(45deg) translate(6px, 6px)' : 'none'
+                    }}
+                  />
+                  <div 
+                    style={{
+                      width: '24px',
+                      height: '2px',
+                      background: isGlassMode ? '#ffffff' : '#000000',
+                      transition: 'all 0.3s ease',
+                      opacity: isMobileMenuOpen ? '0' : '1'
+                    }}
+                  />
+                  <div 
+                    style={{
+                      width: '24px',
+                      height: '2px',
+                      background: isGlassMode ? '#ffffff' : '#000000',
+                      transition: 'all 0.3s ease',
+                      transform: isMobileMenuOpen ? 'rotate(-45deg) translate(6px, -6px)' : 'none'
+                    }}
+                  />
+                </button>
+
+                {/* Mobile Dropdown Menu */}
+                {isMobileMenuOpen && (
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: '0',
+                      marginTop: '8px',
+                      background: isGlassMode ? 'rgba(255, 255, 255, 0.95)' : '#ffffff',
+                      backdropFilter: 'blur(20px)',
+                      borderRadius: '12px',
+                      border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                      minWidth: '200px',
+                      zIndex: 1000,
+                      overflow: 'hidden',
+                      animation: 'slideDown 0.3s ease-out'
+                    }}
+                  >
+                    {/* PLAY Menu Item */}
+                    <Link 
+                      href="/game"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="font-montserrat font-bold"
+                      style={{
+                        display: 'block',
+                        padding: '16px 20px',
+                        color: isGlassMode ? '#000000' : '#000000',
+                        fontSize: '16px',
+                        letterSpacing: '1px',
+                        textDecoration: 'none',
+                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.2s ease',
+                        background: 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'rgba(0, 0, 0, 0.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'transparent';
+                      }}
+                    >
+                      play
+                    </Link>
+
+                    {/* SHOP Menu Item */}
+                    <a 
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentView('shop');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="font-montserrat font-bold"
+                      style={{
+                        display: 'block',
+                        padding: '16px 20px',
+                        color: isGlassMode ? '#000000' : '#000000',
+                        fontSize: '16px',
+                        letterSpacing: '1px',
+                        textDecoration: 'none',
+                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.2s ease',
+                        background: 'transparent',
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'rgba(0, 0, 0, 0.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'transparent';
+                      }}
+                    >
+                      shop
+                    </a>
+
+                    {/* PVP Menu Item */}
+                    <Link 
+                      href="/pvp"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="font-montserrat font-bold"
+                      style={{
+                        display: 'block',
+                        padding: '16px 20px',
+                        color: isGlassMode ? '#000000' : '#000000',
+                        fontSize: '16px',
+                        letterSpacing: '1px',
+                        textDecoration: 'none',
+                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.2s ease',
+                        background: 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'rgba(0, 0, 0, 0.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'transparent';
+                      }}
+                    >
+                      pvp
+                    </Link>
+
+                    {/* Story Menu Item */}
+                    <a 
+                      href="https://ammocat3000.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="font-montserrat font-bold"
+                      style={{
+                        display: 'block',
+                        padding: '16px 20px',
+                        color: isGlassMode ? '#000000' : '#000000',
+                        fontSize: '16px',
+                        letterSpacing: '1px',
+                        textDecoration: 'none',
+                        transition: 'all 0.2s ease',
+                        background: 'transparent',
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'rgba(0, 0, 0, 0.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        const target = e.target as HTMLElement;
+                        target.style.background = 'transparent';
+                      }}
+                    >
+                      story
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
