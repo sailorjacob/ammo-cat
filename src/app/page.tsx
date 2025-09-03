@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 import HatModal from "@/components/HatModal";
@@ -44,12 +45,21 @@ export default function Home() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Check for shop query parameter
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const shopParam = searchParams.get('shop');
+    if (shopParam === 'true') {
+      setCurrentView('shop');
+    }
+  }, [searchParams]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -367,7 +377,9 @@ export default function Home() {
             margin: '0 auto'
           }}
         >
-          <ProductCard 
+          {/* Print products hidden for shop view */}
+          {/*
+          <ProductCard
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print1frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MWZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkwOCwiZXhwIjoxNzg1NTM5OTA4fQ.LX-jv8i6_yls1HtW9qZvmFcd_ZRjf7xgsD8WfEtuZ_c"
                 alt="ammo cat - 10x10 framed"
             title="ammo cat - 10x10 framed"
@@ -378,7 +390,7 @@ export default function Home() {
             isAvailable={true}
             onClick={() => setShowArtModal(1)}
           />
-          <ProductCard 
+          <ProductCard
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print2frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50MmZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkxNywiZXhwIjoxNzg1NTM5OTE3fQ.T7pUJnT78CwvdYhVpqd7UWifuRmVqNR2coe_4-3-4y0"
                 alt="alt character - 11x14 framed"
             title="alt character - 11x14 framed"
@@ -389,8 +401,8 @@ export default function Home() {
             isAvailable={true}
             onClick={() => setShowArtModal(2)}
           />
-          <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print3frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50M2ZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkzMiwiZXhwIjoxNzg1NTM5OTMyfQ.xd1IArLg8_G_oDXGz0_QV8k3p-SDrNwewwny1PxBFZY"
+          <ProductCard
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/print3frame.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3ByaW50M2ZyYW1lLnBuZyIsImlhdCI6MTc1NDAwMzkzMiwiZXhwIjoxNzg1NTM5OTMyfQ.xd1IArLg8_G_oDXGz0_QV8k3p-SDrNwewwny1PxBFZY"
                 alt="zombie - 12x16 framed"
             title="zombie - 12x16 framed"
             description="Limited edition framed art print"
@@ -400,7 +412,8 @@ export default function Home() {
             isAvailable={true}
             onClick={() => setShowArtModal(3)}
           />
-          <ProductCard 
+          */}
+          <ProductCard
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/hat1.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL2hhdDEucG5nIiwiaWF0IjoxNzUzODcxNzgxLCJleHAiOjIwNjkyMzE3ODF9.uTsaVZ_eOuVEd7EmzMmt2xFfb8nnK9vOoHOP-zXsNLU"
                 alt="Shooter Hat"
             title="Shooter Hat"
@@ -410,17 +423,7 @@ export default function Home() {
             isAvailable={true}
             onClick={() => setShowHatModal(1)}
           />
-          <ProductCard 
-            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiehat.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZWhhdC5wbmciLCJpYXQiOjE3NTM5Nzk2ODUsImV4cCI6MjA2OTMzOTY4NX0.Pyz_Qm37fQ3fXVawIT4GTHqhfMOqeX76zZBXGI0pgLI"
-                alt="Zombie Hat"
-            title="Zombie Hat"
-            description="Foam Trucker Hat"
-            limit="Available now"
-            price="$40"
-            isAvailable={true}
-            onClick={() => setShowHatModal(2)}
-          />
-          <ProductCard 
+          <ProductCard
             imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/IMG_5762.PNG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0lNR181NzYyLlBORyIsImlhdCI6MTc1Mzk4NzI4OSwiZXhwIjoyMDY5MzQ3Mjg5fQ.xnucBoG0W4eVDVmI2kaqLvbXfbIuSB5iJmUNknTL1Aw"
                 alt="AMMO Beanie"
             title="AMMO Beanie"
@@ -429,6 +432,16 @@ export default function Home() {
             price="$60"
             isAvailable={true}
             onClick={() => setShowBeanieModal(1)}
+          />
+          <ProductCard
+            imageSrc="https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombiehat.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZWhhdC5wbmciLCJpYXQiOjE3NTM5Nzk2ODUsImV4cCI6MjA2OTMzOTY4NX0.Pyz_Qm37fQ3fXVawIT4GTHqhfMOqeX76zZBXGI0pgLI"
+                alt="Zombie Hat"
+            title="Zombie Hat"
+            description="Foam Trucker Hat"
+            limit="Available now"
+            price="$40"
+            isAvailable={true}
+            onClick={() => setShowHatModal(2)}
           />
 
           <ProductCard 
