@@ -147,14 +147,8 @@ export default function StoryPage() {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               }}
             >
-              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: "0 0 12px", fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
-                Ammo cat is enjoying life in his castle
-              </p>
-              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: "0 0 12px", fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
-                when zombie neighbors start launching
-              </p>
-              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: 0, fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
-                rockets at him and his friends!
+              <p style={{ background: "#f9fafb", padding: "20px 24px", borderRadius: "8px", margin: 0, fontSize: "16px", color: "#374151", lineHeight: 1.6 }}>
+                Ammo cat is enjoying life in his castle when zombie neighbors start launching rockets at him and his friends!
               </p>
             </div>
             <div
@@ -206,12 +200,21 @@ export default function StoryPage() {
                   cursor: "pointer",
                   background: isPlaying ? "#374151" : "#000000",
                   color: "#ffffff",
-                  fontSize: "14px",
-                  fontWeight: 500,
+                  fontSize: "28px",
                   lineHeight: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                {isPlaying ? "Pause" : "Play"}
+                {isPlaying ? (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <rect x="6" y="4" width="4" height="16" />
+                    <rect x="14" y="4" width="4" height="16" />
+                  </svg>
+                ) : (
+                  <span style={{ marginLeft: "4px" }}>▶</span>
+                )}
               </button>
             </div>
             <div style={{ marginBottom: "16px" }}>
