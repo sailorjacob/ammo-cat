@@ -147,8 +147,14 @@ export default function StoryPage() {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               }}
             >
-              <p style={{ background: "#f9fafb", padding: "20px 24px", borderRadius: "8px", margin: 0, fontSize: "16px", color: "#374151", lineHeight: 1.6 }}>
-                Ammo cat is enjoying life in his castle when zombie neighbors start launching rockets at him and his friends!
+              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: "0 0 12px", fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
+                Ammo cat is enjoying life in his castle
+              </p>
+              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: "0 0 12px", fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
+                when zombie neighbors start launching
+              </p>
+              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: 0, fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
+                rockets at him and his friends!
               </p>
             </div>
             <div
