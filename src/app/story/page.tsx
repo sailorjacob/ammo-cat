@@ -123,10 +123,9 @@ export default function StoryPage() {
               style={{ maxWidth: "100%", width: "400px", height: "auto", borderRadius: "12px", display: "block" }}
             />
           </div>
-          <h1 style={{ fontSize: "clamp(2rem, 8vw, 4rem)", fontWeight: 800, color: "#000000", margin: "0 0 8px" }}>
+          <h1 style={{ fontSize: "clamp(2rem, 8vw, 4rem)", fontWeight: 800, color: "#000000", margin: 0 }}>
             Ammo Cat
           </h1>
-          <div style={{ width: "80px", height: "4px", background: "#3b82f6", borderRadius: "2px", margin: "0 auto" }} />
         </div>
 
         {/* Two columns - stack on narrow screens */}
@@ -213,7 +212,7 @@ export default function StoryPage() {
                   borderRadius: "50%",
                   border: "none",
                   cursor: "pointer",
-                  background: isPlaying ? "#ef4444" : "#3b82f6",
+                  background: isPlaying ? "#374151" : "#000000",
                   color: "#ffffff",
                   fontSize: "28px",
                   lineHeight: 1,
@@ -230,14 +229,15 @@ export default function StoryPage() {
               <input
                 type="range"
                 min={0}
-                max={duration || 100}
-                value={currentTime}
+                max={duration > 0 ? duration : 1}
+                step="any"
+                value={duration > 0 ? currentTime : 0}
                 onChange={handleSeek}
                 style={{
                   width: "100%",
                   height: "8px",
                   borderRadius: "4px",
-                  background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${progress}%, #e5e7eb ${progress}%, #e5e7eb 100%)`,
+                  background: `linear-gradient(to right, #000000 0%, #000000 ${progress}%, #e5e7eb ${progress}%, #e5e7eb 100%)`,
                   appearance: "none",
                   cursor: "pointer",
                 }}
@@ -275,7 +275,8 @@ export default function StoryPage() {
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    autoPlay
+                    preload="auto"
                     style={{
                       position: "absolute",
                       top: 0,
