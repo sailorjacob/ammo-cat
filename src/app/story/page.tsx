@@ -57,14 +57,7 @@ export default function StoryPage() {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        width: "100%",
-        background: "#f5f5f5",
-        color: "#111827",
-      }}
-    >
+    <div>
       {/* Header - same pattern as feedback */}
       <div
         style={{
@@ -314,3 +307,4 @@ export default function StoryPage() {
     </div>
   );
 }
+

@@ -291,3 +291,21 @@ button:focus-visible {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Story route: full-page container (server-rendered layout) so page is never fragmented */
+.story-layout {
+  display: block !important;
+  min-height: 100vh !important;
+  height: 100% !important;
+  width: 100% !important;
+  background-color: #f5f5f5 !important;
+  color: #111827 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+.story-layout *,
+.story-layout *::before,
+.story-layout *::after {
+  box-sizing: border-box !important;
+}
