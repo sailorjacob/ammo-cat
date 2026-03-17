@@ -263,6 +263,41 @@ export default function StoryPage() {
         </div>
       </div>
 
+      {/* Accompanying Imagery */}
+      <div className="px-6 pb-24">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+            Story imagery
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <video src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/whitespace.mp4" className="w-full h-full object-cover" muted loop playsInline />
+            </div>
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <img src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/zombiesss.jpeg" alt="Zombies" className="w-full h-full object-cover" />
+            </div>
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <video src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/zombieprep.mp4" className="w-full h-full object-cover" muted loop playsInline />
+            </div>
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <video src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/superammo.mp4" className="w-full h-full object-cover" muted loop playsInline />
+            </div>
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <img src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/poster4.jpeg" alt="Poster" className="w-full h-full object-cover" />
+            </div>
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <img src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/movieposter3.jpg" alt="Movie poster" className="w-full h-full object-cover" />
+            </div>
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <img src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/movieposter.jpeg" alt="Movie poster" className="w-full h-full object-cover" />
+            </div>
+            <div className="relative aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
+              <img src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/mmomovie.jpeg" alt="MMO movie" className="w-full h-full object-cover" />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Custom CSS for slider */}
       <style jsx>{`
         input[type="range"]::-webkit-slider-thumb {

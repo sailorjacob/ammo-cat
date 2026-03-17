@@ -595,11 +595,9 @@ function HomeContent() {
           ──────────
         </span>
 
-        {/* Moon Link to ammocat3000.com */}
-        <a
-          href="https://ammocat3000.com"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Moon Link to Story page */}
+        <Link
+          href="/story"
           style={{
             textDecoration: 'none',
             padding: '2px 4px',
@@ -622,7 +620,7 @@ function HomeContent() {
           }}
         >
           🌙
-        </a>
+        </Link>
       </div>
 
       {/* Art Print Modals */}
@@ -951,10 +949,8 @@ function HomeContent() {
                 </Link>
 
                 {/* Story Button */}
-                <a 
-                  href="https://ammocat3000.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link 
+                  href="/story"
                   className="font-montserrat font-bold"
                   style={{
                     padding: '12px 24px',
@@ -980,7 +976,7 @@ function HomeContent() {
                   }}
                 >
                   story
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -1157,10 +1153,8 @@ function HomeContent() {
                     </Link>
 
                     {/* Story Menu Item */}
-                    <a 
-                      href="https://ammocat3000.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link 
+                      href="/story"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="font-montserrat font-bold"
                       style={{
@@ -1184,7 +1178,7 @@ function HomeContent() {
                       }}
                     >
                       story
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>

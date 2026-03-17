@@ -1889,10 +1889,8 @@ export default function GamePage() {
         <span style={{ color: '#cccccc', margin: '0 8px', fontSize: '10px' }}>
           ──────────────
         </span>
-        <a 
-          href="https://ammocat3000.com" 
-          target="_blank" 
-          rel="noopener noreferrer"
+        <Link 
+          href="/story"
           style={{ 
             textDecoration: 'none', 
             cursor: 'pointer',
@@ -1909,7 +1907,7 @@ export default function GamePage() {
           }}
         >
           🌙
-        </a>
+        </Link>
       </div>
 
       {/* Feedback Button */}
