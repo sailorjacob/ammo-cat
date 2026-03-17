@@ -81,9 +81,8 @@ export default function StoryPage() {
             justifyContent: "space-between",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <img src={LOGO_URL} alt="AMMOCAT" width={35} height={35} style={{ display: "block" }} />
-            <span style={{ fontWeight: 700, fontSize: "18px", color: "#000000" }}>AMMOCAT</span>
           </div>
           <Link
             href="/"
@@ -123,9 +122,6 @@ export default function StoryPage() {
               style={{ maxWidth: "100%", width: "400px", height: "auto", borderRadius: "12px", display: "block" }}
             />
           </div>
-          <h1 style={{ fontSize: "clamp(2rem, 8vw, 4rem)", fontWeight: 800, color: "#000000", margin: 0 }}>
-            Ammo Cat
-          </h1>
         </div>
 
         {/* Two columns - stack on narrow screens */}
@@ -151,7 +147,6 @@ export default function StoryPage() {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               }}
             >
-              <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#000000", margin: "0 0 16px" }}>The Story</h2>
               <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: "0 0 12px", fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
                 Ammo cat is enjoying life in his castle
               </p>
@@ -190,9 +185,6 @@ export default function StoryPage() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#000000", margin: "0 0 20px", textAlign: "center" }}>
-              Audio Story
-            </h2>
             <audio
               ref={audioRef}
               onTimeUpdate={handleTimeUpdate}
@@ -214,11 +206,12 @@ export default function StoryPage() {
                   cursor: "pointer",
                   background: isPlaying ? "#374151" : "#000000",
                   color: "#ffffff",
-                  fontSize: "28px",
+                  fontSize: "14px",
+                  fontWeight: 500,
                   lineHeight: 1,
                 }}
               >
-                {isPlaying ? "⏸" : "▶"}
+                {isPlaying ? "Pause" : "Play"}
               </button>
             </div>
             <div style={{ marginBottom: "16px" }}>
@@ -248,9 +241,6 @@ export default function StoryPage() {
 
         {/* Imagery */}
         <div style={{ marginTop: "48px", paddingBottom: "48px" }}>
-          <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#000000", margin: "0 0 20px", textAlign: "center" }}>
-            Story imagery
-          </h2>
           <div
             style={{
               display: "grid",
