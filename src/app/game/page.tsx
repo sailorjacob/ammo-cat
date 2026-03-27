@@ -39,8 +39,8 @@ export default function GamePage() {
     const maxBottom = 240;
     const sizes = [28, 30, 32, 34, 36];
     const images = [
-      "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png",
-      "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+      "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/zombies%20128x128.png",
+      "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/64x64zomb2.png"
     ];
     
     for (let i = 0; i < 6; i++) {
@@ -207,13 +207,13 @@ export default function GamePage() {
     
     // Load images
     const playerImage = new (window.Image as any)() as HTMLImageElement;
-    playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png";
+    playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png";
     
     const zombieImage = new (window.Image as any)() as HTMLImageElement;
-    zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png";
+    zombieImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/zombies%20128x128.png";
     
     const zombieImage2 = new (window.Image as any)() as HTMLImageElement;
-    zombieImage2.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png";
+    zombieImage2.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/64x64zomb2.png";
     
     // Game constants
     const GAME_WIDTH = 800;
@@ -909,7 +909,7 @@ export default function GamePage() {
           {Array.from({ length: lives }).map((_, index) => (
             <div key={index} className="inline-block" style={{ width: '32px', height: '32px', marginRight: '8px', display: 'inline-block' }}>
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                 alt="Life"
                 width={32}
                 height={32}
@@ -1191,7 +1191,7 @@ export default function GamePage() {
               }}
             >
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                 alt="Character"
                 width={120}
                 height={120}

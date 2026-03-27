@@ -86,7 +86,7 @@ export default function PvpPage() {
   useEffect(() => {
     const loadImages = () => {
       const playerImage = new window.Image();
-      playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png";
+      playerImage.src = "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png";
       
       playerImage.onload = () => {
         imagesRef.current.player = playerImage;
@@ -1411,7 +1411,7 @@ export default function PvpPage() {
                 {Array.from({ length: localLives }).map((_, index) => (
                   <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
                     <Image 
-                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                      src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                       alt="Your Life"
                       width={24}
                       height={24}
@@ -1464,7 +1464,7 @@ export default function PvpPage() {
                   {Array.from({ length: opponentLives }).map((_, index) => (
                     <div key={index} style={{ width: '24px', height: '24px', marginRight: '4px', display: 'inline-block' }}>
                       <Image 
-                        src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                        src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                         alt="Opponent Life"
                         width={24}
                         height={24}
@@ -2070,7 +2070,7 @@ export default function PvpPage() {
               }}
             >
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                 alt="Character"
                 width={80}
                 height={80}
@@ -2210,7 +2210,7 @@ export default function PvpPage() {
               }}
             >
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                 alt="Character"
                 width={80}
                 height={80}

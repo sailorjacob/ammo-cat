@@ -34,7 +34,7 @@ function HomeContent() {
 
   // Video sequence array - 4 videos in sequence for smooth transitions
   const videos = [
-    "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//AMMO4.mp4", // Original main homepage video
+    "https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/AMMO4.mp4", // Original main homepage video
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie11.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTExLm1wNCIsImlhdCI6MTc1MzU0MjE3OSwiZXhwIjoyMDY4OTAyMTc5fQ.geM_QilOlb35kiH9qmbZr7JwSfWISgv0P6KKqC_1rHI",
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/zombie33.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL3pvbWJpZTMzLm1wNCIsImlhdCI6MTc1MzU0MjQ0NSwiZXhwIjoyMDY4OTAyNDQ1fQ.wuhIiwGs-g3pDw46sXM67BU9tXN-VrJhQ5vgN3H2nQE",
     "https://yhmbwjksmppawaiggznm.supabase.co/storage/v1/object/sign/ammo/AMMO.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMzllZDNiMy1kYWMxLTQwOTctODE2Ny00M2MwNTRhNTAwOWUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbW1vL0FNTU8ubXA0IiwiaWF0IjoxNzUzNTQyNzMxLCJleHAiOjIwNjg5MDI3MzF9.TKEoSRs9QSENIkTVwzTyB69S4LRoct1rkg0ahx6nfts"
@@ -290,7 +290,7 @@ function HomeContent() {
                }}
              >
                <Image 
-                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                 src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                  alt="AMMOCAT" 
                  width={32} 
                  height={32}
@@ -827,7 +827,7 @@ function HomeContent() {
               }}
             >
               <Image 
-                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+                src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
                 alt="AMMOCAT" 
                 width={35} 
                 height={35}
@@ -1321,7 +1321,7 @@ function HomeContent() {
         >
           <div className="w-48 h-48 animate-bounce">
             <Image 
-              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
               alt="AMMOCAT"
               width={192}
               height={192}
@@ -1354,7 +1354,7 @@ function HomeContent() {
         >
           <div className="animate-float">
             <Image 
-              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//64x64zomb2.png"
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/64x64zomb2.png"
               alt="Asset 1"
               width={80}
               height={80}
@@ -1363,7 +1363,7 @@ function HomeContent() {
           </div>
           <div className="animate-float" style={{animationDelay: '1s'}}>
             <Image 
-              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//zombies%20128x128.png"
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/zombies%20128x128.png"
               alt="Asset 2"
               width={120}
               height={120}
@@ -1372,7 +1372,7 @@ function HomeContent() {
           </div>
           <div className="animate-float" style={{animationDelay: '2s'}}>
             <Image 
-              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat//transparentshooter.png"
+              src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/ammocat/transparentshooter.png"
               alt="Asset 3"
               width={80}
               height={80}
