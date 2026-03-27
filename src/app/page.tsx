@@ -743,7 +743,7 @@ function HomeContent() {
           <h1 
             className="text-5xl font-bold mb-6"
             style={{
-              color: '#000000'
+              color: '#ffffff'
             }}
           >
             AMMOCAT
@@ -763,7 +763,7 @@ function HomeContent() {
           <p 
             className="text-lg"
             style={{
-              color: '#000000'
+              color: '#ffffff'
             }}
           >
             {Math.floor(loadingProgress)}%
@@ -1391,40 +1391,10 @@ export default function Home() {
   return (
     <Suspense fallback={
       <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '100vw',
         height: '100vh',
         background: '#000000',
-        color: '#ffffff',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{
-            color: '#ffffff',
-            fontSize: '24px',
-            marginBottom: '16px',
-            fontWeight: 'bold'
-          }}>
-            Loading AMMOCAT...
-          </h1>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            border: '4px solid #333333',
-            borderTop: '4px solid #ffffff',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto'
-          }}></div>
-          <style jsx>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
-        </div>
-      </div>
+      }} />
     }>
       <HomeContent />
     </Suspense>
