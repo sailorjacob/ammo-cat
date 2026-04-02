@@ -168,10 +168,7 @@ export default function StoryPage() {
                 color: "#6b7280",
               }}
             >
-              ©2025 Ammo Cat. All rights reserved.{" "}
-              <a href="https://haven.engineer" target="_blank" rel="noopener noreferrer" style={{ color: "#000000", textDecoration: "underline" }}>
-                Haven
-              </a>
+              ©2025 Ammo Cat. All rights reserved.
             </div>
           </div>
 

@@ -885,40 +885,6 @@ function HomeContent() {
                   play
                 </Link>
 
-                {/* SHOP Button */}
-                <a 
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentView('shop');
-                  }}
-                  className="font-montserrat font-bold"
-                  style={{
-                    padding: '12px 24px',
-                    background: isGlassMode ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
-                    border: isGlassMode ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e0e0e0',
-                    borderRadius: isGlassMode ? '50px' : '8px',
-                    color: isGlassMode ? '#ffffff' : '#000000',
-                    fontSize: '16px',
-                    letterSpacing: '1px',
-                    textDecoration: 'none',
-                    transition: 'all 0.3s ease',
-                    backdropFilter: isGlassMode ? 'blur(15px)' : 'none',
-                    outline: 'none',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => {
-                    const target = e.target as HTMLElement;
-                    target.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    const target = e.target as HTMLElement;
-                    target.style.transform = 'translateY(0)';
-                  }}
-                >
-                  shop
-                </a>
-
                 {/* PVP Button */}
                 <Link 
                   href="/pvp"
@@ -1090,39 +1056,6 @@ function HomeContent() {
                     >
                       play
                     </Link>
-
-                    {/* SHOP Menu Item */}
-                    <a 
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentView('shop');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="font-montserrat font-bold"
-                      style={{
-                        display: 'block',
-                        padding: '16px 20px',
-                        color: isGlassMode ? '#000000' : '#000000',
-                        fontSize: '16px',
-                        letterSpacing: '1px',
-                        textDecoration: 'none',
-                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                        transition: 'all 0.2s ease',
-                        background: 'transparent',
-                        cursor: 'pointer'
-                      }}
-                      onMouseEnter={(e) => {
-                        const target = e.target as HTMLElement;
-                        target.style.background = 'rgba(0, 0, 0, 0.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        const target = e.target as HTMLElement;
-                        target.style.background = 'transparent';
-                      }}
-                    >
-                      shop
-                    </a>
 
                     {/* PVP Menu Item */}
                     <Link 
