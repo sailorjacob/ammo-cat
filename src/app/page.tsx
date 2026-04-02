@@ -82,12 +82,12 @@ function HomeContent() {
       setLoadingProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          setTimeout(() => setLoading(false), 400);
+          setTimeout(() => setLoading(false), 500);
           return 100;
         }
-        return prev + Math.random() * 4 + 1.5;
+        return prev + Math.random() * 8 + 2;
       });
-    }, 80);
+    }, 100);
 
     return () => clearInterval(progressInterval);
   }, []);
@@ -748,29 +748,24 @@ function HomeContent() {
             AMMOCAT
           </h1>
           <div 
-            className="rounded-full mb-6"
-            style={{ width: '280px', height: '4px', background: 'rgba(255,255,255,0.15)' }}
+            className="bg-gray-800 rounded-full mb-4"
+            style={{ width: '300px', height: '6px' }}
           >
             <div 
-              className="h-full rounded-full"
+              className="h-full rounded-full transition-all duration-300 ease-out"
               style={{ 
                 width: `${Math.min(loadingProgress, 100)}%`,
-                background: 'linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%)',
-                transition: 'width 0.15s ease-out'
+                background: 'linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%)'
               }}
             ></div>
           </div>
           <p 
+            className="text-lg"
             style={{
-              color: 'rgba(255,255,255,0.85)',
-              fontSize: '15px',
-              fontWeight: '500',
-              letterSpacing: '3px',
-              fontFamily: 'monospace',
-              margin: 0
+              color: '#ffffff'
             }}
           >
-            {Math.floor(Math.min(loadingProgress, 100))}%
+            {Math.floor(loadingProgress)}%
           </p>
         </div>
       </div>
