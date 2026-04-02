@@ -168,7 +168,10 @@ export default function StoryPage() {
                 color: "#6b7280",
               }}
             >
-              ©2025 Ammo Cat. All rights reserved.
+              AMMOCAT is open source —{" "}
+              <a href="https://github.com/sailorjacob/ammo-cat" target="_blank" rel="noopener noreferrer" style={{ color: "#000000", textDecoration: "underline", fontWeight: 500 }}>
+                View on GitHub
+              </a>
             </div>
           </div>
 

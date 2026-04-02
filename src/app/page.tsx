@@ -78,17 +78,16 @@ function HomeContent() {
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
-    // Animate loading progress from 0 to 100
     const progressInterval = setInterval(() => {
       setLoadingProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          setTimeout(() => setLoading(false), 500); // Small delay after reaching 100%
+          setTimeout(() => setLoading(false), 400);
           return 100;
         }
-        return prev + Math.random() * 8 + 2; // Smooth random increments
+        return prev + Math.random() * 4 + 1.5;
       });
-    }, 100);
+    }, 80);
 
     return () => clearInterval(progressInterval);
   }, []);
@@ -749,24 +748,29 @@ function HomeContent() {
             AMMOCAT
           </h1>
           <div 
-            className="bg-gray-800 rounded-full mb-4"
-            style={{ width: '300px', height: '6px' }}
+            className="rounded-full mb-6"
+            style={{ width: '280px', height: '4px', background: 'rgba(255,255,255,0.15)' }}
           >
             <div 
-              className="h-full rounded-full transition-all duration-300 ease-out"
+              className="h-full rounded-full"
               style={{ 
                 width: `${Math.min(loadingProgress, 100)}%`,
-                background: 'linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%)'
+                background: 'linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%)',
+                transition: 'width 0.15s ease-out'
               }}
             ></div>
           </div>
           <p 
-            className="text-lg"
             style={{
-              color: '#ffffff'
+              color: 'rgba(255,255,255,0.85)',
+              fontSize: '15px',
+              fontWeight: '500',
+              letterSpacing: '3px',
+              fontFamily: 'monospace',
+              margin: 0
             }}
           >
-            {Math.floor(loadingProgress)}%
+            {Math.floor(Math.min(loadingProgress, 100))}%
           </p>
         </div>
       </div>
