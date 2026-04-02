@@ -742,7 +742,7 @@ function HomeContent() {
           <h1 
             className="text-5xl font-bold mb-6"
             style={{
-              color: '#ffffff'
+              color: '#000000'
             }}
           >
             AMMOCAT
@@ -762,7 +762,7 @@ function HomeContent() {
           <p 
             className="text-lg"
             style={{
-              color: '#ffffff'
+              color: '#000000'
             }}
           >
             {Math.floor(loadingProgress)}%

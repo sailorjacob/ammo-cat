@@ -57,8 +57,8 @@ export default function StoryPage() {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div>
-      {/* Header - same pattern as feedback */}
+    <div style={{ minHeight: "100vh", background: "#fafafa", fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+      {/* Header */}
       <div
         style={{
           position: "fixed",
@@ -67,33 +67,34 @@ export default function StoryPage() {
           right: 0,
           zIndex: 50,
           background: "#ffffff",
-          borderBottom: "1px solid #e0e0e0",
-          padding: "16px 20px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+          borderBottom: "1px solid #eaeaea",
+          padding: "14px 20px",
         }}
       >
         <div
           style={{
-            maxWidth: "1200px",
+            maxWidth: "1000px",
             margin: "0 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <img src={LOGO_URL} alt="AMMOCAT" width={35} height={35} style={{ display: "block" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <img src={LOGO_URL} alt="AMMOCAT" width={28} height={28} style={{ display: "block" }} />
+            <span style={{ fontSize: "13px", fontWeight: 600, color: "#111", letterSpacing: "0.5px" }}>Story</span>
           </div>
           <Link
             href="/"
             style={{
-              padding: "12px 24px",
-              background: "#000000",
-              color: "#ffffff",
-              borderRadius: "9999px",
+              padding: "8px 18px",
+              background: "#fafafa",
+              color: "#444",
+              border: "1px solid #ddd",
+              borderRadius: "8px",
               fontWeight: 500,
               textDecoration: "none",
-              fontSize: "14px",
+              fontSize: "13px",
             }}
           >
             Back to Home
@@ -101,75 +102,71 @@ export default function StoryPage() {
         </div>
       </div>
 
-      {/* Main content - padding top so content is below fixed header */}
-      <div style={{ paddingTop: "72px", paddingBottom: "48px", maxWidth: "1200px", margin: "0 auto", paddingLeft: "20px", paddingRight: "20px" }}>
-        {/* Hero */}
-        <div style={{ textAlign: "center", padding: "32px 0 24px" }}>
+      {/* Main content */}
+      <div style={{ paddingTop: "68px", paddingBottom: "48px", maxWidth: "1000px", margin: "0 auto", paddingLeft: "20px", paddingRight: "20px" }}>
+        {/* Hero image */}
+        <div style={{ textAlign: "center", padding: "28px 0 20px" }}>
           <div
             style={{
               display: "inline-block",
-              padding: "24px",
-              background: "#ffffff",
-              borderRadius: "16px",
-              border: "1px solid #e0e0e0",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-              marginBottom: "24px",
+              padding: "16px",
+              background: "#fff",
+              borderRadius: "12px",
+              border: "1px solid #eaeaea",
             }}
           >
             <img
               src="https://twejikjgxkzmphocbvpt.supabase.co/storage/v1/object/public/havensvgs/Ammo%20Cat%20Original.jpg"
               alt="Ammo Cat"
-              style={{ maxWidth: "100%", width: "400px", height: "auto", borderRadius: "12px", display: "block" }}
+              style={{ maxWidth: "100%", width: "380px", height: "auto", borderRadius: "8px", display: "block" }}
             />
           </div>
         </div>
 
-        {/* Two columns - stack on narrow screens */}
+        {/* Two columns */}
         <div
           className="story-two-cols"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: "32px",
+            gap: "20px",
             alignItems: "start",
-            marginTop: "32px",
+            marginTop: "24px",
           }}
         >
-          {/* Left: story */}
-          <div>
+          {/* Left: story + open source */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div
               style={{
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-                borderRadius: "16px",
-                padding: "24px",
-                marginBottom: "24px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                background: "#fff",
+                border: "1px solid #eaeaea",
+                borderRadius: "12px",
+                padding: "20px",
               }}
             >
-              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: "0 0 12px", fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
+              <p style={{ background: "#f8f8f8", padding: "14px", borderRadius: "8px", margin: "0 0 10px", fontSize: "15px", color: "#333", lineHeight: 1.5 }}>
                 Ammo cat is enjoying life in his castle
               </p>
-              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: "0 0 12px", fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
+              <p style={{ background: "#f8f8f8", padding: "14px", borderRadius: "8px", margin: "0 0 10px", fontSize: "15px", color: "#333", lineHeight: 1.5 }}>
                 when zombie neighbors start launching
               </p>
-              <p style={{ background: "#f9fafb", padding: "16px", borderRadius: "8px", margin: 0, fontSize: "16px", color: "#374151", lineHeight: 1.5 }}>
+              <p style={{ background: "#f8f8f8", padding: "14px", borderRadius: "8px", margin: 0, fontSize: "15px", color: "#333", lineHeight: 1.5 }}>
                 rockets at him and his friends!
               </p>
             </div>
             <div
               style={{
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-                borderRadius: "16px",
-                padding: "16px",
+                background: "#fff",
+                border: "1px solid #eaeaea",
+                borderRadius: "12px",
+                padding: "14px 16px",
                 textAlign: "center",
-                fontSize: "14px",
-                color: "#6b7280",
+                fontSize: "13px",
+                color: "#888",
               }}
             >
               AMMOCAT is open source —{" "}
-              <a href="https://github.com/sailorjacob/ammo-cat" target="_blank" rel="noopener noreferrer" style={{ color: "#000000", textDecoration: "underline", fontWeight: 500 }}>
+              <a href="https://github.com/sailorjacob/ammo-cat" target="_blank" rel="noopener noreferrer" style={{ color: "#333", textDecoration: "underline", textUnderlineOffset: "2px", fontWeight: 500 }}>
                 View on GitHub
               </a>
             </div>
@@ -178,11 +175,10 @@ export default function StoryPage() {
           {/* Right: audio */}
           <div
             style={{
-              background: "#ffffff",
-              border: "1px solid #e0e0e0",
-              borderRadius: "16px",
+              background: "#fff",
+              border: "1px solid #eaeaea",
+              borderRadius: "12px",
               padding: "24px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
             }}
           >
             <audio
@@ -199,32 +195,33 @@ export default function StoryPage() {
                 type="button"
                 onClick={handlePlayPause}
                 style={{
-                  width: "80px",
-                  height: "80px",
+                  width: "64px",
+                  height: "64px",
                   borderRadius: "50%",
-                  border: "none",
+                  border: "1px solid #ddd",
                   cursor: "pointer",
-                  background: isPlaying ? "#374151" : "#000000",
-                  color: "#ffffff",
-                  fontSize: "28px",
+                  background: isPlaying ? "#f5f5f5" : "#fafafa",
+                  color: "#333",
+                  fontSize: "24px",
                   lineHeight: 1,
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  transition: "background 0.15s",
                 }}
               >
                 {isPlaying ? (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                     <rect x="6" y="4" width="4" height="16" />
                     <rect x="14" y="4" width="4" height="16" />
                   </svg>
                 ) : (
-                  <span style={{ marginLeft: "4px" }}>▶</span>
+                  <span style={{ marginLeft: "3px" }}>▶</span>
                 )}
               </button>
             </div>
-            <div style={{ marginBottom: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#6b7280", marginBottom: "6px" }}>
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#999", marginBottom: "6px" }}>
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
               </div>
@@ -237,9 +234,9 @@ export default function StoryPage() {
                 onChange={handleSeek}
                 style={{
                   width: "100%",
-                  height: "8px",
-                  borderRadius: "4px",
-                  background: `linear-gradient(to right, #000000 0%, #000000 ${progress}%, #e5e7eb ${progress}%, #e5e7eb 100%)`,
+                  height: "6px",
+                  borderRadius: "3px",
+                  background: `linear-gradient(to right, #666 0%, #666 ${progress}%, #e5e7eb ${progress}%, #e5e7eb 100%)`,
                   appearance: "none",
                   cursor: "pointer",
                 }}
@@ -249,12 +246,12 @@ export default function StoryPage() {
         </div>
 
         {/* Imagery */}
-        <div style={{ marginTop: "48px", paddingBottom: "48px" }}>
+        <div style={{ marginTop: "40px", paddingBottom: "40px" }}>
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-              gap: "16px",
+              gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+              gap: "12px",
             }}
           >
             {MEDIA.map((item, i) => (
@@ -264,7 +261,7 @@ export default function StoryPage() {
                   position: "relative",
                   paddingBottom: "56.25%",
                   background: "#e5e7eb",
-                  borderRadius: "12px",
+                  borderRadius: "10px",
                   overflow: "hidden",
                 }}
               >
@@ -307,4 +304,3 @@ export default function StoryPage() {
     </div>
   );
 }
-
